@@ -3,3 +3,7 @@
 dist/
 *.dmg
 .DS_Store
+.codex/
+.cursor/
+.gemini/
+.impeccable/review/

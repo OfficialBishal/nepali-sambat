@@ -1,11 +1,11 @@
 // Renders the app icon at 1024×1024 on the macOS icon grid.
-// Usage: swift scripts/make-icon.swift out.png [concept]   (concept: page | tithi; default page)
+// Usage: swift scripts/make-icon.swift out.png [concept]   (concept: dhaka; default dhaka)
 import AppKit
 import CoreText
 
 let args = CommandLine.arguments
 let out = args.count > 1 ? args[1] : "icon.png"
-let concept = args.count > 2 ? args[2] : "page"
+let concept = args.count > 2 ? args[2] : "dhaka"
 let canvas: CGFloat = 1024
 
 func rgb(_ hex: UInt32, _ a: CGFloat = 1) -> CGColor {
@@ -85,7 +85,77 @@ func available(_ names: [String]) -> String {
     names.first { CTFontCopyPostScriptName(CTFontCreateWithName($0 as CFString, 12, nil)) as String == $0 } ?? names.last!
 }
 
+/// A lozenge as a path; `step` > 0 draws the stair-stepped edge a woven dhaka diamond has.
+func lozenge(center c: CGPoint, radius r: CGFloat, step: CGFloat) -> CGPath {
+    let path = CGMutablePath()
+    guard step > 0 else {
+        path.addLines(between: [CGPoint(x: c.x, y: c.y + r), CGPoint(x: c.x + r, y: c.y),
+                                CGPoint(x: c.x, y: c.y - r), CGPoint(x: c.x - r, y: c.y)])
+        path.closeSubpath()
+        return path
+    }
+    let n = Int((r / step).rounded())
+    var pts: [CGPoint] = []
+    // Walk the four edges as stairs: top → right → bottom → left.
+    for i in 0..<n { // top to right
+        pts.append(CGPoint(x: c.x + CGFloat(i) * step, y: c.y + r - CGFloat(i) * step))
+        pts.append(CGPoint(x: c.x + CGFloat(i + 1) * step, y: c.y + r - CGFloat(i) * step))
+    }
+    for i in 0..<n { // right to bottom
+        pts.append(CGPoint(x: c.x + r - CGFloat(i) * step, y: c.y - CGFloat(i) * step))
+        pts.append(CGPoint(x: c.x + r - CGFloat(i) * step, y: c.y - CGFloat(i + 1) * step))
+    }
+    for i in 0..<n { // bottom to left
+        pts.append(CGPoint(x: c.x - CGFloat(i) * step, y: c.y - r + CGFloat(i) * step))
+        pts.append(CGPoint(x: c.x - CGFloat(i + 1) * step, y: c.y - r + CGFloat(i) * step))
+    }
+    for i in 0..<n { // left to top
+        pts.append(CGPoint(x: c.x - r + CGFloat(i) * step, y: c.y + CGFloat(i) * step))
+        pts.append(CGPoint(x: c.x - r + CGFloat(i) * step, y: c.y + CGFloat(i + 1) * step))
+    }
+    path.addLines(between: pts)
+    path.closeSubpath()
+    return path
+}
+
+func fill(_ path: CGPath, _ color: CGColor) {
+    ctx.addPath(path)
+    ctx.setFillColor(color)
+    ctx.fillPath()
+}
+
 switch concept {
+case "dhaka":
+    // Soft, deep tile; the motif is concentric rounded diamonds in madder, cotton and saffron.
+    fillTile(top: 0x3A3048, bottom: 0x1B1624)
+    let c = CGPoint(x: 512, y: 512)
+    /// A diamond with softened corners: a smaller diamond stroked with a round join.
+    func soft(_ radius: CGFloat, _ color: CGColor, shadow: Bool = false) {
+        let round: CGFloat = 36
+        let path = lozenge(center: c, radius: radius - round * 1.4142, step: 0)
+        ctx.saveGState()
+        if shadow { ctx.setShadow(offset: CGSize(width: 0, height: -18), blur: 40, color: CGColor(gray: 0, alpha: 0.45)) }
+        ctx.addPath(path)
+        ctx.setFillColor(color)
+        ctx.setStrokeColor(color)
+        ctx.setLineWidth(round * 2)
+        ctx.setLineJoin(.round)
+        ctx.drawPath(using: .fillStroke)
+        ctx.restoreGState()
+    }
+    soft(330, rgb(0xC8162E), shadow: true)
+    soft(236, rgb(0xF4EFE6))
+    soft(206, rgb(0xF0A500))
+    soft(92, rgb(0x1B1624))
+    // A light edge along the top of the madder diamond, like glass catching light.
+    ctx.saveGState()
+    ctx.setStrokeColor(CGColor(gray: 1, alpha: 0.22))
+    ctx.setLineWidth(5)
+    ctx.setLineJoin(.round)
+    ctx.addLines(between: [CGPoint(x: 512 - 258, y: 512 + 54), CGPoint(x: 512, y: 512 + 306 - 54 + 54), CGPoint(x: 512 + 258, y: 512 + 54)])
+    ctx.strokePath()
+    ctx.restoreGState()
+
 case "tithi":
     fillTile(top: 0x1B3F8F, bottom: 0x0E2763)
     // Crescent: a disc with an offset disc removed, opening upward like the moon on the flag.

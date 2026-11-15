@@ -2,29 +2,29 @@
 import PackageDescription
 
 let package = Package(
-    name: "NepaliPatro",
+    name: "Sambat",
     platforms: [.macOS(.v14)],
     products: [
-        .library(name: "PatroCore", targets: ["PatroCore"]),
-        .executable(name: "NepaliPatro", targets: ["NepaliPatro"]),
-        .executable(name: "NepaliPatroWidgets", targets: ["NepaliPatroWidgets"]),
-        .executable(name: "patro", targets: ["patro"]),
+        .library(name: "SambatCore", targets: ["SambatCore"]),
+        .executable(name: "SambatApp", targets: ["SambatApp"]),
+        .executable(name: "SambatWidgets", targets: ["SambatWidgets"]),
+        .executable(name: "sambat", targets: ["SambatCLI"]),
     ],
     targets: [
-        .target(name: "PatroCore"),
-        .target(name: "PatroUI", dependencies: ["PatroCore"]),
+        .target(name: "SambatCore"),
+        .target(name: "SambatUI", dependencies: ["SambatCore"]),
         .executableTarget(
-            name: "NepaliPatro",
-            dependencies: ["PatroCore", "PatroUI"]
+            name: "SambatApp",
+            dependencies: ["SambatCore", "SambatUI"]
         ),
         .executableTarget(
-            name: "NepaliPatroWidgets",
-            dependencies: ["PatroCore", "PatroUI"],
+            name: "SambatWidgets",
+            dependencies: ["SambatCore", "SambatUI"],
             swiftSettings: [.unsafeFlags(["-application-extension"])],
             linkerSettings: [.unsafeFlags(["-Xlinker", "-application_extension"])]
         ),
-        .executableTarget(name: "patro", dependencies: ["PatroCore"]),
-        .executableTarget(name: "PatroChecks", dependencies: ["PatroCore"]),
+        .executableTarget(name: "SambatCLI", dependencies: ["SambatCore"]),
+        .executableTarget(name: "SambatChecks", dependencies: ["SambatCore"]),
     ],
     swiftLanguageModes: [.v5]
 )
