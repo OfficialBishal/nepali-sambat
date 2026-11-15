@@ -1,0 +1,1966 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Nepali Patro//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:नेपाली चाडपर्व
+X-WR-TIMEZONE:Asia/Kathmandu
+BEGIN:VEVENT
+UID:newyear-2460780@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250414
+DTEND;VALUE=DATE:20250415
+SUMMARY:नयाँ वर्ष
+DESCRIPTION:नयाँ वर्ष / Nepali New Year\nबैशाख 
+ १\, २०८२\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mataTirtha-2460793@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250427
+DTEND;VALUE=DATE:20250428
+SUMMARY:मातातीर्थ औंसी (आमाको मुख
+  हेर्ने दिन)
+DESCRIPTION:मातातीर्थ औंसी (आमाको 
+ मुख हेर्ने दिन) / Mata Tirtha Aunsi (Mother's Day)
+ \nबैशाख १४\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:labourDay-2460797@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250501
+DTEND;VALUE=DATE:20250502
+SUMMARY:अन्तर्राष्ट्रिय श्रमिक 
+ दिवस
+DESCRIPTION:अन्तर्राष्ट्रिय श्रमि
+ क दिवस / International Labour Day\nबैशाख १८\, २
+ ०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:buddhaJayanti-2460808@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250512
+DTEND;VALUE=DATE:20250513
+SUMMARY:बुद्ध जयन्ती / उभौली पर्व
+DESCRIPTION:बुद्ध जयन्ती / उभौली प
+ र्व / Buddha Jayanti / Ubhauli\nबैशाख २९\, २०८
+ २\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ganatantra-2460825@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250529
+DTEND;VALUE=DATE:20250530
+SUMMARY:गणतन्त्र दिवस
+DESCRIPTION:गणतन्त्र दिवस / Republic Day\nजेठ
+  १५\, २०८२\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:sithiNakha-2460828@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250601
+DTEND;VALUE=DATE:20250602
+SUMMARY:सिथि नख:
+DESCRIPTION:सिथि नख: / Sithi Nakha\nजेठ १८\, २०
+ ८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eidAdha-2460834@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250607
+DTEND;VALUE=DATE:20250608
+SUMMARY:बकर इद (इद उल अजहा)
+DESCRIPTION:बकर इद (इद उल अजहा) / Eid al-Adha\n
+ जेठ २४\, २०८२\nHoliday for the Muslim community\; may sh
+ ift with moon sighting
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:dhanDiwas-2460856@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250629
+DTEND;VALUE=DATE:20250630
+SUMMARY:राष्ट्रिय धान दिवस (असार 
+ १५)
+DESCRIPTION:राष्ट्रिय धान दिवस (असा
+ र १५) / National Paddy Day (Asar 15)\nअसार १५\, २०
+ ८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:saune-2460874@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250717
+DTEND;VALUE=DATE:20250718
+SUMMARY:साउने संक्रान्ति
+DESCRIPTION:साउने संक्रान्ति / Saune Sankrant
+ i\nसाउन १\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghantakarna-2460880@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250723
+DTEND;VALUE=DATE:20250724
+SUMMARY:घण्टाकर्ण चतुर्दशी (गठे
+ मंगल)
+DESCRIPTION:घण्टाकर्ण चतुर्दशी (गठे
+ मंगल) / Ghantakarna (Gathemangal)\nसाउन ७\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:nagPanchami-2460886@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250729
+DTEND;VALUE=DATE:20250730
+SUMMARY:नाग पञ्चमी
+DESCRIPTION:नाग पञ्चमी / Nag Panchami\nसाउन १
+ ३\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:janaiPurnima-2460897@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250809
+DTEND;VALUE=DATE:20250810
+SUMMARY:जनै पूर्णिमा / रक्षा बन्ध
+ न
+DESCRIPTION:जनै पूर्णिमा / रक्षा ब
+ न्धन / Janai Purnima / Raksha Bandhan\nसाउन २४\, २
+ ०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:gaiJatra-2460898@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250810
+DTEND;VALUE=DATE:20250811
+SUMMARY:गाईजात्रा
+DESCRIPTION:गाईजात्रा / Gai Jatra\nसाउन २५\, 
+ २०८२\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:janmashtami-2460904@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250816
+DTEND;VALUE=DATE:20250817
+SUMMARY:श्रीकृष्ण जन्माष्टमी
+DESCRIPTION:श्रीकृष्ण जन्माष्टमी / Kr
+ ishna Janmashtami\nसाउन ३१\, २०८२\nसार्वज
+ निक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kusheAunsi-2460911@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250823
+DTEND;VALUE=DATE:20250824
+SUMMARY:कुशे औंसी (बुबाको मुख हे
+ र्ने दिन)
+DESCRIPTION:कुशे औंसी (बुबाको मुख हे
+ र्ने दिन) / Kushe Aunsi (Father's Day)\nभदौ ७\, २
+ ०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:teej-2460914@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250826
+DTEND;VALUE=DATE:20250827
+SUMMARY:हरितालिका तीज
+DESCRIPTION:हरितालिका तीज / Haritalika Teej\nभ
+ दौ १०\, २०८२\nHoliday for women
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:rishiPanchami-2460916@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250828
+DTEND;VALUE=DATE:20250829
+SUMMARY:ऋषि पञ्चमी
+DESCRIPTION:ऋषि पञ्चमी / Rishi Panchami\nभदौ १२
+ \, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:indraJatra-2460925@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250906
+DTEND;VALUE=DATE:20250907
+SUMMARY:इन्द्रजात्रा
+DESCRIPTION:इन्द्रजात्रा / Indra Jatra\nभदौ 
+ २१\, २०८२\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:jitiya-2460933@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250914
+DTEND;VALUE=DATE:20250915
+SUMMARY:जितिया पर्व
+DESCRIPTION:जितिया पर्व / Jitiya\nभदौ २९\, 
+ २०८२\nHoliday for women observing Jitiya
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:constitution-2460938@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250919
+DTEND;VALUE=DATE:20250920
+SUMMARY:संविधान दिवस
+DESCRIPTION:संविधान दिवस / Constitution Day\nअ
+ सोज ३\, २०८२\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghatasthapana-2460941@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250922
+DTEND;VALUE=DATE:20250923
+SUMMARY:घटस्थापना
+DESCRIPTION:घटस्थापना / Ghatasthapana\nअसोज ६\,
+  २०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpati-2460948@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250929
+DTEND;VALUE=DATE:20250930
+SUMMARY:फूलपाती
+DESCRIPTION:फूलपाती / Fulpati\nअसोज १३\, २०
+ ८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mahaAshtami-2460949@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20250930
+DTEND;VALUE=DATE:20251001
+SUMMARY:महाअष्टमी
+DESCRIPTION:महाअष्टमी / Maha Ashtami\nअसोज १४
+ \, २०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mahaNavami-2460950@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251001
+DTEND;VALUE=DATE:20251002
+SUMMARY:महानवमी
+DESCRIPTION:महानवमी / Maha Navami\nअसोज १५\, २
+ ०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:dashami-2460951@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251002
+DTEND;VALUE=DATE:20251003
+SUMMARY:विजया दशमी
+DESCRIPTION:विजया दशमी / Vijaya Dashami\nअसोज १
+ ६\, २०८२\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpatiBlock-2460952@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251003
+DTEND;VALUE=DATE:20251004
+SUMMARY:दशैं बिदा
+DESCRIPTION:दशैं बिदा / Dashain holiday\nअसोज १
+ ७\, २०८२\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpatiBlock-2460953@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251004
+DTEND;VALUE=DATE:20251005
+SUMMARY:दशैं बिदा
+DESCRIPTION:दशैं बिदा / Dashain holiday\nअसोज १
+ ८\, २०८२\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kojagrat-2460956@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251007
+DTEND;VALUE=DATE:20251008
+SUMMARY:कोजाग्रत पूर्णिमा
+DESCRIPTION:कोजाग्रत पूर्णिमा / Kojagrat Pu
+ rnima\nअसोज २१\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kaagTihar-2460968@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251019
+DTEND;VALUE=DATE:20251020
+SUMMARY:काग तिहार
+DESCRIPTION:काग तिहार / Kaag Tihar\nकात्तिक 
+ २\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kukurTihar-2460969@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251020
+DTEND;VALUE=DATE:20251021
+SUMMARY:कुकुर तिहार
+DESCRIPTION:कुकुर तिहार / Kukur Tihar\nका
+ त्तिक ३\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPuja-2460970@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251021
+DTEND;VALUE=DATE:20251022
+SUMMARY:लक्ष्मी पूजा
+DESCRIPTION:लक्ष्मी पूजा / Laxmi Puja\nका
+ त्तिक ४\, २०८२\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:govardhan-2460971@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251022
+DTEND;VALUE=DATE:20251023
+SUMMARY:गोवर्धन पूजा / म्ह पूजा / 
+ नेपाल संवत् नयाँ वर्ष
+DESCRIPTION:गोवर्धन पूजा / म्ह पूजा / 
+ नेपाल संवत् नयाँ वर्ष / Govardhan Puja
+  / Mha Puja / Nepal Sambat New Year\nकात्तिक ५\, २०८
+ २\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:bhaiTika-2460972@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251023
+DTEND;VALUE=DATE:20251024
+SUMMARY:भाइटीका
+DESCRIPTION:भाइटीका / Bhai Tika\nकात्तिक ६\, 
+ २०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPujaBlock-2460973@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251024
+DTEND;VALUE=DATE:20251025
+SUMMARY:तिहार बिदा
+DESCRIPTION:तिहार बिदा / Tihar holiday\nका
+ त्तिक ७\, २०८२\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:chhath-2460976@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251027
+DTEND;VALUE=DATE:20251028
+SUMMARY:छठ पर्व
+DESCRIPTION:छठ पर्व / Chhath\nकात्तिक १०\, 
+ २०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:balaChaturdashi-2460999@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251119
+DTEND;VALUE=DATE:20251120
+SUMMARY:बाला चतुर्दशी
+DESCRIPTION:बाला चतुर्दशी / Bala Chaturdashi\n
+ मंसिर ३\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:vivahPanchami-2461005@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251125
+DTEND;VALUE=DATE:20251126
+SUMMARY:विवाह पञ्चमी
+DESCRIPTION:विवाह पञ्चमी / Vivah Panchami\nमं
+ सिर ९\, २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:udhauli-2461014@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251204
+DTEND;VALUE=DATE:20251205
+SUMMARY:उधौली पर्व / योमरी पुन्ही
+DESCRIPTION:उधौली पर्व / योमरी पु
+ न्ही / Udhauli / Yomari Punhi\nमंसिर १८\, २०८
+ २\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-2461035@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251225
+DTEND;VALUE=DATE:20251226
+SUMMARY:क्रिसमस
+DESCRIPTION:क्रिसमस / Christmas\nपुस १०\, २०८
+ २\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:tamuLhosar-2461040@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20251230
+DTEND;VALUE=DATE:20251231
+SUMMARY:तमु ल्होसार
+DESCRIPTION:तमु ल्होसार / Tamu Lhosar\nपुस १५
+ \, २०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:prithvi-2461052@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260111
+DTEND;VALUE=DATE:20260112
+SUMMARY:पृथ्वी जयन्ती / राष्ट्रिय
+  एकता दिवस
+DESCRIPTION:पृथ्वी जयन्ती / रा
+ ष्ट्रिय एकता दिवस / Prithvi Jayanti / Nation
+ al Unity Day\nपुस २७\, २०८२\nसार्वजनिक
+  बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:maghe-2461056@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260115
+DTEND;VALUE=DATE:20260116
+SUMMARY:माघे संक्रान्ति
+DESCRIPTION:माघे संक्रान्ति / Maghe Sankranti\n
+ माघ १\, २०८२\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:sonamLhosar-2461060@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260119
+DTEND;VALUE=DATE:20260120
+SUMMARY:सोनाम ल्होसार
+DESCRIPTION:सोनाम ल्होसार / Sonam Lhosar\nमाघ
+  ५\, २०८२\nसार्वजनिक बिदा / Public hol
+ iday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:basantaPanchami-2461064@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260123
+DTEND;VALUE=DATE:20260124
+SUMMARY:बसन्त पञ्चमी / सरस्वती पू
+ जा
+DESCRIPTION:बसन्त पञ्चमी / सरस्वती 
+ पूजा / Basanta Panchami / Saraswati Puja\nमाघ ९\, २०
+ ८२\nHoliday for schools
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:shahid-2461071@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260130
+DTEND;VALUE=DATE:20260131
+SUMMARY:शहीद दिवस
+DESCRIPTION:शहीद दिवस / Martyrs' Day\nमाघ १६\, 
+ २०८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:shivaratri-2461087@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260215
+DTEND;VALUE=DATE:20260216
+SUMMARY:महाशिवरात्रि
+DESCRIPTION:महाशिवरात्रि / Maha Shivaratri\nफा
+ गुन ३\, २०८२\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:gyalpoLhosar-2461090@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260218
+DTEND;VALUE=DATE:20260219
+SUMMARY:ग्याल्पो ल्होसार
+DESCRIPTION:ग्याल्पो ल्होसार / Gyalpo Lhosar\
+ nफागुन ६\, २०८२\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:prajatantra-2461091@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260219
+DTEND;VALUE=DATE:20260220
+SUMMARY:प्रजातन्त्र दिवस
+DESCRIPTION:प्रजातन्त्र दिवस / Democracy Day\
+ nफागुन ७\, २०८२\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:holi-2461102@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260302
+DTEND;VALUE=DATE:20260303
+SUMMARY:फागु पूर्णिमा (होली)
+DESCRIPTION:फागु पूर्णिमा (होली) / Fagu Pur
+ nima (Holi)\nफागुन १८\, २०८२\nसार्वज
+ निक बिदा / Public holiday\nHill and mountain districts
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:holiTerai-2461103@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260303
+DTEND;VALUE=DATE:20260304
+SUMMARY:होली (तराई)
+DESCRIPTION:होली (तराई) / Holi (Terai)\nफागुन १
+ ९\, २०८२\nसार्वजनिक बिदा / Public holi
+ day\nTerai districts
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:womensDay-2461108@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260308
+DTEND;VALUE=DATE:20260309
+SUMMARY:अन्तर्राष्ट्रिय नारी दि
+ वस
+DESCRIPTION:अन्तर्राष्ट्रिय नारी 
+ दिवस / International Women's Day\nफागुन २४\, २०
+ ८२\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghodeJatra-2461118@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260318
+DTEND;VALUE=DATE:20260319
+SUMMARY:घोडेजात्रा
+DESCRIPTION:घोडेजात्रा / Ghode Jatra\nचैत ४\, 
+ २०८२\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eidFitr-2461121@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260321
+DTEND;VALUE=DATE:20260322
+SUMMARY:रमजान इद (इद उल फित्र)
+DESCRIPTION:रमजान इद (इद उल फित्र) / Eid al
+ -Fitr\nचैत ७\, २०८२\nHoliday for the Muslim community\; ma
+ y shift with moon sighting
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:chaiteDashain-2461126@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260326
+DTEND;VALUE=DATE:20260327
+SUMMARY:चैते दशैं
+DESCRIPTION:चैते दशैं / Chaite Dashain\nचैत १२\, 
+ २०८२
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ramNavami-2461127@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260327
+DTEND;VALUE=DATE:20260328
+SUMMARY:श्रीराम नवमी
+DESCRIPTION:श्रीराम नवमी / Ram Navami\nचैत १
+ ३\, २०८२\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:newyear-2461145@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260414
+DTEND;VALUE=DATE:20260415
+SUMMARY:नयाँ वर्ष
+DESCRIPTION:नयाँ वर्ष / Nepali New Year\nबैशाख 
+ १\, २०८३\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mataTirtha-2461148@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260417
+DTEND;VALUE=DATE:20260418
+SUMMARY:मातातीर्थ औंसी (आमाको मुख
+  हेर्ने दिन)
+DESCRIPTION:मातातीर्थ औंसी (आमाको 
+ मुख हेर्ने दिन) / Mata Tirtha Aunsi (Mother's Day)
+ \nबैशाख ४\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:labourDay-2461162@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260501
+DTEND;VALUE=DATE:20260502
+SUMMARY:अन्तर्राष्ट्रिय श्रमिक 
+ दिवस
+DESCRIPTION:अन्तर्राष्ट्रिय श्रमि
+ क दिवस / International Labour Day\nबैशाख १८\, २
+ ०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:buddhaJayanti-2461162@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260501
+DTEND;VALUE=DATE:20260502
+SUMMARY:बुद्ध जयन्ती / उभौली पर्व
+DESCRIPTION:बुद्ध जयन्ती / उभौली प
+ र्व / Buddha Jayanti / Ubhauli\nबैशाख १८\, २०८
+ ३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eidAdha-2461188@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260527
+DTEND;VALUE=DATE:20260528
+SUMMARY:बकर इद (इद उल अजहा)
+DESCRIPTION:बकर इद (इद उल अजहा) / Eid al-Adha\n
+ जेठ १३\, २०८३\nHoliday for the Muslim community\; may sh
+ ift with moon sighting
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ganatantra-2461190@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260529
+DTEND;VALUE=DATE:20260530
+SUMMARY:गणतन्त्र दिवस
+DESCRIPTION:गणतन्त्र दिवस / Republic Day\nजेठ
+  १५\, २०८३\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:sithiNakha-2461212@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260620
+DTEND;VALUE=DATE:20260621
+SUMMARY:सिथि नख:
+DESCRIPTION:सिथि नख: / Sithi Nakha\nअसार ६\, २०
+ ८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:dhanDiwas-2461221@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260629
+DTEND;VALUE=DATE:20260630
+SUMMARY:राष्ट्रिय धान दिवस (असार 
+ १५)
+DESCRIPTION:राष्ट्रिय धान दिवस (असा
+ र १५) / National Paddy Day (Asar 15)\nअसार १५\, २०
+ ८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:saune-2461239@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260717
+DTEND;VALUE=DATE:20260718
+SUMMARY:साउने संक्रान्ति
+DESCRIPTION:साउने संक्रान्ति / Saune Sankrant
+ i\nसाउन १\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghantakarna-2461264@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260811
+DTEND;VALUE=DATE:20260812
+SUMMARY:घण्टाकर्ण चतुर्दशी (गठे
+ मंगल)
+DESCRIPTION:घण्टाकर्ण चतुर्दशी (गठे
+ मंगल) / Ghantakarna (Gathemangal)\nसाउन २६\, २०८
+ ३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:nagPanchami-2461270@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260817
+DTEND;VALUE=DATE:20260818
+SUMMARY:नाग पञ्चमी
+DESCRIPTION:नाग पञ्चमी / Nag Panchami\nभदौ १\, 
+ २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:janaiPurnima-2461281@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:जनै पूर्णिमा / रक्षा बन्ध
+ न
+DESCRIPTION:जनै पूर्णिमा / रक्षा ब
+ न्धन / Janai Purnima / Raksha Bandhan\nभदौ १२\, २०
+ ८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:gaiJatra-2461282@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260829
+DTEND;VALUE=DATE:20260830
+SUMMARY:गाईजात्रा
+DESCRIPTION:गाईजात्रा / Gai Jatra\nभदौ १३\, २
+ ०८३\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:janmashtami-2461288@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260904
+DTEND;VALUE=DATE:20260905
+SUMMARY:श्रीकृष्ण जन्माष्टमी
+DESCRIPTION:श्रीकृष्ण जन्माष्टमी / Kr
+ ishna Janmashtami\nभदौ १९\, २०८३\nसार्वज
+ निक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kusheAunsi-2461295@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260911
+DTEND;VALUE=DATE:20260912
+SUMMARY:कुशे औंसी (बुबाको मुख हे
+ र्ने दिन)
+DESCRIPTION:कुशे औंसी (बुबाको मुख हे
+ र्ने दिन) / Kushe Aunsi (Father's Day)\nभदौ २६\, 
+ २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:teej-2461298@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260914
+DTEND;VALUE=DATE:20260915
+SUMMARY:हरितालिका तीज
+DESCRIPTION:हरितालिका तीज / Haritalika Teej\nभ
+ दौ २९\, २०८३\nHoliday for women
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:rishiPanchami-2461300@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260916
+DTEND;VALUE=DATE:20260917
+SUMMARY:ऋषि पञ्चमी
+DESCRIPTION:ऋषि पञ्चमी / Rishi Panchami\nभदौ ३१
+ \, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:constitution-2461303@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260919
+DTEND;VALUE=DATE:20260920
+SUMMARY:संविधान दिवस
+DESCRIPTION:संविधान दिवस / Constitution Day\nअ
+ सोज ३\, २०८३\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:indraJatra-2461309@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20260925
+DTEND;VALUE=DATE:20260926
+SUMMARY:इन्द्रजात्रा
+DESCRIPTION:इन्द्रजात्रा / Indra Jatra\nअसो
+ ज ९\, २०८३\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:jitiya-2461318@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261005
+SUMMARY:जितिया पर्व
+DESCRIPTION:जितिया पर्व / Jitiya\nअसोज १८\,
+  २०८३\nHoliday for women observing Jitiya
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghatasthapana-2461325@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261011
+DTEND;VALUE=DATE:20261012
+SUMMARY:घटस्थापना
+DESCRIPTION:घटस्थापना / Ghatasthapana\nअसोज २
+ ५\, २०८३\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpati-2461332@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261018
+DTEND;VALUE=DATE:20261019
+SUMMARY:फूलपाती
+DESCRIPTION:फूलपाती / Fulpati\nकात्तिक १\, 
+ २०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mahaAshtami-2461333@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261019
+DTEND;VALUE=DATE:20261020
+SUMMARY:महाअष्टमी
+DESCRIPTION:महाअष्टमी / Maha Ashtami\nकात्ति
+ क २\, २०८३\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mahaNavami-2461334@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261020
+DTEND;VALUE=DATE:20261021
+SUMMARY:महानवमी
+DESCRIPTION:महानवमी / Maha Navami\nकात्तिक ३\
+ , २०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:dashami-2461335@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261021
+DTEND;VALUE=DATE:20261022
+SUMMARY:विजया दशमी
+DESCRIPTION:विजया दशमी / Vijaya Dashami\nका
+ त्तिक ४\, २०८३\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpatiBlock-2461336@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261022
+DTEND;VALUE=DATE:20261023
+SUMMARY:दशैं बिदा
+DESCRIPTION:दशैं बिदा / Dashain holiday\nकात्ति
+ क ५\, २०८३\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpatiBlock-2461337@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261023
+DTEND;VALUE=DATE:20261024
+SUMMARY:दशैं बिदा
+DESCRIPTION:दशैं बिदा / Dashain holiday\nकात्ति
+ क ६\, २०८३\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kojagrat-2461340@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261027
+SUMMARY:कोजाग्रत पूर्णिमा
+DESCRIPTION:कोजाग्रत पूर्णिमा / Kojagrat Pu
+ rnima\nकात्तिक ९\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kaagTihar-2461352@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261107
+DTEND;VALUE=DATE:20261108
+SUMMARY:काग तिहार
+DESCRIPTION:काग तिहार / Kaag Tihar\nकात्तिक 
+ २१\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kukurTihar-2461353@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261109
+SUMMARY:कुकुर तिहार
+DESCRIPTION:कुकुर तिहार / Kukur Tihar\nका
+ त्तिक २२\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPuja-2461353@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261109
+SUMMARY:लक्ष्मी पूजा
+DESCRIPTION:लक्ष्मी पूजा / Laxmi Puja\nका
+ त्तिक २२\, २०८३\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPujaBlock-2461354@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261109
+DTEND;VALUE=DATE:20261110
+SUMMARY:तिहार बिदा
+DESCRIPTION:तिहार बिदा / Tihar holiday\nका
+ त्तिक २३\, २०८३\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:govardhan-2461355@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261110
+DTEND;VALUE=DATE:20261111
+SUMMARY:गोवर्धन पूजा / म्ह पूजा / 
+ नेपाल संवत् नयाँ वर्ष
+DESCRIPTION:गोवर्धन पूजा / म्ह पूजा / 
+ नेपाल संवत् नयाँ वर्ष / Govardhan Puja
+  / Mha Puja / Nepal Sambat New Year\nकात्तिक २४\, २०
+ ८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:bhaiTika-2461356@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+SUMMARY:भाइटीका
+DESCRIPTION:भाइटीका / Bhai Tika\nकात्तिक २५
+ \, २०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPujaBlock-2461357@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+SUMMARY:तिहार बिदा
+DESCRIPTION:तिहार बिदा / Tihar holiday\nका
+ त्तिक २६\, २०८३\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:chhath-2461360@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261115
+DTEND;VALUE=DATE:20261116
+SUMMARY:छठ पर्व
+DESCRIPTION:छठ पर्व / Chhath\nकात्तिक २९\, 
+ २०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:balaChaturdashi-2461382@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261207
+DTEND;VALUE=DATE:20261208
+SUMMARY:बाला चतुर्दशी
+DESCRIPTION:बाला चतुर्दशी / Bala Chaturdashi\n
+ मंसिर २१\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:vivahPanchami-2461389@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261214
+DTEND;VALUE=DATE:20261215
+SUMMARY:विवाह पञ्चमी
+DESCRIPTION:विवाह पञ्चमी / Vivah Panchami\nमं
+ सिर २८\, २०८३
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:udhauli-2461399@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20261225
+SUMMARY:उधौली पर्व / योमरी पुन्ही
+DESCRIPTION:उधौली पर्व / योमरी पु
+ न्ही / Udhauli / Yomari Punhi\nपुस ९\, २०८३\n
+ सार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-2461400@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261225
+DTEND;VALUE=DATE:20261226
+SUMMARY:क्रिसमस
+DESCRIPTION:क्रिसमस / Christmas\nपुस १०\, २०८
+ ३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:tamuLhosar-2461405@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20261230
+DTEND;VALUE=DATE:20261231
+SUMMARY:तमु ल्होसार
+DESCRIPTION:तमु ल्होसार / Tamu Lhosar\nपुस १५
+ \, २०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:prithvi-2461417@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270111
+DTEND;VALUE=DATE:20270112
+SUMMARY:पृथ्वी जयन्ती / राष्ट्रिय
+  एकता दिवस
+DESCRIPTION:पृथ्वी जयन्ती / रा
+ ष्ट्रिय एकता दिवस / Prithvi Jayanti / Nation
+ al Unity Day\nपुस २७\, २०८३\nसार्वजनिक
+  बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:maghe-2461421@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270115
+DTEND;VALUE=DATE:20270116
+SUMMARY:माघे संक्रान्ति
+DESCRIPTION:माघे संक्रान्ति / Maghe Sankranti\n
+ माघ १\, २०८३\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:shahid-2461436@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270130
+DTEND;VALUE=DATE:20270131
+SUMMARY:शहीद दिवस
+DESCRIPTION:शहीद दिवस / Martyrs' Day\nमाघ १६\, 
+ २०८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:sonamLhosar-2461444@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270207
+DTEND;VALUE=DATE:20270208
+SUMMARY:सोनाम ल्होसार
+DESCRIPTION:सोनाम ल्होसार / Sonam Lhosar\nमाघ
+  २४\, २०८३\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:basantaPanchami-2461448@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270211
+DTEND;VALUE=DATE:20270212
+SUMMARY:बसन्त पञ्चमी / सरस्वती पू
+ जा
+DESCRIPTION:बसन्त पञ्चमी / सरस्वती 
+ पूजा / Basanta Panchami / Saraswati Puja\nमाघ २८\, २
+ ०८३\nHoliday for schools
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:prajatantra-2461456@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270219
+DTEND;VALUE=DATE:20270220
+SUMMARY:प्रजातन्त्र दिवस
+DESCRIPTION:प्रजातन्त्र दिवस / Democracy Day\
+ nफागुन ७\, २०८३\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:shivaratri-2461471@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270306
+DTEND;VALUE=DATE:20270307
+SUMMARY:महाशिवरात्रि
+DESCRIPTION:महाशिवरात्रि / Maha Shivaratri\nफा
+ गुन २२\, २०८३\nसार्वजनिक बिदा 
+ / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:womensDay-2461473@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270308
+DTEND;VALUE=DATE:20270309
+SUMMARY:अन्तर्राष्ट्रिय नारी दि
+ वस
+DESCRIPTION:अन्तर्राष्ट्रिय नारी 
+ दिवस / International Women's Day\nफागुन २४\, २०
+ ८३\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:gyalpoLhosar-2461474@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270309
+DTEND;VALUE=DATE:20270310
+SUMMARY:ग्याल्पो ल्होसार
+DESCRIPTION:ग्याल्पो ल्होसार / Gyalpo Lhosar\
+ nफागुन २५\, २०८३\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eidFitr-2461475@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270310
+DTEND;VALUE=DATE:20270311
+SUMMARY:रमजान इद (इद उल फित्र)
+DESCRIPTION:रमजान इद (इद उल फित्र) / Eid al
+ -Fitr\nफागुन २६\, २०८३\nHoliday for the Muslim commu
+ nity\; may shift with moon sighting
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:holi-2461486@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270321
+DTEND;VALUE=DATE:20270322
+SUMMARY:फागु पूर्णिमा (होली)
+DESCRIPTION:फागु पूर्णिमा (होली) / Fagu Pur
+ nima (Holi)\nचैत ७\, २०८३\nसार्वजनिक 
+ बिदा / Public holiday\nHill and mountain districts
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:holiTerai-2461487@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270322
+DTEND;VALUE=DATE:20270323
+SUMMARY:होली (तराई)
+DESCRIPTION:होली (तराई) / Holi (Terai)\nचैत ८\, २
+ ०८३\nसार्वजनिक बिदा / Public holiday\nTera
+ i districts
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghodeJatra-2461502@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270406
+DTEND;VALUE=DATE:20270407
+SUMMARY:घोडेजात्रा
+DESCRIPTION:घोडेजात्रा / Ghode Jatra\nचैत २३\
+ , २०८३\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:newyear-2461510@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270414
+DTEND;VALUE=DATE:20270415
+SUMMARY:नयाँ वर्ष
+DESCRIPTION:नयाँ वर्ष / Nepali New Year\nबैशाख 
+ १\, २०८४\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:chaiteDashain-2461510@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270414
+DTEND;VALUE=DATE:20270415
+SUMMARY:चैते दशैं
+DESCRIPTION:चैते दशैं / Chaite Dashain\nबैशाख १
+ \, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ramNavami-2461511@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270415
+DTEND;VALUE=DATE:20270416
+SUMMARY:श्रीराम नवमी
+DESCRIPTION:श्रीराम नवमी / Ram Navami\nबैशा
+ ख २\, २०८४\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:labourDay-2461527@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270501
+DTEND;VALUE=DATE:20270502
+SUMMARY:अन्तर्राष्ट्रिय श्रमिक 
+ दिवस
+DESCRIPTION:अन्तर्राष्ट्रिय श्रमि
+ क दिवस / International Labour Day\nबैशाख १८\, २
+ ०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mataTirtha-2461532@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270506
+DTEND;VALUE=DATE:20270507
+SUMMARY:मातातीर्थ औंसी (आमाको मुख
+  हेर्ने दिन)
+DESCRIPTION:मातातीर्थ औंसी (आमाको 
+ मुख हेर्ने दिन) / Mata Tirtha Aunsi (Mother's Day)
+ \nबैशाख २३\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eidAdha-2461543@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270518
+SUMMARY:बकर इद (इद उल अजहा)
+DESCRIPTION:बकर इद (इद उल अजहा) / Eid al-Adha\n
+ जेठ ३\, २०८४\nHoliday for the Muslim community\; may shift
+  with moon sighting
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:buddhaJayanti-2461546@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270520
+DTEND;VALUE=DATE:20270521
+SUMMARY:बुद्ध जयन्ती / उभौली पर्व
+DESCRIPTION:बुद्ध जयन्ती / उभौली प
+ र्व / Buddha Jayanti / Ubhauli\nजेठ ६\, २०८४\nसा
+ र्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ganatantra-2461555@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270529
+DTEND;VALUE=DATE:20270530
+SUMMARY:गणतन्त्र दिवस
+DESCRIPTION:गणतन्त्र दिवस / Republic Day\nजेठ
+  १५\, २०८४\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:sithiNakha-2461567@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270610
+DTEND;VALUE=DATE:20270611
+SUMMARY:सिथि नख:
+DESCRIPTION:सिथि नख: / Sithi Nakha\nजेठ २७\, २०
+ ८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:dhanDiwas-2461586@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270629
+DTEND;VALUE=DATE:20270630
+SUMMARY:राष्ट्रिय धान दिवस (असार 
+ १५)
+DESCRIPTION:राष्ट्रिय धान दिवस (असा
+ र १५) / National Paddy Day (Asar 15)\nअसार १५\, २०
+ ८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:saune-2461604@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270717
+DTEND;VALUE=DATE:20270718
+SUMMARY:साउने संक्रान्ति
+DESCRIPTION:साउने संक्रान्ति / Saune Sankrant
+ i\nसाउन १\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghantakarna-2461619@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270801
+DTEND;VALUE=DATE:20270802
+SUMMARY:घण्टाकर्ण चतुर्दशी (गठे
+ मंगल)
+DESCRIPTION:घण्टाकर्ण चतुर्दशी (गठे
+ मंगल) / Ghantakarna (Gathemangal)\nसाउन १६\, २०८
+ ४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:nagPanchami-2461624@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270806
+DTEND;VALUE=DATE:20270807
+SUMMARY:नाग पञ्चमी
+DESCRIPTION:नाग पञ्चमी / Nag Panchami\nसाउन २
+ १\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:janaiPurnima-2461635@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270817
+DTEND;VALUE=DATE:20270818
+SUMMARY:जनै पूर्णिमा / रक्षा बन्ध
+ न
+DESCRIPTION:जनै पूर्णिमा / रक्षा ब
+ न्धन / Janai Purnima / Raksha Bandhan\nभदौ १\, २०८
+ ४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:gaiJatra-2461636@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270818
+DTEND;VALUE=DATE:20270819
+SUMMARY:गाईजात्रा
+DESCRIPTION:गाईजात्रा / Gai Jatra\nभदौ २\, २०
+ ८४\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:janmashtami-2461643@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270825
+DTEND;VALUE=DATE:20270826
+SUMMARY:श्रीकृष्ण जन्माष्टमी
+DESCRIPTION:श्रीकृष्ण जन्माष्टमी / Kr
+ ishna Janmashtami\nभदौ ९\, २०८४\nसार्वजनि
+ क बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kusheAunsi-2461649@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270831
+DTEND;VALUE=DATE:20270901
+SUMMARY:कुशे औंसी (बुबाको मुख हे
+ र्ने दिन)
+DESCRIPTION:कुशे औंसी (बुबाको मुख हे
+ र्ने दिन) / Kushe Aunsi (Father's Day)\nभदौ १५\, 
+ २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:teej-2461652@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270903
+DTEND;VALUE=DATE:20270904
+SUMMARY:हरितालिका तीज
+DESCRIPTION:हरितालिका तीज / Haritalika Teej\nभ
+ दौ १८\, २०८४\nHoliday for women
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:rishiPanchami-2461654@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270905
+DTEND;VALUE=DATE:20270906
+SUMMARY:ऋषि पञ्चमी
+DESCRIPTION:ऋषि पञ्चमी / Rishi Panchami\nभदौ २०
+ \, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:indraJatra-2461663@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270914
+DTEND;VALUE=DATE:20270915
+SUMMARY:इन्द्रजात्रा
+DESCRIPTION:इन्द्रजात्रा / Indra Jatra\nभदौ 
+ २९\, २०८४\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:constitution-2461668@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270919
+DTEND;VALUE=DATE:20270920
+SUMMARY:संविधान दिवस
+DESCRIPTION:संविधान दिवस / Constitution Day\nअ
+ सोज ३\, २०८४\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:jitiya-2461672@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270923
+DTEND;VALUE=DATE:20270924
+SUMMARY:जितिया पर्व
+DESCRIPTION:जितिया पर्व / Jitiya\nअसोज ७\, 
+ २०८४\nHoliday for women observing Jitiya
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghatasthapana-2461679@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20270930
+DTEND;VALUE=DATE:20271001
+SUMMARY:घटस्थापना
+DESCRIPTION:घटस्थापना / Ghatasthapana\nअसोज १
+ ४\, २०८४\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpati-2461685@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271006
+DTEND;VALUE=DATE:20271007
+SUMMARY:फूलपाती
+DESCRIPTION:फूलपाती / Fulpati\nअसोज २०\, २०
+ ८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mahaAshtami-2461686@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271007
+DTEND;VALUE=DATE:20271008
+SUMMARY:महाअष्टमी
+DESCRIPTION:महाअष्टमी / Maha Ashtami\nअसोज २१
+ \, २०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:mahaNavami-2461687@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271008
+DTEND;VALUE=DATE:20271009
+SUMMARY:महानवमी
+DESCRIPTION:महानवमी / Maha Navami\nअसोज २२\, २
+ ०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:dashami-2461688@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271009
+DTEND;VALUE=DATE:20271010
+SUMMARY:विजया दशमी
+DESCRIPTION:विजया दशमी / Vijaya Dashami\nअसोज २
+ ३\, २०८४\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpatiBlock-2461689@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271010
+DTEND;VALUE=DATE:20271011
+SUMMARY:दशैं बिदा
+DESCRIPTION:दशैं बिदा / Dashain holiday\nअसोज २
+ ४\, २०८४\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fulpatiBlock-2461690@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271011
+DTEND;VALUE=DATE:20271012
+SUMMARY:दशैं बिदा
+DESCRIPTION:दशैं बिदा / Dashain holiday\nअसोज २
+ ५\, २०८४\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kojagrat-2461694@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271015
+DTEND;VALUE=DATE:20271016
+SUMMARY:कोजाग्रत पूर्णिमा
+DESCRIPTION:कोजाग्रत पूर्णिमा / Kojagrat Pu
+ rnima\nअसोज २९\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kaagTihar-2461706@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271027
+DTEND;VALUE=DATE:20271028
+SUMMARY:काग तिहार
+DESCRIPTION:काग तिहार / Kaag Tihar\nकात्तिक 
+ ११\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:kukurTihar-2461707@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271028
+DTEND;VALUE=DATE:20271029
+SUMMARY:कुकुर तिहार
+DESCRIPTION:कुकुर तिहार / Kukur Tihar\nका
+ त्तिक १२\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPuja-2461708@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271029
+DTEND;VALUE=DATE:20271030
+SUMMARY:लक्ष्मी पूजा
+DESCRIPTION:लक्ष्मी पूजा / Laxmi Puja\nका
+ त्तिक १३\, २०८४\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:govardhan-2461709@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271030
+DTEND;VALUE=DATE:20271031
+SUMMARY:गोवर्धन पूजा / म्ह पूजा / 
+ नेपाल संवत् नयाँ वर्ष
+DESCRIPTION:गोवर्धन पूजा / म्ह पूजा / 
+ नेपाल संवत् नयाँ वर्ष / Govardhan Puja
+  / Mha Puja / Nepal Sambat New Year\nकात्तिक १४\, २०
+ ८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:bhaiTika-2461710@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271031
+DTEND;VALUE=DATE:20271101
+SUMMARY:भाइटीका
+DESCRIPTION:भाइटीका / Bhai Tika\nकात्तिक १५
+ \, २०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:laxmiPujaBlock-2461711@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271101
+DTEND;VALUE=DATE:20271102
+SUMMARY:तिहार बिदा
+DESCRIPTION:तिहार बिदा / Tihar holiday\nका
+ त्तिक १६\, २०८४\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:chhath-2461714@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271104
+DTEND;VALUE=DATE:20271105
+SUMMARY:छठ पर्व
+DESCRIPTION:छठ पर्व / Chhath\nकात्तिक १९\, 
+ २०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:balaChaturdashi-2461737@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271127
+DTEND;VALUE=DATE:20271128
+SUMMARY:बाला चतुर्दशी
+DESCRIPTION:बाला चतुर्दशी / Bala Chaturdashi\n
+ मंसिर १२\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:vivahPanchami-2461743@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271203
+DTEND;VALUE=DATE:20271204
+SUMMARY:विवाह पञ्चमी
+DESCRIPTION:विवाह पञ्चमी / Vivah Panchami\nमं
+ सिर १८\, २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:udhauli-2461753@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271213
+DTEND;VALUE=DATE:20271214
+SUMMARY:उधौली पर्व / योमरी पुन्ही
+DESCRIPTION:उधौली पर्व / योमरी पु
+ न्ही / Udhauli / Yomari Punhi\nमंसिर २८\, २०८
+ ४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-2461765@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271225
+DTEND;VALUE=DATE:20271226
+SUMMARY:क्रिसमस
+DESCRIPTION:क्रिसमस / Christmas\nपुस १०\, २०८
+ ४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:tamuLhosar-2461770@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20271230
+DTEND;VALUE=DATE:20271231
+SUMMARY:तमु ल्होसार
+DESCRIPTION:तमु ल्होसार / Tamu Lhosar\nपुस १५
+ \, २०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:prithvi-2461782@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280111
+DTEND;VALUE=DATE:20280112
+SUMMARY:पृथ्वी जयन्ती / राष्ट्रिय
+  एकता दिवस
+DESCRIPTION:पृथ्वी जयन्ती / रा
+ ष्ट्रिय एकता दिवस / Prithvi Jayanti / Nation
+ al Unity Day\nपुस २७\, २०८४\nसार्वजनिक
+  बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:maghe-2461785@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280114
+DTEND;VALUE=DATE:20280115
+SUMMARY:माघे संक्रान्ति
+DESCRIPTION:माघे संक्रान्ति / Maghe Sankranti\n
+ माघ १\, २०८४\nसार्वजनिक बिदा / P
+ ublic holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:sonamLhosar-2461798@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280127
+DTEND;VALUE=DATE:20280128
+SUMMARY:सोनाम ल्होसार
+DESCRIPTION:सोनाम ल्होसार / Sonam Lhosar\nमाघ
+  १४\, २०८४\nसार्वजनिक बिदा / Public 
+ holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:shahid-2461800@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280129
+DTEND;VALUE=DATE:20280130
+SUMMARY:शहीद दिवस
+DESCRIPTION:शहीद दिवस / Martyrs' Day\nमाघ १६\, 
+ २०८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:basantaPanchami-2461803@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280201
+DTEND;VALUE=DATE:20280202
+SUMMARY:बसन्त पञ्चमी / सरस्वती पू
+ जा
+DESCRIPTION:बसन्त पञ्चमी / सरस्वती 
+ पूजा / Basanta Panchami / Saraswati Puja\nमाघ १९\, २
+ ०८४\nHoliday for schools
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:prajatantra-2461821@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280219
+DTEND;VALUE=DATE:20280220
+SUMMARY:प्रजातन्त्र दिवस
+DESCRIPTION:प्रजातन्त्र दिवस / Democracy Day\
+ nफागुन ७\, २०८४\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:shivaratri-2461825@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280223
+DTEND;VALUE=DATE:20280224
+SUMMARY:महाशिवरात्रि
+DESCRIPTION:महाशिवरात्रि / Maha Shivaratri\nफा
+ गुन ११\, २०८४\nसार्वजनिक बिदा 
+ / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:gyalpoLhosar-2461828@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280226
+DTEND;VALUE=DATE:20280227
+SUMMARY:ग्याल्पो ल्होसार
+DESCRIPTION:ग्याल्पो ल्होसार / Gyalpo Lhosar\
+ nफागुन १४\, २०८४\nसार्वजनिक बि
+ दा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eidFitr-2461829@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280227
+DTEND;VALUE=DATE:20280228
+SUMMARY:रमजान इद (इद उल फित्र)
+DESCRIPTION:रमजान इद (इद उल फित्र) / Eid al
+ -Fitr\nफागुन १५\, २०८४\nHoliday for the Muslim commu
+ nity\; may shift with moon sighting
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:womensDay-2461839@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280308
+DTEND;VALUE=DATE:20280309
+SUMMARY:अन्तर्राष्ट्रिय नारी दि
+ वस
+DESCRIPTION:अन्तर्राष्ट्रिय नारी 
+ दिवस / International Women's Day\nफागुन २५\, २०
+ ८४\nसार्वजनिक बिदा / Public holiday
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:holi-2461841@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280310
+DTEND;VALUE=DATE:20280311
+SUMMARY:फागु पूर्णिमा (होली)
+DESCRIPTION:फागु पूर्णिमा (होली) / Fagu Pur
+ nima (Holi)\nफागुन २७\, २०८४\nसार्वज
+ निक बिदा / Public holiday\nHill and mountain districts
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:holiTerai-2461842@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280311
+DTEND;VALUE=DATE:20280312
+SUMMARY:होली (तराई)
+DESCRIPTION:होली (तराई) / Holi (Terai)\nफागुन २
+ ८\, २०८४\nसार्वजनिक बिदा / Public holi
+ day\nTerai districts
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ghodeJatra-2461856@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280325
+DTEND;VALUE=DATE:20280326
+SUMMARY:घोडेजात्रा
+DESCRIPTION:घोडेजात्रा / Ghode Jatra\nचैत १२\
+ , २०८४\nHoliday in Kathmandu Valley
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:chaiteDashain-2461865@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280403
+DTEND;VALUE=DATE:20280404
+SUMMARY:चैते दशैं
+DESCRIPTION:चैते दशैं / Chaite Dashain\nचैत २१\, 
+ २०८४
+CATEGORIES:Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ramNavami-2461866@nepali-patro
+DTSTAMP:20261115T162757Z
+DTSTART;VALUE=DATE:20280404
+DTEND;VALUE=DATE:20280405
+SUMMARY:श्रीराम नवमी
+DESCRIPTION:श्रीराम नवमी / Ram Navami\nचैत २
+ २\, २०८४\nसार्वजनिक बिदा / Public holi
+ day
+CATEGORIES:Public Holiday
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR
