@@ -11,6 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Self-checks
-        run: swift run PatroChecks
+        run: swift run SambatChecks
       - name: Build all targets
         run: swift build -c release
