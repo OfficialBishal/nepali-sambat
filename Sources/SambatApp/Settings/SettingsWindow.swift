@@ -79,7 +79,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         tabs.tabStyle = .toolbar
         tabs.transitionOptions = [.allowUserInteraction]
         for tab in SettingsTab.allCases {
-            let host = NSHostingController(rootView: tab.content
+            let host = NSHostingController(rootView: AccentTinted { tab.content }
                 .frame(width: tab.size.width)
                 .frame(maxHeight: .infinity, alignment: .top)
                 .environment(model))
@@ -150,5 +150,16 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
             item.viewController?.title = tab.title(model)
         }
         window?.title = SettingsTab.allCases[tabs.selectedTabViewItemIndex].title(model)
+    }
+}
+
+/// Tints Settings' controls (switches, segmented controls, links) with the app's accent colour,
+/// so they match the popover.
+struct AccentTinted<Content: View>: View {
+    @Environment(AppModel.self) private var model
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        content.tint(model.palette.accent)
     }
 }

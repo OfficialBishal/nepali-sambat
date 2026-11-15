@@ -18,8 +18,8 @@ struct ConverterPage: View {
                 .font(.title3.weight(.semibold))
 
             PillPicker(selection: $model.convertDirection, items: [
-                (ConvertDirection.adToBS, model.t("AD to BS", "ईस्वीबाट विक्रम")),
-                (ConvertDirection.bsToAD, model.t("BS to AD", "विक्रमबाट ईस्वी")),
+                .init(ConvertDirection.adToBS, model.t("AD to BS", "ईस्वीबाट विक्रम")),
+                .init(ConvertDirection.bsToAD, model.t("BS to AD", "विक्रमबाट ईस्वी")),
             ])
 
             VStack(alignment: .leading, spacing: 10) {
@@ -113,26 +113,17 @@ struct BSDatePicker: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Picker("", selection: yearBinding) {
-                ForEach((BSCalendar.firstYear...BSCalendar.lastYear).reversed(), id: \.self) { y in
-                    Text(Formatter.digits(y, lang)).tag(y)
-                }
-            }
-            .frame(width: 78)
-            Picker("", selection: monthBinding) {
-                ForEach(1...12, id: \.self) { m in Text(Formatter.bsMonth(m, lang)).tag(m) }
-            }
-            .frame(width: 96)
-            Picker("", selection: $date.day) {
-                ForEach(1...(BSCalendar.daysInMonth(year: date.year, month: date.month) ?? 30), id: \.self) { d in
-                    Text(Formatter.digits(d, lang)).tag(d)
-                }
-            }
-            .frame(width: 62)
+            MenuField(title: lang == .nepali ? "दिन" : "Day", selection: $date.day,
+                      options: (1...(BSCalendar.daysInMonth(year: date.year, month: date.month) ?? 30)).map { ($0, Formatter.digits($0, lang)) })
+                .frame(width: 62)
+            MenuField(title: lang == .nepali ? "महिना" : "Month", selection: monthBinding,
+                      options: (1...12).map { ($0, Formatter.bsMonth($0, lang)) })
+                .frame(width: 112)
+            MenuField(title: lang == .nepali ? "साल" : "Year", selection: yearBinding,
+                      options: (BSCalendar.firstYear...BSCalendar.lastYear).reversed().map { ($0, Formatter.digits($0, lang)) })
+                .frame(width: 84)
             Spacer(minLength: 0)
         }
-        .labelsHidden()
-        .pickerStyle(.menu)
     }
 
     private var yearBinding: Binding<Int> {
@@ -164,22 +155,17 @@ struct ADDatePicker: View {
         let year = parts.year ?? 2026, month = parts.month ?? 1, day = parts.day ?? 1
         let first = ADDate(jdn: BSCalendar.firstJDN).year, last = ADDate(jdn: BSCalendar.endJDN - 1).year
         HStack(spacing: 6) {
-            Picker("", selection: Binding(get: { year }, set: { set(year: $0, month: month, day: day) })) {
-                ForEach((first...last).reversed(), id: \.self) { y in Text(verbatim: "\(y)").tag(y) }
-            }
-            .frame(width: 78)
-            Picker("", selection: Binding(get: { month }, set: { set(year: year, month: $0, day: day) })) {
-                ForEach(1...12, id: \.self) { m in Text(Formatter.adMonth(m, .english)).tag(m) }
-            }
-            .frame(width: 112)
-            Picker("", selection: Binding(get: { day }, set: { set(year: year, month: month, day: $0) })) {
-                ForEach(1...ADDate.daysInMonth(year: year, month: month), id: \.self) { d in Text(verbatim: "\(d)").tag(d) }
-            }
-            .frame(width: 62)
+            MenuField(title: "Day", selection: Binding(get: { day }, set: { set(year: year, month: month, day: $0) }),
+                      options: (1...ADDate.daysInMonth(year: year, month: month)).map { ($0, "\($0)") })
+                .frame(width: 62)
+            MenuField(title: "Month", selection: Binding(get: { month }, set: { set(year: year, month: $0, day: day) }),
+                      options: (1...12).map { ($0, Formatter.adMonth($0, .english)) })
+                .frame(width: 112)
+            MenuField(title: "Year", selection: Binding(get: { year }, set: { set(year: $0, month: month, day: day) }),
+                      options: (first...last).reversed().map { ($0, "\($0)") })
+                .frame(width: 84)
             Spacer(minLength: 0)
         }
-        .labelsHidden()
-        .pickerStyle(.menu)
     }
 
     private func set(year: Int, month: Int, day: Int) {

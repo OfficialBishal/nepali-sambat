@@ -22,11 +22,28 @@ struct PanelRoot: View {
             Divider()
             BottomBar()
         }
-        .frame(width: Self.size.width, height: Self.size.height)
+        .frame(width: Self.size.width)
+        .frame(maxHeight: .infinity)
         .tint(model.palette.accent)
-        .background {
-            if model.snapshotBackground { Color(nsColor: .windowBackgroundColor) }
-        }
+        .background { PanelSurface().ignoresSafeArea() }
+    }
+}
+
+/// The popover's own surface. The system popover glass adapts to whatever is behind it, so a Light
+/// popover over a dark desktop came out grey and low-contrast. This keeps Light light and Dark
+/// dark, and it reaches under the arrow (the popover uses full-size content).
+struct PanelSurface: View {
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        (scheme == .dark ? Color(white: 0.135) : Color(white: 0.975)).opacity(0.96)
+    }
+}
+
+/// The soft track every app-drawn control sits on: switchers, menus, icon groups.
+struct ControlTrack: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color.primary.opacity(0.07))
     }
 }
 
@@ -37,11 +54,14 @@ struct BottomBar: View {
         @Bindable var model = model
         HStack(spacing: 8) {
             PillPicker(selection: $model.page, items: [
-                (Page.calendar, model.t("Calendar", "पात्रो")),
-                (Page.converter, model.t("Convert", "रूपान्तरण")),
-                (Page.upcoming, model.t("Festivals", "चाडपर्व")),
-            ])
+                .init(Page.calendar, model.t("Calendar (⌘1)", "पात्रो (⌘1)"), symbol: "calendar"),
+                .init(Page.converter, model.t("Convert a date (⌘2)", "मिति रूपान्तरण (⌘2)"), symbol: "arrow.left.arrow.right"),
+                .init(Page.upcoming, model.t("Festivals (⌘3)", "चाडपर्व (⌘3)"), symbol: "sparkles"),
+            ], segmentWidth: 44)
+            .fixedSize()
             .accessibilityLabel(model.t("Page", "पृष्ठ"))
+
+            Spacer(minLength: 0)
 
             Menu {
                 Button(model.t("Settings…", "सेटिङ…")) {
@@ -67,7 +87,7 @@ struct BottomBar: View {
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
                     .frame(width: PillPicker<Page>.height + 4, height: PillPicker<Page>.height)
-                    .background(PillPicker<Page>.track)
+                    .background(ControlTrack())
                     .contentShape(Rectangle())
             }
             .menuStyle(.button)
@@ -90,14 +110,26 @@ struct BottomBar: View {
 /// A segmented control drawn the way current macOS draws one in a form: a soft track with the
 /// chosen segment raised. A native segmented control in a popover switches to a heavy accent
 /// fill, and greys out whenever the popover isn't the key window; this looks the same either way.
+/// Segments show a symbol (with the label as tooltip and spoken name) or the label itself.
 struct PillPicker<Value: Hashable>: View {
-    static var height: CGFloat { 26 }
-    static var track: some View {
-        RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color.primary.opacity(0.07))
+    struct Item {
+        let value: Value
+        let label: String
+        var symbol: String? = nil
+
+        init(_ value: Value, _ label: String, symbol: String? = nil) {
+            self.value = value
+            self.label = label
+            self.symbol = symbol
+        }
     }
 
+    static var height: CGFloat { 26 }
+
     @Binding var selection: Value
-    let items: [(Value, String)]
+    let items: [Item]
+    /// Fixed segment width (icon segments); nil shares the available width.
+    var segmentWidth: CGFloat? = nil
 
     @Namespace private var namespace
     @Environment(\.colorScheme) private var scheme
@@ -106,34 +138,77 @@ struct PillPicker<Value: Hashable>: View {
     var body: some View {
         HStack(spacing: 0) {
             ForEach(items.indices, id: \.self) { i in
-                let (value, label) = items[i]
-                let on = value == selection
+                let item = items[i]
+                let on = item.value == selection
                 Button {
-                    withAnimation(reduceMotion ? nil : .snappy(duration: 0.22)) { selection = value }
+                    withAnimation(reduceMotion ? nil : .snappy(duration: 0.22)) { selection = item.value }
                 } label: {
-                    Text(label)
-                        .font(.system(size: 12.5, weight: on ? .semibold : .regular))
-                        .foregroundStyle(on ? AnyShapeStyle(.primary) : AnyShapeStyle(.secondary))
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: Self.height - 4)
-                        .background {
-                            if on {
-                                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                    .fill(scheme == .dark ? Color.white.opacity(0.17) : Color.white)
-                                    .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.14), radius: 1.5, y: 0.5)
-                                    .matchedGeometryEffect(id: "selection", in: namespace)
-                            }
+                    Group {
+                        if let symbol = item.symbol {
+                            Image(systemName: symbol).font(.system(size: 13, weight: on ? .semibold : .regular))
+                        } else {
+                            Text(item.label).font(.system(size: 12.5, weight: on ? .semibold : .regular)).lineLimit(1)
                         }
-                        .contentShape(Rectangle())
+                    }
+                    .foregroundStyle(on ? AnyShapeStyle(.primary) : AnyShapeStyle(.secondary))
+                    .frame(maxWidth: segmentWidth == nil ? .infinity : nil)
+                    .frame(width: segmentWidth, height: Self.height - 4)
+                    .background {
+                        if on {
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .fill(scheme == .dark ? Color.white.opacity(0.17) : Color.white)
+                                .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.14), radius: 1.5, y: 0.5)
+                                .matchedGeometryEffect(id: "selection", in: namespace)
+                        }
+                    }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .help(item.symbol == nil ? "" : item.label)
+                .accessibilityLabel(item.label)
                 .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
             }
         }
         .padding(2)
-        .background(Self.track)
+        .background(ControlTrack())
         .accessibilityElement(children: .contain)
+    }
+}
+
+/// A pop-up menu in the app's control style: the value and a chevron on the soft track, instead of
+/// the native pop-up button's white bezel and accent badge.
+struct MenuField<Value: Hashable>: View {
+    let title: String
+    @Binding var selection: Value
+    let options: [(Value, String)]
+
+    var body: some View {
+        Menu {
+            Picker(title, selection: $selection) {
+                ForEach(options.indices, id: \.self) { i in Text(options[i].1).tag(options[i].0) }
+            }
+            .pickerStyle(.inline)
+            .labelsHidden()
+        } label: {
+            HStack(spacing: 6) {
+                Text(options.first { $0.0 == selection }?.1 ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, 9)
+            .frame(height: PillPicker<Value>.height)
+            .background(ControlTrack())
+            .contentShape(Rectangle())
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .menuIndicator(.hidden)
+        .accessibilityLabel(title)
     }
 }
 

@@ -20,6 +20,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         popover.contentViewController = hosting
         popover.contentSize = PanelRoot.size
         popover.behavior = .transient
+        popover.hasFullSizeContent = true
         popover.animates = true
         popover.delegate = self
 

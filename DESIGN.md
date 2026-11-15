@@ -8,7 +8,9 @@ Nepali Sambat is a native macOS utility. The design system is mostly macOS's own
 | --- | --- | --- |
 | Calendar popover | `NSPopover` (transient) hosting SwiftUI, 340 × 596 pt | System popover material (Liquid Glass on macOS 26+, vibrancy before). Fixed height so the bottom navigation never moves under the pointer. |
 | Settings | `NSTabViewController` with `.toolbar` tabs, one `Form(.grouped)` per tab | Window resizes per tab, top edge fixed. Footers are leading-aligned secondary text. |
-| Bottom bar | `PillPicker` (Calendar, Convert, Festivals) filling the width, and a gear menu in a matching tile | Drawn like the macOS 26 segmented control in a form: a soft track with the chosen segment raised. The native control switches to a heavy accent fill in a popover and greys out when the popover isn't key; this looks the same in every state. The converter's AD/BS switch uses the same control. |
+| Popover surface | `PanelSurface` behind everything, reaching under the arrow (`hasFullSizeContent`) | Near-white (97.5% white) in Light, near-black (13.5%) in Dark, at 96% opacity. The system glass adapts to what's behind it, so a Light popover over a dark desktop came out grey; the app's own surface keeps Light light. |
+| App-drawn controls | `ControlTrack` (8 pt continuous corners, 7% primary) under every control the app draws | `PillPicker` (segmented: the chosen segment raised in white, or 17% white in Dark), `MenuField` (pop-up menu: value plus a chevron), and icon groups. The native segmented control and pop-up button switch to accent fills and badges inside a popover and grey out when it isn't key, so the popover uses these instead. |
+| Bottom bar | Icon `PillPicker` (calendar, convert arrows, sparkles) on the left, the gear menu in a matching tile on the right | Icons carry tooltips with the page name and shortcut (⌘1–⌘3) and VoiceOver labels. |
 | Widgets | WidgetKit, `containerBackground(.background)` | Same month grid as the popover, non-interactive. |
 | Menu bar | `NSStatusItem` with menu-bar font text or a template glyph | Right-click shows a standard `NSMenu`. |
 
@@ -53,7 +55,7 @@ Sentence case for every label and header. No uppercase tracked labels, no middle
 
 ## Icon buttons
 
-Where an action is secondary and its symbol is unambiguous, it is a borderless icon button (`IconButton`) with a tooltip and a spoken label: copy and "show in calendar" beside a converted date, the public-holidays filter on Festivals (filled in the accent when on). Navigation, "Today" and Settings keep text.
+Where an action's symbol is unambiguous, it is a borderless icon button (`IconButton`) with a tooltip and a spoken label: previous month, today (a target dot, dimmed when you're already there) and next month on one track; copy and "show in calendar" beside a converted date; the public-holidays filter on Festivals (filled in the accent when on); the page switcher. Settings tint their native controls with the accent.
 
 ## Calendar page
 

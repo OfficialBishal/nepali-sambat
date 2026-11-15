@@ -59,7 +59,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 self.model.settings.language = ui
                 self.model.settings.calendarLanguage = cal
                 self.model.settings.accent = accent
-                self.model.snapshotBackground = true
                 self.model.selectedJDN = name.hasPrefix("dark") ? self.model.todayJDN + 7 : nil
             }
             for page in Page.allCases {
@@ -76,7 +75,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 steps.append { [weak self] in
                     guard let self else { return }
                     let size = tab.size(self.model)
-                    OffscreenRenderer.render(tab.content.frame(width: size.width, height: size.height).environment(self.model),
+                    OffscreenRenderer.render(AccentTinted { tab.content }.frame(width: size.width, height: size.height).environment(self.model),
                                              size: size, appearance: appearance.nsAppearance,
                                              to: dir.appendingPathComponent("\(name)-settings-\(tab.rawValue).png"))
                 }

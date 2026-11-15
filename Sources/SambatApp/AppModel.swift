@@ -48,8 +48,6 @@ final class AppModel {
     var selectedJDN: Int?
     /// Month navigation direction, for the slide transition.
     var monthStep = 0
-    /// Debug snapshots paint the popover material, which can't be captured offscreen.
-    var snapshotBackground = false
     var panelVisible = false {
         didSet { scheduleTick() }
     }

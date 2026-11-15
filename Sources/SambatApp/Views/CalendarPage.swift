@@ -199,18 +199,20 @@ struct MonthBar: View {
                     .foregroundStyle(.quiet)
             }
             Spacer(minLength: 0)
-            ControlGroup {
-                Button { model.step(months: -1) } label: { Image(systemName: "chevron.left") }
-                    .help(model.t("Previous month (←)", "अघिल्लो महिना (←)"))
-                    .accessibilityLabel(model.t("Previous month", "अघिल्लो महिना"))
-                Button(model.t("Today", "आज")) { model.goToToday() }
-                    .help(model.t("Go to today (T)", "आजको मिति (T)"))
-                    .disabled(model.isShowingCurrentMonth && model.selectedJDN == nil)
-                Button { model.step(months: 1) } label: { Image(systemName: "chevron.right") }
-                    .help(model.t("Next month (→)", "अर्को महिना (→)"))
-                    .accessibilityLabel(model.t("Next month", "अर्को महिना"))
+            HStack(spacing: 0) {
+                IconButton(symbol: "chevron.left", label: model.t("Previous month (←)", "अघिल्लो महिना (←)")) {
+                    model.step(months: -1)
+                }
+                IconButton(symbol: "smallcircle.filled.circle", label: model.t("Go to today (T)", "आजको मिति (T)")) {
+                    model.goToToday()
+                }
+                .disabled(model.isShowingCurrentMonth && model.selectedJDN == nil)
+                IconButton(symbol: "chevron.right", label: model.t("Next month (→)", "अर्को महिना (→)")) {
+                    model.step(months: 1)
+                }
             }
-            .controlSize(.small)
+            .padding(1)
+            .background(ControlTrack())
             .fixedSize()
         }
     }
