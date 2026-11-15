@@ -25,8 +25,7 @@ struct CalendarPage: View {
                       otherTodayJDN: s.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN,
                       selectedJDN: model.selectedJDN,
                       lang: model.cal, palette: model.palette,
-                      metrics: .init(cellHeight: 42, numeralRow: 18, numeralTop: 2,
-                                     showAD: s.showAD, showTithi: s.showTithi),
+                      metrics: .init(showCorner: s.showAD, showTithi: s.showTithi),
                       onSelect: { model.select($0) })
                 .padding(.horizontal, 16)
                 .id(model.displayYear * 12 + model.displayMonth)
@@ -293,7 +292,6 @@ struct DayDetail: View {
 /// shrinks the popover to the month; the choice is remembered.
 struct DaySection: View {
     @Environment(AppModel.self) private var model
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 0) {
@@ -314,9 +312,11 @@ struct DaySection: View {
                         .padding(.leading, 6)
                 }
                 Spacer(minLength: 6)
+                // No SwiftUI animation here: the popover animates its own size, and animating the
+                // layout as well made the month above shift while the two caught up.
                 IconButton(symbol: model.sectionHidden ? "chevron.up" : "chevron.down",
                            label: model.sectionHidden ? model.t("Show", "देखाउनुहोस्") : model.t("Hide", "लुकाउनुहोस्")) {
-                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { model.sectionHidden.toggle() }
+                    model.sectionHidden.toggle()
                 }
             }
             .padding(.horizontal, 10)
@@ -326,7 +326,6 @@ struct DaySection: View {
                     if let jdn = model.selectedJDN { DayDetail(jdn: jdn) } else { UpcomingScroll() }
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
-                .transition(.opacity)
             }
         }
     }

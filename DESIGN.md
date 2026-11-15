@@ -48,9 +48,10 @@ Sentence case for every label and header. No uppercase tracked labels, no middle
 
 - A box grid, as in a printed patro: every day a box drawn with 0.5 pt hairlines (`BoxLines`, 10% primary), inner and outer edges. Only the rows a month needs (five or six); with "Coming up" shown, it absorbs the difference, and with it hidden the popover follows the month.
 - Sunday first; weekday initials in the calendar language above the boxes, Saturday in holiday red.
-- Each box reads in three lines: festival dot on the left and the AD day on the right (the 1st carries the month: "1 Nov"); the BS numeral; the tithi at a fixed size.
-- A day is marked by its whole box (`DayMark`, square): filled with the accent for today, with all its text in `onAccent`; a 10% primary tint for the selection; a 1.5 pt outline for today on the other clock; a 5% tint on hover. The converter's AD and BS grids use the same boxes.
-- Festival marker (`EventDot`), the same everywhere (grid, lists, widgets): a red dot for a public holiday, a red ring for a regional holiday, a tan dot for a festival. Holiday status is also always written out in text in the detail, lists and converter.
+- Each box: the numeral at the exact centre; pinned to the top edge, the festival dot on the left and the other calendar's day on the right (the 1st carries the month: "1 Nov"); pinned to the bottom edge, the tithi, with room for Devanagari marks below the letters and 2 pt side padding so it never crosses the box lines. Boxes are 46 pt tall.
+- A day is marked by its whole box (`DayMark`, square): filled with the accent for today, with all its text in `onAccent`; a 10% primary tint for the selection; a 1.5 pt outline for today on the other clock; a 5% tint on hover.
+- Festival dot (`EventDot`) in the grid only where the numeral can't say it: a tan dot for a festival, a red ring for a regional holiday, and a red dot on today's filled box when today is a public holiday. A red numeral already means holiday. Lists and the detail use the same dots, and always write holiday status out in text.
+- One grid for both calendars (`DayGrid`): `MonthGrid` lays out a BS month; `ADMonthGrid`, used by the converter, lays out an AD month mirrored, with the AD day at the centre and the BS day in the corner. The converter's BS grid is the calendar's grid.
 - Every box has a full VoiceOver label.
 
 ## Calendar page

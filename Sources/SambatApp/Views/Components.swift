@@ -11,9 +11,8 @@ struct PanelRoot: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        // With the section under the month hidden, the popover hugs the month; otherwise it keeps
-        // one height on every page, so the bottom bar never moves under the pointer.
-        let compact = model.page == .calendar && model.sectionHidden
+        // One layout in every state, pinned to the top: when the popover resizes, only its bottom
+        // edge moves and the month stays put.
         VStack(spacing: 0) {
             ZStack {
                 switch model.page {
@@ -22,9 +21,8 @@ struct PanelRoot: View {
                 case .upcoming: UpcomingPage().transition(.opacity)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: compact ? nil : .infinity, alignment: .top)
+            .frame(maxWidth: .infinity, maxHeight: measuring ? nil : .infinity, alignment: .top)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: model.page)
-            if compact && !measuring { Spacer(minLength: 0) }
             Divider()
             BottomBar()
         }

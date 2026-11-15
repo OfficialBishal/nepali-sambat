@@ -226,9 +226,8 @@ struct MonthWidgetContent: View {
                     .foregroundStyle(.quiet)
             }
             MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: cal, palette: palette,
-                      metrics: .init(cellHeight: rows == 6 ? 45 : 53, numeralSize: 15, numeralRow: 20,
-                                     numeralTop: rows == 6 ? 3 : 7,
-                                     showAD: true, showTithi: entry.settings.showTithi, interactive: false))
+                      metrics: .init(cellHeight: rows == 6 ? 45 : 53,
+                                     showCorner: true, showTithi: entry.settings.showTithi, interactive: false))
             Spacer(minLength: 0)
             HStack(spacing: 10) {
                 HStack(spacing: 4) {

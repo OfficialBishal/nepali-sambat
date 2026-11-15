@@ -13,10 +13,9 @@ struct ConverterPage: View {
         @Bindable var model = model
         let jdn = resultJDN
         let other = model.settings.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN
+        let s = model.settings
+        let metrics = GridMetrics(showCorner: s.showAD, showTithi: s.showTithi)
         VStack(alignment: .leading, spacing: 14) {
-            Text(model.t("Convert a date", "मिति रूपान्तरण"))
-                .font(.title3.weight(.semibold))
-
             PillPicker(selection: $model.convertDirection, items: [
                 .init(ConvertDirection.adToBS, model.t("AD to BS", "ईस्वीबाट विक्रम")),
                 .init(ConvertDirection.bsToAD, model.t("BS to AD", "विक्रमबाट ईस्वी")),
@@ -25,21 +24,21 @@ struct ConverterPage: View {
             VStack(alignment: .leading, spacing: 10) {
                 if model.convertDirection == .adToBS {
                     ADDatePicker(date: $model.convertAD)
-                    ADMonthGrid(selected: JDN.of(model.convertAD, in: .current), todayJDN: model.todayJDN,
-                                otherTodayJDN: other, palette: model.palette) { jdn in
+                    let chosen = ADDate(jdn: JDN.of(model.convertAD, in: .current))
+                    ADMonthGrid(year: chosen.year, month: chosen.month, todayJDN: model.todayJDN, otherTodayJDN: other,
+                                selectedJDN: chosen.jdn, lang: model.cal, palette: model.palette, metrics: metrics) { jdn in
                         model.convertAD = JDN.startOfDay(jdn, in: .current).addingTimeInterval(12 * 3600)
                     }
                 } else {
                     BSDatePicker(date: $model.convertBS, lang: model.cal)
                     MonthGrid(year: model.convertBS.year, month: model.convertBS.month,
                               todayJDN: model.todayJDN, otherTodayJDN: other, selectedJDN: model.convertBS.jdn,
-                              lang: model.cal, palette: model.palette,
-                              metrics: .init(cellHeight: 29, numeralSize: 13, numeralRow: 29, numeralTop: 0,
-                                             showAD: false, showTithi: false),
+                              lang: model.cal, palette: model.palette, metrics: metrics,
                               onSelect: { jdn in if let d = BSDate(jdn: jdn) { model.convertBS = d } })
                 }
             }
-            .frame(height: 230, alignment: .top)
+            // Room for six rows, so the result below doesn't move between months.
+            .frame(height: 36 + 15 + 6 * metrics.cellHeight, alignment: .top)
             .onChange(of: model.convertDirection) { copied = false }
 
             Divider()
@@ -172,60 +171,5 @@ struct ADDatePicker: View {
         let d = min(day, ADDate.daysInMonth(year: year, month: month))
         let jdn = min(max(ADDate(year: year, month: month, day: d).jdn, BSCalendar.firstJDN), BSCalendar.endJDN - 1)
         date = JDN.startOfDay(jdn, in: .current).addingTimeInterval(12 * 3600)
-    }
-}
-
-/// A Gregorian month drawn like the Nepali grid, as boxes: today's box in the accent, the chosen day
-/// tinted, today on the other clock outlined. Only the rows the month needs; the space it sits in
-/// has a fixed height, so the result below never moves.
-struct ADMonthGrid: View {
-    let selected: Int
-    let todayJDN: Int
-    var otherTodayJDN: Int? = nil
-    let palette: Palette
-    let onSelect: (Int) -> Void
-
-    var body: some View {
-        let ad = ADDate(jdn: selected)
-        let start = JDN.from(year: ad.year, month: ad.month, day: 1)
-        let length = ADDate.daysInMonth(year: ad.year, month: ad.month)
-        let lead = JDN.weekday(start)
-        let rows = (lead + length + 6) / 7
-        VStack(spacing: 0) {
-            WeekdayHeader(lang: .english)
-            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                ForEach(0..<rows, id: \.self) { row in
-                    GridRow {
-                        ForEach(0..<7, id: \.self) { col in
-                            let index = row * 7 + col - lead
-                            if index >= 0 && index < length {
-                                cell(jdn: start + index, day: index + 1)
-                            } else {
-                                Color.clear.frame(maxWidth: .infinity).frame(height: 29)
-                            }
-                        }
-                    }
-                }
-            }
-            .background(BoxLines(rows: rows, columns: 7))
-        }
-    }
-
-    private func cell(jdn: Int, day: Int) -> some View {
-        let isSelected = jdn == selected && jdn != todayJDN
-        let isToday = jdn == todayJDN
-        let isOther = jdn == otherTodayJDN && otherTodayJDN != todayJDN
-        return Text(verbatim: "\(day)")
-            .font(.system(size: 13, weight: isToday ? .semibold : .regular))
-            .monospacedDigit()
-            .foregroundStyle(isToday ? AnyShapeStyle(palette.onAccent) : AnyShapeStyle(.primary))
-            .frame(maxWidth: .infinity)
-            .frame(height: 29)
-            .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOther, accent: palette.accent) }
-        .contentShape(Rectangle())
-        .onTapGesture { onSelect(jdn) }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Formatter.adLong(ADDate(jdn: jdn), .english))
-        .accessibilityAddTraits(jdn == selected ? [.isButton, .isSelected] : .isButton)
     }
 }
