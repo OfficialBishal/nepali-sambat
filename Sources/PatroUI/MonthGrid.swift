@@ -107,7 +107,7 @@ struct DayCell: View {
     let onSelect: ((Int) -> Void)?
 
     @Environment(\.colorSchemeContrast) private var contrast
-    private var hovered = State(initialValue: false)
+    var hovered = State(initialValue: false)
 
     var body: some View {
         let ad = ADDate(jdn: jdn)
