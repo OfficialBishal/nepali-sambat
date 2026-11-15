@@ -176,7 +176,8 @@ struct ADDatePicker: View {
 }
 
 /// A Gregorian month drawn like the Nepali grid, as boxes: today's box in the accent, the chosen day
-/// tinted, today on the other clock outlined. Always six rows, so the result below never moves.
+/// tinted, today on the other clock outlined. Only the rows the month needs; the space it sits in
+/// has a fixed height, so the result below never moves.
 struct ADMonthGrid: View {
     let selected: Int
     let todayJDN: Int
@@ -189,10 +190,11 @@ struct ADMonthGrid: View {
         let start = JDN.from(year: ad.year, month: ad.month, day: 1)
         let length = ADDate.daysInMonth(year: ad.year, month: ad.month)
         let lead = JDN.weekday(start)
+        let rows = (lead + length + 6) / 7
         VStack(spacing: 0) {
             WeekdayHeader(lang: .english)
             Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                ForEach(0..<6, id: \.self) { row in
+                ForEach(0..<rows, id: \.self) { row in
                     GridRow {
                         ForEach(0..<7, id: \.self) { col in
                             let index = row * 7 + col - lead
@@ -205,7 +207,7 @@ struct ADMonthGrid: View {
                     }
                 }
             }
-            .background(BoxLines(rows: 6, columns: 7))
+            .background(BoxLines(rows: rows, columns: 7))
         }
     }
 

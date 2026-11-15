@@ -14,14 +14,14 @@ public struct MonthGrid: View {
         public var numeralTop: CGFloat
         /// Horizontal inset of the day mark.
         public var markInset: CGFloat
-        /// Always draw at least this many rows, so the grid keeps one height from month to month.
+        /// Draw at least this many rows (0: only the rows the month needs).
         public var minRows: Int
         public var showAD: Bool
         public var showTithi: Bool
         public var interactive: Bool
 
         public init(cellHeight: CGFloat = 44, numeralSize: CGFloat = 15, numeralRow: CGFloat = 26, numeralTop: CGFloat = 6,
-                    markInset: CGFloat = 0, minRows: Int = 6,
+                    markInset: CGFloat = 0, minRows: Int = 0,
                     showAD: Bool = true, showTithi: Bool = true, interactive: Bool = true) {
             self.cellHeight = cellHeight
             self.numeralSize = numeralSize

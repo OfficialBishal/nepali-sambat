@@ -51,6 +51,8 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
             _ = model.settings.appearance
             _ = model.page
             _ = model.sectionHidden
+            _ = model.displayYear
+            _ = model.displayMonth
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.updateButton()

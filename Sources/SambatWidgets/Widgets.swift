@@ -214,6 +214,7 @@ struct MonthWidgetContent: View {
         let bs = BSDate(jdn: entry.jdn) ?? BSDate(year: 2083, month: 1, day: 1)
         let start = BSCalendar.startJDN(year: bs.year, month: bs.month) ?? entry.jdn
         let len = BSCalendar.daysInMonth(year: bs.year, month: bs.month) ?? 30
+        let rows = MonthGrid.rows(year: bs.year, month: bs.month)
         let a = ADDate(jdn: start), b = ADDate(jdn: start + len - 1)
         let todayEvent = FestivalEngine.shared.events(on: entry.jdn).first { $0.category != .observance }
         VStack(alignment: .leading, spacing: 6) {
@@ -225,7 +226,8 @@ struct MonthWidgetContent: View {
                     .foregroundStyle(.quiet)
             }
             MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: cal, palette: palette,
-                      metrics: .init(cellHeight: 45, numeralSize: 15, numeralRow: 20, numeralTop: 3,
+                      metrics: .init(cellHeight: rows == 6 ? 45 : 53, numeralSize: 15, numeralRow: 20,
+                                     numeralTop: rows == 6 ? 3 : 7,
                                      showAD: true, showTithi: entry.settings.showTithi, interactive: false))
             Spacer(minLength: 0)
             HStack(spacing: 10) {

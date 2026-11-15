@@ -46,7 +46,7 @@ Sentence case for every label and header. No uppercase tracked labels, no middle
 
 ## The patro grid (`SambatUI.MonthGrid`)
 
-- A box grid, as in a printed patro: every day a box drawn with 0.5 pt hairlines (`BoxLines`, 10% primary), inner and outer edges. Always six rows, so the grid keeps one height from month to month.
+- A box grid, as in a printed patro: every day a box drawn with 0.5 pt hairlines (`BoxLines`, 10% primary), inner and outer edges. Only the rows a month needs (five or six); with "Coming up" shown, it absorbs the difference, and with it hidden the popover follows the month.
 - Sunday first; weekday initials in the calendar language above the boxes, Saturday in holiday red.
 - Each box reads in three lines: festival dot on the left and the AD day on the right (the 1st carries the month: "1 Nov"); the BS numeral; the tithi at a fixed size.
 - A day is marked by its whole box (`DayMark`, square): filled with the accent for today, with all its text in `onAccent`; a 10% primary tint for the selection; a 1.5 pt outline for today on the other clock; a 5% tint on hover. The converter's AD and BS grids use the same boxes.
