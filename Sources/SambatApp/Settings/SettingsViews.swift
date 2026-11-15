@@ -72,7 +72,7 @@ struct GeneralSettings: View {
     }
 
     private func sample(_ lang: Language) -> String {
-        "\(Formatter.bsMonth(model.today.month, lang)) \(Formatter.digits(model.today.day, lang))"
+        Formatter.dateShort(model.today, lang)
     }
 
     private var basisFooter: String {

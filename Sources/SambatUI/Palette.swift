@@ -16,58 +16,58 @@ extension NSColor {
     }
 }
 
-/// The app's whole color vocabulary. Everything else uses system semantic colors.
+/// The app's whole color vocabulary: neutral system greys, plus three colours with one job each.
+/// The accent marks today and the selection, brick red marks holidays (as a printed patro does),
+/// and a warm tan marks festivals. Everything else uses system semantic colors.
 public struct Palette: Sendable {
     /// Today and the current selection.
     public let accent: Color
     /// Text drawn on top of `accent`.
     public let onAccent: Color
 
-    /// Holidays and Saturdays, as printed in red in a Nepali patro (crimson from the flag).
-    public static let holiday = Color(nsColor: .adaptive(light: 0xC0122C, dark: 0xFF6B70))
+    /// Holidays and Saturdays, in the red a printed patro uses: a warm brick red rather than a
+    /// saturated crimson, so a month full of holidays isn't loud.
+    public static let holiday = Color(nsColor: .adaptive(light: 0xB8342E, dark: 0xEF756B))
+    /// Festival markers that aren't holidays.
+    public static let festival = Color(nsColor: .adaptive(light: 0x9A6F45, dark: 0xCDA27A))
 
     public init(_ choice: AccentChoice) {
         switch choice {
+        case .blue:
+            accent = Color(nsColor: .adaptive(light: 0x2864DC, dark: 0x4D8DF7))
+            onAccent = .white
+        case .teal:
+            accent = Color(nsColor: .adaptive(light: 0x0B7782, dark: 0x3DBFC8))
+            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x052A2E))
+        case .green:
+            accent = Color(nsColor: .adaptive(light: 0x2E7A45, dark: 0x5BC47D))
+            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x0B2A14))
+        case .purple:
+            accent = Color(nsColor: .adaptive(light: 0x6747C7, dark: 0xA68DFF))
+            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x1C0F3D))
+        case .graphite:
+            accent = Color(nsColor: .adaptive(light: 0x545862, dark: 0xB2B6BE))
+            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x1C1C1E))
         case .system:
             accent = Color(nsColor: .controlAccentColor)
             onAccent = .white
-        case .blue:
-            accent = Color(nsColor: .adaptive(light: 0x1D4FB8, dark: 0x5E8EF7))
-            onAccent = .white
-        case .teal:
-            accent = Color(nsColor: .adaptive(light: 0x00707A, dark: 0x3CC2CC))
-            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x06272A))
-        case .green:
-            accent = Color(nsColor: .adaptive(light: 0x2F7A34, dark: 0x5DC46B))
-            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x0B2A10))
-        case .marigold:
-            accent = Color(nsColor: .adaptive(light: 0xA85F00, dark: 0xF5A623))
-            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x2E1A00))
-        case .purple:
-            accent = Color(nsColor: .adaptive(light: 0x6E45C2, dark: 0xA98BFF))
-            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x1C0F3D))
-        case .graphite:
-            accent = Color(nsColor: .adaptive(light: 0x56565C, dark: 0xB0B0B6))
-            onAccent = Color(nsColor: .adaptive(light: 0xFFFFFF, dark: 0x1C1C1E))
         }
     }
 
     public static func name(_ choice: AccentChoice, _ lang: Language) -> String {
         switch (choice, lang) {
-        case (.system, .english): return "System"
-        case (.system, .nepali): return "सिस्टम"
         case (.blue, .english): return "Blue"
         case (.blue, .nepali): return "नीलो"
         case (.teal, .english): return "Teal"
         case (.teal, .nepali): return "टिल"
         case (.green, .english): return "Green"
         case (.green, .nepali): return "हरियो"
-        case (.marigold, .english): return "Marigold"
-        case (.marigold, .nepali): return "सयपत्री"
         case (.purple, .english): return "Jacaranda"
         case (.purple, .nepali): return "जकरान्डा"
         case (.graphite, .english): return "Graphite"
         case (.graphite, .nepali): return "ग्राफाइट"
+        case (.system, .english): return "macOS accent color"
+        case (.system, .nepali): return "म्याकको मुख्य रङ"
         }
     }
 }
@@ -97,7 +97,7 @@ public extension ShapeStyle where Self == Color {
 }
 
 /// The one festival marker, used in the grid, lists and widgets. Fill carries the meaning as well
-/// as colour: a red dot is a public holiday, a red ring a regional holiday, a grey dot a festival.
+/// as colour: a red dot is a public holiday, a red ring a regional holiday, a tan dot a festival.
 public struct EventDot: View {
     public enum Kind: Sendable { case publicHoliday, regionalHoliday, festival }
 
@@ -121,10 +121,26 @@ public struct EventDot: View {
             switch kind {
             case .publicHoliday: Circle().fill(Palette.holiday)
             case .regionalHoliday: Circle().strokeBorder(Palette.holiday, lineWidth: max(1, size * 0.22))
-            case .festival: Circle().fill(Color.primary.opacity(0.45))
+            case .festival: Circle().fill(Palette.festival)
             }
         }
         .frame(width: size, height: size)
         .accessibilityHidden(true)
+    }
+}
+
+/// The SF Symbol for the moon phase of a tithi.
+public enum MoonIcon {
+    public static func name(for tithi: Int) -> String {
+        switch tithi {
+        case 30: return "moonphase.new.moon"
+        case 1...3: return "moonphase.waxing.crescent"
+        case 4...7: return "moonphase.first.quarter"
+        case 8...14: return "moonphase.waxing.gibbous"
+        case 15: return "moonphase.full.moon"
+        case 16...22: return "moonphase.waning.gibbous"
+        case 23...26: return "moonphase.last.quarter"
+        default: return "moonphase.waning.crescent"
+        }
     }
 }

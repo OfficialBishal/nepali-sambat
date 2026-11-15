@@ -35,7 +35,7 @@ func describe(jdn: Int) {
     guard let bs = BSDate(jdn: jdn) else { fail("Date is outside \(BSCalendar.firstYear)–\(BSCalendar.lastYear) BS") }
     let ad = ADDate(jdn: jdn)
     let p = Panchang.shared.day(jdn)
-    print("\(Formatter.dateLong(bs, lang)), \(Formatter.weekday(JDN.weekday(jdn), lang))")
+    print(Formatter.dateFull(bs, weekday: JDN.weekday(jdn), lang))
     print("\(Formatter.weekday(JDN.weekday(jdn), .english)), \(Formatter.adLong(ad, .english))")
     print(Formatter.tithiName(p, lang))
     for e in FestivalEngine.shared.events(on: jdn) {
@@ -121,7 +121,7 @@ case "upcoming", "next":
     for e in list {
         let bs = BSDate(jdn: e.jdn)!
         let ad = ADDate(jdn: e.jdn)
-        let date = "\(Formatter.bsMonth(bs.month, lang)) \(Formatter.digits(bs.day, lang))"
+        let date = Formatter.dateShort(bs, lang)
         print("\(date.padding(toLength: 12, withPad: " ", startingAt: 0)) \(Formatter.adShort(ad, .english).padding(toLength: 7, withPad: " ", startingAt: 0))  \(e.name(lang))\(e.isPublicHoliday ? " ★" : "")  (\(Formatter.relativeDays(e.jdn - today, lang)))")
     }
 

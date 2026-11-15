@@ -55,7 +55,13 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
     }
 
     private func updateAppearance() {
-        popover.appearance = model.settings.appearance.nsAppearance
+        // Set app-wide, not only on the popover: otherwise AppKit controls hosted by SwiftUI (pop-up
+        // buttons) and the popover material can resolve to the system's appearance while the rest of
+        // the content uses the app's, leaving light controls on a dark popover or the reverse.
+        let appearance = model.settings.appearance.nsAppearance
+        NSApp.appearance = appearance
+        popover.appearance = appearance
+        popover.contentViewController?.view.window?.appearance = appearance
     }
 
     private func updateButton() {
@@ -79,7 +85,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
 
     private func tooltip() -> String {
         let jdn = model.todayJDN
-        return "\(Formatter.dateLong(model.today, model.cal)), \(Formatter.weekday(JDN.weekday(jdn), model.cal))\n\(Formatter.adLong(ADDate(jdn: jdn), .english))"
+        return "\(Formatter.dateFull(model.today, weekday: JDN.weekday(jdn), model.cal))\n\(Formatter.adLong(ADDate(jdn: jdn), .english))"
     }
 
     // MARK: Popover
@@ -178,29 +184,31 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
     @objc private func openSettings() { model.openSettings(.general) }
     @objc private func quit() { NSApp.terminate(nil) }
     @objc private func copyToday() {
-        Clipboard.copy("\(Formatter.dateLong(model.today, model.cal)), \(Formatter.weekday(JDN.weekday(model.todayJDN), model.cal))")
+        Clipboard.copy(Formatter.dateFull(model.today, weekday: JDN.weekday(model.todayJDN), model.cal))
     }
 }
 
 #if DEBUG
-extension StatusBarController {
-    /// Debug builds only: renders the popover's pages to PNG files for visual review.
-    func snapshotSteps(to dir: URL, prefix: String) -> [() -> Void] {
-        var steps: [() -> Void] = []
-        for page in Page.allCases {
-            steps.append { [weak self] in
-                guard let self else { return }
-                self.closePopover()
-                self.model.page = page
-                self.openPopover(page: page)
-            }
-            steps.append { [weak self] in
-                guard let self, let view = self.popover.contentViewController?.view else { return }
-                SnapshotWriter.write(view: view, appearance: self.popover.effectiveAppearance,
-                                     to: dir.appendingPathComponent("\(prefix)-\(page.rawValue).png"), material: true)
-            }
+/// Debug builds only: draws a SwiftUI view to PNG in a window that is never put on screen.
+@MainActor
+enum OffscreenRenderer {
+    private static var windows: [NSWindow] = []
+
+    static func render<V: View>(_ view: V, size: CGSize, appearance: NSAppearance?, to url: URL) {
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: size), styleMask: [.borderless],
+                              backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.appearance = appearance
+        let host = NSHostingView(rootView: view)
+        host.frame = NSRect(origin: .zero, size: size)
+        window.contentView = host
+        windows.append(window)
+        // Give SwiftUI a run loop turn to build the view, then draw it.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            host.layoutSubtreeIfNeeded()
+            SnapshotWriter.write(view: host, appearance: window.effectiveAppearance, to: url, material: true)
+            windows.removeAll { $0 === window }
         }
-        return steps
     }
 }
 

@@ -63,9 +63,16 @@ public enum Formatter {
         }
     }
 
-    /// "कात्तिक २९, २०८३" / "Kartik 29, 2083"
+    // Dates are written day, month, year, the way Nepalis write them.
+
+    /// "२९ कात्तिक २०८३" / "29 Kartik 2083"
     public static func dateLong(_ bs: BSDate, _ lang: Language) -> String {
-        "\(bsMonth(bs.month, lang)) \(digits(bs.day, lang)), \(digits(bs.year, lang))"
+        "\(digits(bs.day, lang)) \(bsMonth(bs.month, lang)) \(digits(bs.year, lang))"
+    }
+
+    /// "२९ कात्तिक" / "29 Kartik"
+    public static func dateShort(_ bs: BSDate, _ lang: Language) -> String {
+        "\(digits(bs.day, lang)) \(bsMonth(bs.month, lang))"
     }
 
     /// "२०८३/०७/२९"
@@ -73,20 +80,24 @@ public enum Formatter {
         "\(digits(bs.year, lang))\(separator)\(padded(bs.month, lang))\(separator)\(padded(bs.day, lang))"
     }
 
-    /// "November 15, 2026"
+    /// "15 November 2026"
     public static func adLong(_ ad: ADDate, _ lang: Language) -> String {
-        "\(adMonth(ad.month, lang)) \(digits(ad.day, lang)), \(digits(ad.year, lang))"
+        "\(digits(ad.day, lang)) \(adMonth(ad.month, lang)) \(digits(ad.year, lang))"
     }
 
-    /// "Nov 15", with a no-break space so it never splits across lines.
+    /// "15 Nov 2026"
+    public static func adMedium(_ ad: ADDate, _ lang: Language) -> String {
+        "\(digits(ad.day, lang))\u{00A0}\(adMonth(ad.month, lang, short: true)) \(digits(ad.year, lang))"
+    }
+
+    /// "15 Nov", with a no-break space so it never splits across lines.
     public static func adShort(_ ad: ADDate, _ lang: Language) -> String {
-        "\(adMonth(ad.month, lang, short: true))\u{00A0}\(digits(ad.day, lang))"
+        "\(digits(ad.day, lang))\u{00A0}\(adMonth(ad.month, lang, short: true))"
     }
 
-    /// The one long BS format, weekday first: "Monday, Kartik 30, 2083" / "सोमबार, कात्तिक ३०, २०८३".
+    /// The one long BS format, weekday first: "Monday, 30 Kartik 2083" / "सोमबार, ३० कात्तिक २०८३".
     public static func dateFull(_ bs: BSDate, weekday: Int, _ lang: Language, year: Bool = true) -> String {
-        let date = year ? dateLong(bs, lang) : "\(bsMonth(bs.month, lang)) \(digits(bs.day, lang))"
-        return "\(Self.weekday(weekday, lang)), \(date)"
+        "\(Self.weekday(weekday, lang)), \(year ? dateLong(bs, lang) : dateShort(bs, lang))"
     }
 
     public static func tithiOnly(_ tithi: Int, _ lang: Language) -> String {

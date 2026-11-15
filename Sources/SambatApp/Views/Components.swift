@@ -273,18 +273,3 @@ struct FactRow: View {
         }
     }
 }
-
-enum MoonIcon {
-    static func name(for tithi: Int) -> String {
-        switch tithi {
-        case 30: return "moonphase.new.moon"
-        case 1...3: return "moonphase.waxing.crescent"
-        case 4...7: return "moonphase.first.quarter"
-        case 8...14: return "moonphase.waxing.gibbous"
-        case 15: return "moonphase.full.moon"
-        case 16...22: return "moonphase.waning.gibbous"
-        case 23...26: return "moonphase.last.quarter"
-        default: return "moonphase.waning.crescent"
-        }
-    }
-}

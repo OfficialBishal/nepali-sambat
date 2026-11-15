@@ -34,7 +34,7 @@ struct ConverterPage: View {
                     MonthGrid(year: model.convertBS.year, month: model.convertBS.month,
                               todayJDN: model.todayJDN, otherTodayJDN: other, selectedJDN: model.convertBS.jdn,
                               lang: model.cal, palette: model.palette,
-                              metrics: .init(cellHeight: 25, numeralSize: 12.5, circle: 21, circleTop: 2,
+                              metrics: .init(cellHeight: 25, numeralSize: 12.5, numeralRow: 21, numeralTop: 2,
                                              showAD: false, showTithi: false),
                               onSelect: { jdn in if let d = BSDate(jdn: jdn) { model.convertBS = d } })
                 }
@@ -103,7 +103,7 @@ struct ConverterPage: View {
     private func primaryResult(_ jdn: Int) -> String {
         switch model.convertDirection {
         case .adToBS: return model.bsLong(jdn)
-        case .bsToAD: return "\(Formatter.weekday(JDN.weekday(jdn), .english)), \(Formatter.adLong(ADDate(jdn: jdn), .english))"
+        case .bsToAD: return "\(Formatter.weekday(JDN.weekday(jdn), .english)), \(Formatter.adLong(ADDate(jdn: jdn), .english))" // "Monday, 16 November 2026"
         }
     }
 }
@@ -191,8 +191,8 @@ struct ADDatePicker: View {
     }
 }
 
-/// A Gregorian month drawn like the Nepali grid: today in the accent circle, the chosen day in grey,
-/// and today on the other clock as a ring. Always six rows, so the result below never moves.
+/// A Gregorian month drawn like the Nepali grid: today's cell in the accent, the chosen day tinted,
+/// and today on the other clock outlined. Always six rows, so the result below never moves.
 struct ADMonthGrid: View {
     let selected: Int
     let todayJDN: Int
@@ -235,22 +235,13 @@ struct ADMonthGrid: View {
         let isSelected = jdn == selected && jdn != todayJDN
         let isToday = jdn == todayJDN
         let isOther = jdn == otherTodayJDN && otherTodayJDN != todayJDN
-        return ZStack {
-            if isToday {
-                Circle().fill(palette.accent)
-            } else if isSelected {
-                Circle().fill(Color.primary.opacity(0.1))
-            } else if isOther {
-                Circle().strokeBorder(Color.primary.opacity(0.45), lineWidth: 1)
-            }
-            Text(verbatim: "\(day)")
-                .font(.system(size: 12.5, weight: isToday ? .semibold : .regular))
-                .monospacedDigit()
-                .foregroundStyle(isToday ? AnyShapeStyle(palette.onAccent) : AnyShapeStyle(.primary))
-        }
-        .frame(width: 21, height: 21)
-        .frame(maxWidth: .infinity)
-        .frame(height: 25)
+        return Text(verbatim: "\(day)")
+            .font(.system(size: 12.5, weight: isToday ? .semibold : .regular))
+            .monospacedDigit()
+            .foregroundStyle(isToday ? AnyShapeStyle(palette.onAccent) : AnyShapeStyle(.primary))
+            .frame(maxWidth: .infinity)
+            .frame(height: 25)
+            .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOther, accent: palette.accent) }
         .contentShape(Rectangle())
         .onTapGesture { onSelect(jdn) }
         .accessibilityElement(children: .ignore)

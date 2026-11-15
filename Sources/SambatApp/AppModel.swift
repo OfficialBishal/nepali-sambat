@@ -17,11 +17,29 @@ enum ConvertDirection: String {
 final class AppModel {
     var settings: AppSettings {
         didSet {
-            guard settings != oldValue else { return }
+            guard settings != oldValue, !Self.isRendering else { return }
             settings.save()
             settingsChanged(from: oldValue)
         }
     }
+
+    /// Debug renders change settings to draw each configuration. They must never touch the real
+    /// saved settings, the widgets' settings file or scheduled notifications.
+    nonisolated static var isRenderingProcess: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["PATRO_SNAPSHOT_DIR"] != nil
+        #else
+        return false
+        #endif
+    }
+
+    static let isRendering: Bool = {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["PATRO_SNAPSHOT_DIR"] != nil
+        #else
+        return false
+        #endif
+    }()
 
     var now = AppModel.currentDate()
     var page: Page = .calendar
@@ -59,6 +77,7 @@ final class AppModel {
         displayMonth = today.month
         convertBS = today
         lastTodayJDN = JDN.of(AppModel.currentDate(), in: s.basis.timeZone)
+        guard !Self.isRendering else { return }
         s.shared.save()
         observeSystem()
         scheduleTick()
@@ -85,7 +104,7 @@ final class AppModel {
 
     // One format per kind of value, used on every screen.
 
-    /// BS date with weekday first, in the calendar language: "Monday, Kartik 30, 2083".
+    /// BS date with weekday first, in the calendar language: "Monday, 30 Kartik 2083".
     func bsLong(_ jdn: Int, year: Bool = true) -> String {
         guard let bs = BSDate(jdn: jdn) else { return "" }
         return Formatter.dateFull(bs, weekday: JDN.weekday(jdn), cal, year: year)
@@ -111,23 +130,22 @@ final class AppModel {
         return t("\(here) here, \(there.prefix(1).lowercased() + there.dropFirst()) in Nepal", "यहाँ \(here), नेपालमा \(there)")
     }
 
-    /// Gregorian date for list rows: "Dec 7", or "Jan 11, 2027" outside the current year.
+    /// Gregorian date for list rows: "7 Dec", or "11 Jan 2027" outside the current year.
     func adCompact(_ jdn: Int) -> String {
         let ad = ADDate(jdn: jdn)
-        let short = Formatter.adShort(ad, .english)
-        return ad.year == ADDate(jdn: todayJDN).year ? short : "\(short), \(ad.year)"
+        return ad.year == ADDate(jdn: todayJDN).year ? Formatter.adShort(ad, .english) : Formatter.adMedium(ad, .english)
     }
 
-    /// Short BS date in the calendar language: "Mangsir 6".
+    /// Short BS date in the calendar language: "6 Mangsir".
     func bsShort(_ jdn: Int) -> String {
         guard let bs = BSDate(jdn: jdn) else { return "" }
-        return "\(Formatter.bsMonth(bs.month, cal)) \(Formatter.digits(bs.day, cal))"
+        return Formatter.dateShort(bs, cal)
     }
 
-    /// Gregorian date, always in English: "Nov 16, 2026".
+    /// Gregorian date, always in English: "16 Nov 2026".
     func adMedium(_ jdn: Int) -> String {
         let ad = ADDate(jdn: jdn)
-        return "\(Formatter.adMonth(ad.month, .english, short: true)) \(ad.day), \(ad.year)"
+        return Formatter.adMedium(ad, .english)
     }
 
     /// A clock time in the interface language.

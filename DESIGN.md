@@ -16,15 +16,16 @@ No cards, no custom window chrome, no gradients, no glass panels drawn by the ap
 
 ## Color
 
-Color carries meaning, and only these three meanings:
+Neutral system greys, plus three colours with one job each:
 
 | Role | Light | Dark | Use |
 | --- | --- | --- | --- |
-| Holiday (`Palette.holiday`) | `#C0122C` | `#FF6B70` | Public holidays and Saturdays, as in a printed patro. Event dot for holidays. |
-| Accent (`Palette.accent`) | user choice | user choice | Today's circle, the selected date in pickers, interactive tint. Never red, so it can't be confused with a holiday. |
+| Accent (`Palette.accent`) | `#2864DC` | `#4D8DF7` | Today's cell, the selected date in pickers, interactive tint (pop-up buttons, toggles). Blue by default; never red, so it can't be confused with a holiday. |
+| Holiday (`Palette.holiday`) | `#B8342E` | `#EF756B` | Public holidays and Saturdays, as in a printed patro, and the holiday dot. A warm brick red rather than a saturated crimson, so a month of holidays isn't loud. |
+| Festival (`Palette.festival`) | `#9A6F45` | `#CDA27A` | The dot on festival days that aren't holidays. |
 | Quiet text (`.quiet`) | primary at 68% | primary at 68% | AD dates, tithi, captions. System `.secondary` falls under 4.5:1 at caption sizes. |
 
-Accent choices: System (follows macOS), Blue `#1D4FB8`/`#5E8EF7`, Teal, Green, Marigold, Jacaranda, Graphite. Each defines an `onAccent` color with at least 4.5:1 contrast (dark-mode accents use dark text). Everything else is a system semantic color (`.primary`, `.secondary`, `windowBackgroundColor`) so Increase Contrast and vibrancy behave natively.
+Accent choices: Blue (default), Teal, Green, Jacaranda, Graphite, and the macOS accent color as an opt-in last choice. The macOS accent used to be the default, but on macOS 26 it can follow the wallpaper and come out yellow or red, so it is no longer the default; there is no yellow or orange accent. Each defines an `onAccent` color with at least 4.5:1 contrast (dark-mode accents use dark text). Everything else is a system semantic color (`.primary`, `.secondary`, `windowBackgroundColor`) so Increase Contrast and vibrancy behave natively.
 
 ## Type
 
@@ -44,9 +45,9 @@ Sentence case for every label and header. No uppercase tracked labels, no middle
 ## The patro grid (`SambatUI.MonthGrid`)
 
 - Sunday first; weekday initials in the calendar language, Saturday in holiday red.
-- Each cell: BS numeral in a circle slot, set low enough that the AD day in the top-right corner never touches it (the 1st of the month and the first day shown carry the month: "Nov 1", "Oct 18"). Tithi directly below at a fixed size.
-- Festival marker (`EventDot`) in the top-left corner, the same everywhere (grid, lists, widgets): a red dot for a public holiday, a red ring for a regional holiday, a grey dot for a festival. Holiday status is also always written out in text in the detail, lists and converter.
-- Today is a filled accent circle with `onAccent` text. A selected day is a 10% primary fill. "Today on the other clock" (the Mac's date while following Nepal, or the reverse) is a 1 pt secondary ring.
+- Each cell: AD day in the top-right corner (the 1st carries the month: "1 Nov"), BS numeral, tithi directly below at a fixed size.
+- A day is marked by its whole cell, a rounded rectangle (`DayMark`, 7 pt continuous corners, inset 1.5 pt): filled with the accent for today, with all its text in `onAccent`; a 10% primary tint for the selection; a 1 pt outline for today on the other clock. No circles. The converter's AD and BS grids use the same marks.
+- Festival marker (`EventDot`) in the top-left corner, the same everywhere (grid, lists, widgets): a red dot for a public holiday, a red ring for a regional holiday, a tan dot for a festival. Holiday status is also always written out in text in the detail, lists and converter.
 - Hover is a 5% primary rounded fill. Every cell has a full VoiceOver label.
 
 ## Calendar page
@@ -57,7 +58,7 @@ Sentence case for every label and header. No uppercase tracked labels, no middle
 
 ## Formats
 
-One format per kind of value. Long BS date: weekday first ("Monday, Kartik 30, 2083"). Short BS date: "Kartik 30". AD dates: always English, with a no-break space ("Nov 16"). Times follow the interface language; Nepali uses the spoken part of the day ("राति २:०८"). Tithi is shown as fortnight and tithi ("Shukla Saptami") without the lunar month, which reads as a mistake next to the solar month. Near today, when the two dates differ, relative labels name the place ("Today here, yesterday in Nepal").
+Dates are written day, month, year, the way Nepalis write them. Long BS date: weekday first ("सोमबार, ३० कात्तिक २०८३", "Monday, 30 Kartik 2083"). Short BS date: "३० कात्तिक". AD dates: always English ("16 November 2026", "16 Nov 2026", "16 Nov" with a no-break space). Month labels read month then year ("कात्तिक २०८३", "Oct – Nov 2026"). The menu bar defaults to "३० कात्तिक". Times follow the interface language; Nepali uses the spoken part of the day ("राति २:०८"). Tithi is shown as fortnight and tithi ("Shukla Saptami") without the lunar month, which reads as a mistake next to the solar month. Near today, when the two dates differ, relative labels name the place ("Today here, yesterday in Nepal").
 
 ## Motion
 
@@ -65,6 +66,10 @@ One format per kind of value. Long BS date: weekday first ("Monday, Kartik 30, 2
 - With Reduce Motion on, both become instant or a plain fade.
 - The bottom switcher's raised segment slides between pages (0.22 s), instant with Reduce Motion.
 - Nothing animates on its own except the clock's numeric transition.
+
+## Appearance
+
+Light, Dark or Auto applies to the whole app (`NSApp.appearance`), not only the popover. Set on the popover alone, AppKit controls hosted by SwiftUI and the popover material could resolve to the system's appearance while the rest followed the app's.
 
 ## Language
 

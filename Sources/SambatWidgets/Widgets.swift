@@ -107,12 +107,15 @@ struct TodayBlock: View {
                 .font(.system(size: 10.5, weight: .medium))
                 .lineLimit(1)
             } else if entry.settings.showTithi {
-                Text(verbatim: Formatter.tithiShort(p, cal))
-                    .font(.system(size: 10.5))
-                    .foregroundStyle(.quiet)
-                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Image(systemName: MoonIcon.name(for: p.tithi)).font(.system(size: 9))
+                    Text(verbatim: Formatter.tithiShort(p, cal))
+                }
+                .font(.system(size: 10.5))
+                .foregroundStyle(.quiet)
+                .lineLimit(1)
             }
-            Text(verbatim: "\(Formatter.adMonth(ad.month, .english, short: true))\u{00A0}\(ad.day), \(ad.year)")
+            Text(verbatim: Formatter.adMedium(ad, .english))
                 .font(.system(size: 10.5))
                 .foregroundStyle(.quiet)
                 .lineLimit(1)
@@ -160,7 +163,7 @@ struct UpcomingList: View {
 
     private func bsShort(_ jdn: Int, _ lang: Language) -> String {
         guard let bs = BSDate(jdn: jdn) else { return "" }
-        return "\(Formatter.bsMonth(bs.month, lang)) \(Formatter.digits(bs.day, lang))"
+        return Formatter.dateShort(bs, lang)
     }
 
     /// Short distance for a narrow column: "Tomorrow", "21 days".
@@ -223,15 +226,16 @@ struct MonthWidgetContent: View {
                     .foregroundStyle(.quiet)
             }
             MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: cal, palette: palette,
-                      metrics: .init(cellHeight: rows == 6 ? 45 : 53, numeralSize: 15, circle: rows == 6 ? 25 : 27,
-                                     circleTop: rows == 6 ? 6 : 8,
+                      metrics: .init(cellHeight: rows == 6 ? 45 : 53, numeralSize: 15, numeralRow: rows == 6 ? 25 : 27,
+                                     numeralTop: rows == 6 ? 6 : 8,
                                      showAD: true, showTithi: entry.settings.showTithi, interactive: false))
             Spacer(minLength: 0)
             HStack(spacing: 10) {
                 HStack(spacing: 4) {
+                    Image(systemName: MoonIcon.name(for: Panchang.shared.day(entry.jdn).tithi)).font(.system(size: 10))
                     Text(verbatim: Formatter.tithiShort(Panchang.shared.day(entry.jdn), cal))
-                        .foregroundStyle(.quiet)
                 }
+                .foregroundStyle(.quiet)
                 if let e = todayEvent {
                     HStack(spacing: 4) {
                         if let kind = EventDot.kind(for: [e]) { EventDot(kind, size: 5) }
@@ -283,7 +287,7 @@ enum WidgetMain {
 func renderPreviews(to dir: URL) {
     try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     let configs: [(String, ColorScheme, Language, AccentChoice)] = [
-        ("light", .light, .nepali, .system), ("dark", .dark, .nepali, .blue), ("light-en", .light, .english, .teal),
+        ("light", .light, .nepali, .blue), ("dark", .dark, .nepali, .blue), ("light-en", .light, .english, .teal),
     ]
     for (name, scheme, cal, accent) in configs {
         var settings = SharedSettings()

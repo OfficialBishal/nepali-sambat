@@ -29,8 +29,8 @@ Most Nepali calendar apps work out "today" from your Mac's clock. If you live ou
 
 ## Features
 
-- **Menu bar date**: `कात्तिक २९`, `२९ कात्तिक, आइत`, `२०८३/०७/२९`, a calendar icon, and more, with the time in Nepal if you want it.
-- **The month, the way a patro prints it**: Nepali dates with the English date in the corner, the tithi for each day, today in your accent colour, holidays and Saturdays in red, and a dot on festival days (red for a public holiday, grey for other festivals). When Nepal and your Mac are on different dates, your local date gets a thin ring.
+- **Menu bar date**: `२९ कात्तिक`, `२९ कात्तिक, आइत`, `२०८३/०७/२९`, a calendar icon, and more, with the time in Nepal if you want it.
+- **The month, the way a patro prints it**: Nepali dates with the English date in the corner, the tithi for each day, today's cell in your accent colour, holidays and Saturdays in red, and a dot on festival days (red for a public holiday, tan for other festivals). When Nepal and your Mac are on different dates, your local date is outlined. Dates are written the Nepali way: day, month, year.
 - **Tithi and panchang**: the tithi with its end time, sunrise and sunset in Kathmandu, and the Nepal Sambat year.
 - **Festivals and holidays**: Dashain, Tihar, Chhath, Teej, Lhosars, Eid, and more. These are worked out from astronomy and the rules Nepali patros use, then checked against the Government of Nepal's holiday lists for 2082 and 2083 BS (see [accuracy](#accuracy)).
 - **Date converter** (AD to BS and BS to AD) in both directions, 1975–2100 BS (1918–2044 AD).
@@ -39,22 +39,20 @@ Most Nepali calendar apps work out "today" from your Mac's clock. If you live ou
 - **Apple Calendar**: your own events appear under the selected day, and one click writes Nepali festivals into a "Nepali Festivals" calendar. You can also export a `.ics` file or copy a feed URL for Google Calendar or Outlook.
 - **Desktop widgets**: today's date (small and medium) and the full month (large). They also follow Nepal time.
 - **Two separate languages**: an English interface with Nepali dates, a fully Nepali interface, or English throughout. The interface language and the calendar language are independent settings.
-- **Native look**: a system popover, a standard Settings window, Light, Dark or Auto, and seven accent colors. Red is never an accent, because in a patro red means a holiday.
+- **Native look**: a system popover, a standard Settings window, Light, Dark or Auto, and six accent colors (blue by default). Red is never an accent, because in a patro red means a holiday.
 - **Keyboard shortcuts**: ← → change month, ↑ ↓ change year, `T` goes to today, `⌘1`–`⌘3` switch pages, `⌘,` opens Settings, Esc closes.
 - **`sambat` command-line tool**, installed with the app:
 
 ```console
 $ sambat
-कात्तिक २९, २०८३, आइतबार
-Sunday, November 15, 2026
-कार्तिक शुक्ल षष्ठी
-• छठ पर्व (बिदा)
-नेपाल समय: १०:११ PM
+सोमबार, ३० कात्तिक २०८३
+Monday, 16 November 2026
+कार्तिक शुक्ल सप्तमी
 
 $ sambat upcoming 3 --en
-Kartik 29    Nov 15   Chhath ★  (Today)
-Mangsir 21   Dec 7    Bala Chaturdashi  (in 22 days)
-Mangsir 28   Dec 14   Vivah Panchami  (in 29 days)
+21 Mangsir   7 Dec    Bala Chaturdashi  (In 21 days)
+28 Mangsir   14 Dec   Vivah Panchami  (In 28 days)
+9 Poush      24 Dec   Udhauli / Yomari Punhi ★  (In 38 days)
 
 $ sambat bs2ad 2083-07-22 --en      # also: ad2bs, month, events, ics
 ```

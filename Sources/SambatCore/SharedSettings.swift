@@ -5,8 +5,12 @@ public enum AppearanceMode: String, Codable, CaseIterable, Sendable {
 }
 
 /// Accent color for today and the selection. Red is deliberately absent: in a patro, red means a holiday.
+/// "System" used to be the default; on macOS 26 the system accent can follow the wallpaper (often
+/// yellow or red), so it is now an explicit choice with a new stored value, and old "system" and
+/// "marigold" settings fall back to blue.
 public enum AccentChoice: String, Codable, CaseIterable, Sendable {
-    case system, blue, teal, green, marigold, purple, graphite
+    case blue, teal, green, purple, graphite
+    case system = "macos"
 }
 
 /// Settings the widget extension also needs. The app writes them to a small JSON file that the
@@ -18,7 +22,7 @@ public struct SharedSettings: Codable, Equatable, Sendable {
     public var calendarLanguage: Language = .nepali
     public var basis: DateBasis = .nepal
     public var appearance: AppearanceMode = .auto
-    public var accent: AccentChoice = .system
+    public var accent: AccentChoice = .blue
     public var showTithi: Bool = true
 
     public init() {}

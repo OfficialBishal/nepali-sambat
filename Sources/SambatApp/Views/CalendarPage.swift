@@ -26,8 +26,8 @@ struct CalendarPage: View {
                       otherTodayJDN: s.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN,
                       selectedJDN: model.selectedJDN,
                       lang: model.cal, palette: model.palette,
-                      metrics: .init(cellHeight: rows == 6 ? 40 : 44, circle: rows == 6 ? 24 : 26,
-                                     circleTop: rows == 6 ? 5 : 6, showAD: s.showAD, showTithi: s.showTithi),
+                      metrics: .init(cellHeight: rows == 6 ? 42 : 46, numeralRow: rows == 6 ? 22 : 24,
+                                     numeralTop: rows == 6 ? 6 : 7, showAD: s.showAD, showTithi: s.showTithi),
                       onSelect: { model.select($0) })
                 .padding(.horizontal, 16)
                 .id(model.displayYear * 12 + model.displayMonth)
@@ -73,7 +73,7 @@ struct TodayHeader: View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(verbatim: "\(Formatter.bsMonth(today.month, cal)) \(Formatter.digits(today.day, cal))")
+                    Text(verbatim: Formatter.dateShort(today, cal))
                         .font(.system(size: 22, weight: .semibold))
                     Text(verbatim: Formatter.digits(today.year, cal))
                         .font(.system(size: 22, weight: .regular))

@@ -2,7 +2,7 @@ import Foundation
 import SambatCore
 
 enum MenuBarFormat: String, Codable, CaseIterable, Identifiable {
-    case monthDay, dayMonth, dayMonthWeekday, full, numeric, dayOnly, iconOnly
+    case dayMonth, monthDay, dayMonthWeekday, full, numeric, dayOnly, iconOnly
 
     var id: String { rawValue }
 
@@ -28,10 +28,10 @@ struct AppSettings: Codable, Equatable {
     var calendarLanguage: Language = .nepali
     var basis: DateBasis = .nepal
     var appearance: AppearanceMode = .auto
-    var accent: AccentChoice = .system
+    var accent: AccentChoice = .blue
     var showTithi = true
     var showAD = true
-    var menuFormat: MenuBarFormat = .monthDay
+    var menuFormat: MenuBarFormat = .dayMonth
     var menuShowsNepalTime = false
     var menuShowsIcon = false
     var notificationsEnabled = false
@@ -43,6 +43,8 @@ struct AppSettings: Codable, Equatable {
     var eveningMinute = 0
     var showCalendarEvents = false
     var checkForUpdates = true
+    /// Bumped when a default changes, so old saved defaults can be moved over once.
+    var formatVersion = 2
 
     init() {}
 
@@ -59,6 +61,9 @@ struct AppSettings: Codable, Equatable {
         showTithi = v(.showTithi, d.showTithi)
         showAD = v(.showAD, d.showAD)
         menuFormat = v(.menuFormat, d.menuFormat)
+        // Before 2.2 the default was month-day ("कात्तिक ३०"). Dates are now written day-month,
+        // the Nepali way, so settings still on that old default move over once.
+        if v(.formatVersion, 1) < 2, menuFormat == .monthDay { menuFormat = .dayMonth }
         menuShowsNepalTime = v(.menuShowsNepalTime, d.menuShowsNepalTime)
         menuShowsIcon = v(.menuShowsIcon, d.menuShowsIcon)
         notificationsEnabled = v(.notificationsEnabled, d.notificationsEnabled)
