@@ -221,6 +221,59 @@ struct FestivalRow: View {
     }
 }
 
+/// A borderless icon button, like a toolbar item: the symbol alone, a soft highlight on hover and
+/// press, a tooltip, and a spoken label. Active shows it filled in the accent (for toggles).
+struct IconButton: View {
+    let symbol: String
+    let label: String
+    var active = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: 13))
+                .frame(width: 26, height: 24)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(IconButtonStyle(active: active))
+        .help(label)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(active ? .isSelected : [])
+    }
+}
+
+struct IconButtonStyle: ButtonStyle {
+    var active = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        IconBody(configuration: configuration, active: active)
+    }
+
+    private struct IconBody: View {
+        let configuration: ButtonStyleConfiguration
+        let active: Bool
+        @Environment(\.isEnabled) private var isEnabled
+        private var hovered = State(initialValue: false)
+
+        init(configuration: ButtonStyleConfiguration, active: Bool) {
+            self.configuration = configuration
+            self.active = active
+        }
+
+        var body: some View {
+            configuration.label
+                .foregroundStyle(active ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Color.primary.opacity(configuration.isPressed ? 0.12 : (hovered.wrappedValue ? 0.07 : 0)))
+                )
+                .opacity(isEnabled ? 1 : 0.4)
+                .onHover { hovered.wrappedValue = $0 }
+        }
+    }
+}
+
 /// A plain row that highlights on hover and press, like a native list row.
 struct RowButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

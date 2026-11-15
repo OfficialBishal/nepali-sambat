@@ -11,16 +11,20 @@ public struct MonthGrid: View {
         public var numeralRow: CGFloat
         /// Space above the numeral, below the AD date in the corner.
         public var numeralTop: CGFloat
+        /// Horizontal inset of the day mark, so short cells get a near-square mark rather than a wide bar.
+        public var markInset: CGFloat
         public var showAD: Bool
         public var showTithi: Bool
         public var interactive: Bool
 
         public init(cellHeight: CGFloat = 44, numeralSize: CGFloat = 15, numeralRow: CGFloat = 26, numeralTop: CGFloat = 6,
+                    markInset: CGFloat = 0,
                     showAD: Bool = true, showTithi: Bool = true, interactive: Bool = true) {
             self.cellHeight = cellHeight
             self.numeralSize = numeralSize
             self.numeralRow = numeralRow
             self.numeralTop = numeralTop
+            self.markInset = markInset
             self.showAD = showAD
             self.showTithi = showTithi
             self.interactive = interactive
@@ -162,7 +166,8 @@ struct DayCell: View {
             }
         }
         .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOtherToday,
-                              isHovered: metrics.interactive && hovered.wrappedValue, accent: palette.accent) }
+                              isHovered: metrics.interactive && hovered.wrappedValue, accent: palette.accent,
+                              horizontalInset: metrics.markInset) }
         .contentShape(Rectangle())
         .onHover { inside in if metrics.interactive { hovered.wrappedValue = inside } }
         .onTapGesture { onSelect?(jdn) }
@@ -209,15 +214,18 @@ public struct DayMark: View {
     let isOtherToday: Bool
     let isHovered: Bool
     let accent: Color
+    let horizontalInset: CGFloat
 
     @Environment(\.colorSchemeContrast) private var contrast
 
-    public init(isToday: Bool, isSelected: Bool, isOtherToday: Bool, isHovered: Bool = false, accent: Color) {
+    public init(isToday: Bool, isSelected: Bool, isOtherToday: Bool, isHovered: Bool = false, accent: Color,
+                horizontalInset: CGFloat = 0) {
         self.isToday = isToday
         self.isSelected = isSelected
         self.isOtherToday = isOtherToday
         self.isHovered = isHovered
         self.accent = accent
+        self.horizontalInset = horizontalInset
     }
 
     public var body: some View {
@@ -234,5 +242,6 @@ public struct DayMark: View {
             }
         }
         .padding(1.5)
+        .padding(.horizontal, horizontalInset)
     }
 }

@@ -1,5 +1,5 @@
 // Renders the app icon at 1024×1024 on the macOS icon grid.
-// Usage: swift scripts/make-icon.swift out.png [concept]   (concept: pad | pad-crimson | pad-ink; default pad)
+// Usage: swift scripts/make-icon.swift out.png [concept]   (concept: pad | pad-sand | pad-brick | pad-blue; default pad)
 import AppKit
 import CoreText
 
@@ -170,13 +170,15 @@ func patroPage(tileTop: UInt32, tileBottom: UInt32, band: UInt32, numeral: UInt3
 }
 
 switch concept {
-case "pad-crimson":
-    patroPage(tileTop: 0xE8344E, tileBottom: 0xB4122E, band: 0x1F3F98, numeral: 0x1C1C22)
-case "pad-ink":
-    patroPage(tileTop: 0x3A3F58, tileBottom: 0x1E2133, band: 0xD0142F, numeral: 0x1C1C22)
-default:
-    // Flag blue tile, crimson header: the colours of Nepal's flag, on the patro page of v1.
+case "pad-sand":
+    patroPage(tileTop: 0xEFE6D6, tileBottom: 0xD9C8AC, band: 0xB8342E, numeral: 0x1C1C22)
+case "pad-brick":
+    patroPage(tileTop: 0xC9473F, tileBottom: 0x9E2A25, band: 0x2A2A30, numeral: 0x1C1C22)
+case "pad-blue":
     patroPage(tileTop: 0x3D63C9, tileBottom: 0x1C3C93, band: 0xD0142F, numeral: 0x1C1C22)
+default:
+    // Graphite tile, brick-red header: the app's own palette of neutral greys and holiday red.
+    patroPage(tileTop: 0x4A4A51, tileBottom: 0x232327, band: 0xB8342E, numeral: 0x1C1C22)
 }
 
 let png = NSBitmapImageRep(cgImage: ctx.makeImage()!).representation(using: .png, properties: [:])!

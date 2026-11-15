@@ -26,9 +26,10 @@ struct UpcomingPage: View {
                 Text(model.t("Festivals", "चाडपर्व"))
                     .font(.title3.weight(.semibold))
                 Spacer()
-                Toggle(model.t("Public holidays only", "सार्वजनिक बिदा मात्र"), isOn: $holidaysOnly)
-                    .toggleStyle(.checkbox)
-                    .controlSize(.small)
+                IconButton(symbol: holidaysOnly ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle",
+                           label: holidaysOnly ? model.t("Showing public holidays only", "सार्वजनिक बिदा मात्र देखाइँदै")
+                                               : model.t("Show public holidays only", "सार्वजनिक बिदा मात्र देखाउनुहोस्"),
+                           active: holidaysOnly) { holidaysOnly.toggle() }
             }
             .padding(.horizontal, 16)
             .padding(.top, 16)

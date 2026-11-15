@@ -34,12 +34,12 @@ struct ConverterPage: View {
                     MonthGrid(year: model.convertBS.year, month: model.convertBS.month,
                               todayJDN: model.todayJDN, otherTodayJDN: other, selectedJDN: model.convertBS.jdn,
                               lang: model.cal, palette: model.palette,
-                              metrics: .init(cellHeight: 25, numeralSize: 12.5, numeralRow: 21, numeralTop: 2,
-                                             showAD: false, showTithi: false),
+                              metrics: .init(cellHeight: 29, numeralSize: 13, numeralRow: 29, numeralTop: 0,
+                                             markInset: 5, showAD: false, showTithi: false),
                               onSelect: { jdn in if let d = BSDate(jdn: jdn) { model.convertBS = d } })
                 }
             }
-            .frame(height: 206, alignment: .top)
+            .frame(height: 230, alignment: .top)
             .onChange(of: model.convertDirection) { copied = false }
 
             Divider()
@@ -55,28 +55,26 @@ struct ConverterPage: View {
                         .textSelection(.enabled)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
-                    Text(model.relative(jdn))
-                        .font(.subheadline)
-                        .foregroundStyle(.quiet)
+                    HStack(alignment: .center, spacing: 2) {
+                        Text(model.relative(jdn))
+                            .font(.subheadline)
+                            .foregroundStyle(.quiet)
+                        Spacer(minLength: 6)
+                        IconButton(symbol: copied ? "checkmark" : "doc.on.doc",
+                                   label: copied ? model.t("Copied", "कपी भयो") : model.t("Copy date", "मिति कपी गर्नुहोस्")) {
+                            Clipboard.copy(primaryResult(jdn))
+                            copied = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
+                        }
+                        IconButton(symbol: "calendar", label: model.t("Show in Calendar", "पात्रोमा हेर्नुहोस्")) {
+                            model.reveal(jdn)
+                        }
+                    }
                 }
                 VStack(alignment: .leading, spacing: 6) {
                     FactRow(symbol: MoonIcon.name(for: p.tithi), text: Formatter.tithiShort(p, model.cal))
                     ForEach(events.prefix(2), id: \.id) { e in EventLine(event: e) }
                 }
-                HStack(spacing: 8) {
-                    Button {
-                        Clipboard.copy(primaryResult(jdn))
-                        copied = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
-                    } label: {
-                        Label(copied ? model.t("Copied", "कपी भयो") : model.t("Copy", "कपी"),
-                              systemImage: copied ? "checkmark" : "doc.on.doc")
-                    }
-                    Button { model.reveal(jdn) } label: {
-                        Label(model.t("Show in Calendar", "पात्रोमा हेर्नुहोस्"), systemImage: "calendar")
-                    }
-                }
-                .controlSize(.small)
             }
 
             Spacer(minLength: 0)
@@ -223,7 +221,7 @@ struct ADMonthGrid: View {
                         if index >= 0 && index < length {
                             cell(jdn: start + index, day: index + 1)
                         } else {
-                            Color.clear.frame(maxWidth: .infinity).frame(height: 25)
+                            Color.clear.frame(maxWidth: .infinity).frame(height: 29)
                         }
                     }
                 }
@@ -236,12 +234,13 @@ struct ADMonthGrid: View {
         let isToday = jdn == todayJDN
         let isOther = jdn == otherTodayJDN && otherTodayJDN != todayJDN
         return Text(verbatim: "\(day)")
-            .font(.system(size: 12.5, weight: isToday ? .semibold : .regular))
+            .font(.system(size: 13, weight: isToday ? .semibold : .regular))
             .monospacedDigit()
             .foregroundStyle(isToday ? AnyShapeStyle(palette.onAccent) : AnyShapeStyle(.primary))
             .frame(maxWidth: .infinity)
-            .frame(height: 25)
-            .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOther, accent: palette.accent) }
+            .frame(height: 29)
+            .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOther, accent: palette.accent,
+                                  horizontalInset: 5) }
         .contentShape(Rectangle())
         .onTapGesture { onSelect(jdn) }
         .accessibilityElement(children: .ignore)
