@@ -75,7 +75,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     guard let self else { return }
                     self.model.page = .calendar
                     self.model.sectionHidden = true
-                    OffscreenRenderer.render(PanelRoot().environment(self.model), size: nil, appearance: appearance.nsAppearance,
+                    let size = PanelRoot.size(for: self.model)
+                    print("compact popover size: \(size)")
+                    OffscreenRenderer.render(PanelRoot().environment(self.model), size: size, appearance: appearance.nsAppearance,
                                              to: dir.appendingPathComponent("\(name)-calendar-hidden.png"))
                 }
                 steps.append { [weak self] in self?.model.sectionHidden = false }

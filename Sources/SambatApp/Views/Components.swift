@@ -4,6 +4,9 @@ import SwiftUI
 
 struct PanelRoot: View {
     static let size = CGSize(width: 340, height: 670)
+    /// Laid out at its natural height, to measure how tall the popover should be (see
+    /// `StatusBarController.panelSize`). In the popover itself the panel fills whatever size it's given.
+    var measuring = false
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -21,13 +24,27 @@ struct PanelRoot: View {
             }
             .frame(maxWidth: .infinity, maxHeight: compact ? nil : .infinity, alignment: .top)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: model.page)
+            if compact && !measuring { Spacer(minLength: 0) }
             Divider()
             BottomBar()
         }
-        .frame(width: Self.size.width, height: compact ? nil : Self.size.height)
-        .fixedSize(horizontal: false, vertical: compact)
+        .frame(width: Self.size.width)
+        .frame(maxHeight: measuring ? nil : .infinity)
+        .fixedSize(horizontal: false, vertical: measuring)
         .tint(model.palette.accent)
         .background { PanelSurface().ignoresSafeArea() }
+    }
+}
+
+extension PanelRoot {
+    /// The popover's size: the full panel, or on the Calendar page with "Coming up" hidden, the
+    /// month's natural height, measured offscreen.
+    @MainActor static func size(for model: AppModel) -> CGSize {
+        guard model.page == .calendar && model.sectionHidden else { return size }
+        let probe = NSHostingView(rootView: PanelRoot(measuring: true).environment(model))
+        probe.frame = NSRect(x: 0, y: 0, width: size.width, height: 100)
+        let height = ceil(probe.fittingSize.height)
+        return CGSize(width: size.width, height: min(max(height, 300), size.height))
     }
 }
 

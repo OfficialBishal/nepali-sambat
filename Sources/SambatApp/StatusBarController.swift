@@ -16,7 +16,10 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         super.init()
 
         let hosting = NSHostingController(rootView: PanelRoot().environment(model))
-        hosting.sizingOptions = [.preferredContentSize]
+        // The popover's size is set explicitly (see `panelSize`). Letting it follow the hosting
+        // controller's preferred size made it wider than the panel once the content extends under
+        // the arrow (`hasFullSizeContent`), leaving a strip of bare glass at the side.
+        hosting.sizingOptions = []
         popover.contentViewController = hosting
         popover.contentSize = PanelRoot.size
         popover.behavior = .transient
@@ -46,13 +49,21 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
             _ = model.settings.menuShowsIcon
             _ = model.settings.menuFormat
             _ = model.settings.appearance
+            _ = model.page
+            _ = model.sectionHidden
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.updateButton()
                 self?.updateAppearance()
+                self?.updateSize()
                 self?.observeModel()
             }
         }
+    }
+
+    private func updateSize() {
+        let size = PanelRoot.size(for: model)
+        if popover.contentSize != size { popover.contentSize = size }
     }
 
     private func updateAppearance() {
@@ -108,6 +119,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         if let page { model.page = page }
         model.now = AppModel.currentDate()
         model.panelVisible = true
+        updateSize()
         NSApp.activate(ignoringOtherApps: true)
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         popover.contentViewController?.view.window?.makeKey()
