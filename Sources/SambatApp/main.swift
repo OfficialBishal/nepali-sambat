@@ -70,6 +70,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                                              to: dir.appendingPathComponent("\(name)-\(page.rawValue).png"))
                 }
             }
+            if name == "light" {
+                steps.append { [weak self] in
+                    guard let self else { return }
+                    self.model.page = .calendar
+                    self.model.sectionHidden = true
+                    OffscreenRenderer.render(PanelRoot().environment(self.model), size: nil, appearance: appearance.nsAppearance,
+                                             to: dir.appendingPathComponent("\(name)-calendar-hidden.png"))
+                }
+                steps.append { [weak self] in self?.model.sectionHidden = false }
+            }
             guard name == "light" || name == "dark" else { continue }
             for tab in SettingsTab.allCases {
                 steps.append { [weak self] in

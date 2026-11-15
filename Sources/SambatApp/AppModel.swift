@@ -45,7 +45,13 @@ final class AppModel {
     var page: Page = .calendar
     var displayYear: Int
     var displayMonth: Int
-    var selectedJDN: Int?
+    var selectedJDN: Int? {
+        didSet { if selectedJDN != nil && sectionHidden { sectionHidden = false } }
+    }
+    /// Whether the section under the month (Coming up / the selected day) is hidden.
+    var sectionHidden = UserDefaults.standard.bool(forKey: "sectionHidden") {
+        didSet { if !Self.isRendering { UserDefaults.standard.set(sectionHidden, forKey: "sectionHidden") } }
+    }
     /// Month navigation direction, for the slide transition.
     var monthStep = 0
     var panelVisible = false {

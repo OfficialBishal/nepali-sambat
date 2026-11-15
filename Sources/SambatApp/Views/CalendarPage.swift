@@ -9,7 +9,6 @@ struct CalendarPage: View {
 
     var body: some View {
         let s = model.settings
-        let rows = MonthGrid.rows(year: model.displayYear, month: model.displayMonth)
         VStack(alignment: .leading, spacing: 0) {
             TodayHeader()
                 .padding(.horizontal, 16)
@@ -26,24 +25,15 @@ struct CalendarPage: View {
                       otherTodayJDN: s.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN,
                       selectedJDN: model.selectedJDN,
                       lang: model.cal, palette: model.palette,
-                      metrics: .init(cellHeight: rows == 6 ? 42 : 46, numeralRow: rows == 6 ? 22 : 24,
-                                     numeralTop: rows == 6 ? 6 : 7, showAD: s.showAD, showTithi: s.showTithi),
+                      metrics: .init(cellHeight: 42, numeralRow: 18, numeralTop: 2,
+                                     showAD: s.showAD, showTithi: s.showTithi),
                       onSelect: { model.select($0) })
                 .padding(.horizontal, 16)
                 .id(model.displayYear * 12 + model.displayMonth)
                 .transition(monthTransition)
                 .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: model.displayYear * 12 + model.displayMonth)
-            Divider()
-                .padding(.horizontal, 16)
-                .padding(.top, 4)
-            Group {
-                if let selected = model.selectedJDN {
-                    DayDetail(jdn: selected)
-                } else {
-                    ComingUp()
-                }
-            }
-            .frame(maxHeight: .infinity, alignment: .top)
+            DaySection()
+                .padding(.top, 8)
         }
         .clipped()
     }
@@ -248,19 +238,13 @@ struct DayDetail: View {
 
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(verbatim: model.bsLong(jdn))
-                            .font(.headline)
-                        Spacer(minLength: 6)
-                        Text(model.relative(jdn))
-                            .font(.caption)
-                            .foregroundStyle(.quiet)
-                    }
+                HStack(alignment: .firstTextBaseline) {
                     Text(verbatim: model.adMedium(jdn))
-                        .font(.subheadline)
-                        .foregroundStyle(.quiet)
+                    Spacer(minLength: 6)
+                    Text(model.relative(jdn))
                 }
+                .font(.subheadline)
+                .foregroundStyle(.quiet)
 
                 VStack(alignment: .leading, spacing: 6) {
                     FactRow(symbol: MoonIcon.name(for: p.tithi), text: Formatter.tithiShort(p, cal), detail: model.tithiEnd(p))
@@ -297,50 +281,78 @@ struct DayDetail: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.top, 2)
+            .padding(.bottom, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .scrollIndicators(.automatic)
     }
 }
 
-/// With no day selected: the next festivals, so the space under the month looks ahead instead of
-/// repeating today. Shows as many whole rows as fit.
-struct ComingUp: View {
+/// Below the month: what's coming up, or the selected day. It scrolls, and it can be hidden, which
+/// shrinks the popover to the month; the choice is remembered.
+struct DaySection: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Divider().padding(.horizontal, 16)
+            HStack(spacing: 2) {
+                if let jdn = model.selectedJDN {
+                    IconButton(symbol: "chevron.left", label: model.t("Back to coming up", "आउँदै गरेकामा फर्कनुहोस्")) {
+                        model.selectedJDN = nil
+                    }
+                    Text(verbatim: model.bsLong(jdn))
+                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
+                } else {
+                    Text(model.t("Coming up", "आउँदै गरेका"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.quiet)
+                        .padding(.leading, 6)
+                }
+                Spacer(minLength: 6)
+                IconButton(symbol: model.sectionHidden ? "chevron.up" : "chevron.down",
+                           label: model.sectionHidden ? model.t("Show", "देखाउनुहोस्") : model.t("Hide", "लुकाउनुहोस्")) {
+                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { model.sectionHidden.toggle() }
+                }
+            }
+            .padding(.horizontal, 10)
+            .frame(height: 34)
+            if !model.sectionHidden {
+                Group {
+                    if let jdn = model.selectedJDN { DayDetail(jdn: jdn) } else { UpcomingScroll() }
+                }
+                .frame(maxHeight: .infinity, alignment: .top)
+                .transition(.opacity)
+            }
+        }
+    }
+}
+
+/// The festivals of the coming months, in a list that scrolls. Today's own festival is in the header.
+struct UpcomingScroll: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
         let today = model.todayJDN
-        let events = FestivalEngine.shared.events(from: today + 1, to: today + 120).filter { $0.category != .observance }
+        let events = FestivalEngine.shared.events(from: today + 1, to: today + 180).filter { $0.category != .observance }
         let byDay = Dictionary(grouping: events, by: \.jdn)
-        let days = Array(byDay.keys.sorted().prefix(3))
-
-        ViewThatFits(in: .vertical) {
-            list(Array(days.prefix(3)), byDay)
-            list(Array(days.prefix(2)), byDay)
-            list(Array(days.prefix(1)), byDay)
-            Color.clear.frame(height: 0)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-    }
-
-    private func list(_ days: [Int], _ byDay: [Int: [CalendarEvent]]) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(model.t("Coming up", "आउँदै गरेका"))
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.quiet)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 2)
-            ForEach(days, id: \.self) { jdn in
-                Button { model.reveal(jdn) } label: {
-                    FestivalRow(jdn: jdn, events: byDay[jdn] ?? [], showsMonth: true)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 5)
+        ScrollView(.vertical) {
+            LazyVStack(alignment: .leading, spacing: 0) {
+                ForEach(byDay.keys.sorted(), id: \.self) { jdn in
+                    Button { model.reveal(jdn) } label: {
+                        FestivalRow(jdn: jdn, events: byDay[jdn] ?? [], showsMonth: true)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 5)
+                    }
+                    .buttonStyle(RowButtonStyle())
                 }
-                .buttonStyle(RowButtonStyle())
             }
+            .padding(.bottom, 8)
         }
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .scrollIndicators(.automatic)
     }
 }

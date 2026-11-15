@@ -35,7 +35,7 @@ struct ConverterPage: View {
                               todayJDN: model.todayJDN, otherTodayJDN: other, selectedJDN: model.convertBS.jdn,
                               lang: model.cal, palette: model.palette,
                               metrics: .init(cellHeight: 29, numeralSize: 13, numeralRow: 29, numeralTop: 0,
-                                             markInset: 5, showAD: false, showTithi: false),
+                                             showAD: false, showTithi: false),
                               onSelect: { jdn in if let d = BSDate(jdn: jdn) { model.convertBS = d } })
                 }
             }
@@ -175,8 +175,8 @@ struct ADDatePicker: View {
     }
 }
 
-/// A Gregorian month drawn like the Nepali grid: today's cell in the accent, the chosen day tinted,
-/// and today on the other clock outlined. Always six rows, so the result below never moves.
+/// A Gregorian month drawn like the Nepali grid, as boxes: today's box in the accent, the chosen day
+/// tinted, today on the other clock outlined. Always six rows, so the result below never moves.
 struct ADMonthGrid: View {
     let selected: Int
     let todayJDN: Int
@@ -189,29 +189,23 @@ struct ADMonthGrid: View {
         let start = JDN.from(year: ad.year, month: ad.month, day: 1)
         let length = ADDate.daysInMonth(year: ad.year, month: ad.month)
         let lead = JDN.weekday(start)
-        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-            GridRow {
-                ForEach(0..<7, id: \.self) { wd in
-                    Text(Formatter.weekday(wd, .english, short: true))
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundStyle(wd == 6 ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.quiet))
-                        .frame(maxWidth: .infinity)
-                        .padding(.bottom, 4)
-                        .accessibilityHidden(true)
-                }
-            }
-            ForEach(0..<6, id: \.self) { row in
-                GridRow {
-                    ForEach(0..<7, id: \.self) { col in
-                        let index = row * 7 + col - lead
-                        if index >= 0 && index < length {
-                            cell(jdn: start + index, day: index + 1)
-                        } else {
-                            Color.clear.frame(maxWidth: .infinity).frame(height: 29)
+        VStack(spacing: 0) {
+            WeekdayHeader(lang: .english)
+            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                ForEach(0..<6, id: \.self) { row in
+                    GridRow {
+                        ForEach(0..<7, id: \.self) { col in
+                            let index = row * 7 + col - lead
+                            if index >= 0 && index < length {
+                                cell(jdn: start + index, day: index + 1)
+                            } else {
+                                Color.clear.frame(maxWidth: .infinity).frame(height: 29)
+                            }
                         }
                     }
                 }
             }
+            .background(BoxLines(rows: 6, columns: 7))
         }
     }
 
@@ -225,8 +219,7 @@ struct ADMonthGrid: View {
             .foregroundStyle(isToday ? AnyShapeStyle(palette.onAccent) : AnyShapeStyle(.primary))
             .frame(maxWidth: .infinity)
             .frame(height: 29)
-            .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOther, accent: palette.accent,
-                                  horizontalInset: 5) }
+            .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOther, accent: palette.accent) }
         .contentShape(Rectangle())
         .onTapGesture { onSelect(jdn) }
         .accessibilityElement(children: .ignore)

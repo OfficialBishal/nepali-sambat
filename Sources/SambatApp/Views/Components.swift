@@ -3,12 +3,14 @@ import SambatUI
 import SwiftUI
 
 struct PanelRoot: View {
-    static let size = CGSize(width: 340, height: 596)
+    static let size = CGSize(width: 340, height: 670)
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        @Bindable var model = model
+        // With the section under the month hidden, the popover hugs the month; otherwise it keeps
+        // one height on every page, so the bottom bar never moves under the pointer.
+        let compact = model.page == .calendar && model.sectionHidden
         VStack(spacing: 0) {
             ZStack {
                 switch model.page {
@@ -17,13 +19,13 @@ struct PanelRoot: View {
                 case .upcoming: UpcomingPage().transition(.opacity)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .frame(maxWidth: .infinity, maxHeight: compact ? nil : .infinity, alignment: .top)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: model.page)
             Divider()
             BottomBar()
         }
-        .frame(width: Self.size.width)
-        .frame(maxHeight: .infinity)
+        .frame(width: Self.size.width, height: compact ? nil : Self.size.height)
+        .fixedSize(horizontal: false, vertical: compact)
         .tint(model.palette.accent)
         .background { PanelSurface().ignoresSafeArea() }
     }

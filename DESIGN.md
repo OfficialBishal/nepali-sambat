@@ -6,7 +6,7 @@ Nepali Sambat is a native macOS utility. The design system is mostly macOS's own
 
 | Surface | Implementation | Notes |
 | --- | --- | --- |
-| Calendar popover | `NSPopover` (transient) hosting SwiftUI, 340 × 596 pt | System popover material (Liquid Glass on macOS 26+, vibrancy before). Fixed height so the bottom navigation never moves under the pointer. |
+| Calendar popover | `NSPopover` (transient) hosting SwiftUI, 340 × 670 pt, sized by the hosting controller's preferred content size | One height on every page, so the bottom navigation never moves under the pointer. With "Coming up" hidden, the Calendar page hugs the month instead. |
 | Settings | `NSTabViewController` with `.toolbar` tabs, one `Form(.grouped)` per tab | Window resizes per tab, top edge fixed. Footers are leading-aligned secondary text. |
 | Popover surface | `PanelSurface` behind everything, reaching under the arrow (`hasFullSizeContent`) | Near-white (97.5% white) in Light, near-black (13.5%) in Dark, at 96% opacity. The system glass adapts to what's behind it, so a Light popover over a dark desktop came out grey; the app's own surface keeps Light light. |
 | App-drawn controls | `ControlTrack` (8 pt continuous corners, 7% primary) under every control the app draws | `PillPicker` (segmented: the chosen segment raised in white, or 17% white in Dark), `MenuField` (pop-up menu: value plus a chevron), and icon groups. The native segmented control and pop-up button switch to accent fills and badges inside a popover and grey out when it isn't key, so the popover uses these instead. |
@@ -46,22 +46,18 @@ Sentence case for every label and header. No uppercase tracked labels, no middle
 
 ## The patro grid (`SambatUI.MonthGrid`)
 
-- Sunday first; weekday initials in the calendar language, Saturday in holiday red.
-- Each cell: AD day in the top-right corner (the 1st carries the month: "1 Nov"), BS numeral, tithi directly below at a fixed size.
-- A day is marked by its whole cell, a rounded rectangle (`DayMark`, 7 pt continuous corners, inset 1.5 pt): filled with the accent for today, with all its text in `onAccent`; a 10% primary tint for the selection; a 1 pt outline for today on the other clock. No circles. The converter's AD and BS grids use the same marks.
-- Festival marker (`EventDot`) in the top-left corner, the same everywhere (grid, lists, widgets): a red dot for a public holiday, a red ring for a regional holiday, a tan dot for a festival. Holiday status is also always written out in text in the detail, lists and converter.
-- Hover is a 5% primary rounded fill. Every cell has a full VoiceOver label.
-- In the converter's compact grids (29 pt rows) the mark is inset 5 pt from the sides, so it stays near-square instead of becoming a wide bar.
-
-## Icon buttons
-
-Where an action's symbol is unambiguous, it is a borderless icon button (`IconButton`) with a tooltip and a spoken label: previous month, today (a target dot, dimmed when you're already there) and next month on one track; copy and "show in calendar" beside a converted date; the public-holidays filter on Festivals (filled in the accent when on); the page switcher. Settings tint their native controls with the accent.
+- A box grid, as in a printed patro: every day a box drawn with 0.5 pt hairlines (`BoxLines`, 10% primary), inner and outer edges. Always six rows, so the grid keeps one height from month to month.
+- Sunday first; weekday initials in the calendar language above the boxes, Saturday in holiday red.
+- Each box reads in three lines: festival dot on the left and the AD day on the right (the 1st carries the month: "1 Nov"); the BS numeral; the tithi at a fixed size.
+- A day is marked by its whole box (`DayMark`, square): filled with the accent for today, with all its text in `onAccent`; a 10% primary tint for the selection; a 1.5 pt outline for today on the other clock; a 5% tint on hover. The converter's AD and BS grids use the same boxes.
+- Festival marker (`EventDot`), the same everywhere (grid, lists, widgets): a red dot for a public holiday, a red ring for a regional holiday, a tan dot for a festival. Holiday status is also always written out in text in the detail, lists and converter.
+- Every box has a full VoiceOver label.
 
 ## Calendar page
 
 - Header: BS date, then weekday (calendar language) and AD date (English), then the tithi with when it ends, then today's festival if any. Nepal's clock on the right, labelled "Nepal time".
 - When Nepal and the Mac are on different dates, a one-line note says so.
-- Below the grid: "Coming up" (as many whole rows as fit) when nothing is selected, or the selected day's detail. Today's details aren't repeated under the grid.
+- Below the grid, a section with a header row: "Coming up" lists the festivals of the next six months in a list that scrolls; selecting a day shows its detail there instead, with a back arrow to return. A chevron hides the section (remembered), which shrinks the popover to the month; selecting a day shows it again. Today's details aren't repeated under the grid.
 
 ## Formats
 

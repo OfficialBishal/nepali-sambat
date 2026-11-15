@@ -16,7 +16,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         super.init()
 
         let hosting = NSHostingController(rootView: PanelRoot().environment(model))
-        hosting.sizingOptions = []
+        hosting.sizingOptions = [.preferredContentSize]
         popover.contentViewController = hosting
         popover.contentSize = PanelRoot.size
         popover.behavior = .transient
@@ -195,7 +195,9 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
 enum OffscreenRenderer {
     private static var windows: [NSWindow] = []
 
-    static func render<V: View>(_ view: V, size: CGSize, appearance: NSAppearance?, to url: URL) {
+    /// - Parameter size: the size to draw at, or nil to draw at the view's own fitting size.
+    static func render<V: View>(_ view: V, size: CGSize?, appearance: NSAppearance?, to url: URL) {
+        let size = size ?? CGSize(width: 340, height: 800)
         let window = NSWindow(contentRect: NSRect(origin: .zero, size: size), styleMask: [.borderless],
                               backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
@@ -205,7 +207,13 @@ enum OffscreenRenderer {
         window.contentView = host
         windows.append(window)
         // Give SwiftUI a run loop turn to build the view, then draw it.
+        let fit = size.height == 800
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            if fit {
+                let fitting = host.fittingSize
+                window.setContentSize(fitting)
+                host.frame = NSRect(origin: .zero, size: fitting)
+            }
             host.layoutSubtreeIfNeeded()
             SnapshotWriter.write(view: host, appearance: window.effectiveAppearance, to: url, material: true)
             windows.removeAll { $0 === window }

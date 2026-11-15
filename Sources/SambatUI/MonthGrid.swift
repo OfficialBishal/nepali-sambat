@@ -1,30 +1,34 @@
 import SambatCore
 import SwiftUI
 
-/// A Bikram Sambat month laid out Sunday-first, as in a printed patro. A day is marked by its whole
-/// cell: filled with the accent for today, tinted for the selection, outlined for today on the other clock.
+/// A Bikram Sambat month laid out Sunday-first as a box grid, as in a printed patro. A day is marked
+/// by its whole box: filled with the accent for today, tinted for the selection, outlined for today
+/// on the other clock.
 public struct MonthGrid: View {
     public struct Metrics: Sendable {
         public var cellHeight: CGFloat
         public var numeralSize: CGFloat
         /// Height of the numeral's row.
         public var numeralRow: CGFloat
-        /// Space above the numeral, below the AD date in the corner.
+        /// Space at the top of the box.
         public var numeralTop: CGFloat
-        /// Horizontal inset of the day mark, so short cells get a near-square mark rather than a wide bar.
+        /// Horizontal inset of the day mark.
         public var markInset: CGFloat
+        /// Always draw at least this many rows, so the grid keeps one height from month to month.
+        public var minRows: Int
         public var showAD: Bool
         public var showTithi: Bool
         public var interactive: Bool
 
         public init(cellHeight: CGFloat = 44, numeralSize: CGFloat = 15, numeralRow: CGFloat = 26, numeralTop: CGFloat = 6,
-                    markInset: CGFloat = 0,
+                    markInset: CGFloat = 0, minRows: Int = 6,
                     showAD: Bool = true, showTithi: Bool = true, interactive: Bool = true) {
             self.cellHeight = cellHeight
             self.numeralSize = numeralSize
             self.numeralRow = numeralRow
             self.numeralTop = numeralTop
             self.markInset = markInset
+            self.minRows = minRows
             self.showAD = showAD
             self.showTithi = showTithi
             self.interactive = interactive
@@ -68,21 +72,13 @@ public struct MonthGrid: View {
         let start = BSCalendar.startJDN(year: year, month: month) ?? 0
         let length = BSCalendar.daysInMonth(year: year, month: month) ?? 30
         let lead = JDN.weekday(start)
-        let rows = (lead + length + 6) / 7
+        let rows = max(metrics.minRows, (lead + length + 6) / 7)
         let events = FestivalEngine.shared.eventsByDay(year: year, month: month)
 
-        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-            GridRow {
-                ForEach(0..<7, id: \.self) { wd in
-                    Text(Formatter.weekday(wd, lang, short: true))
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundStyle(wd == 6 ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.quiet))
-                        .frame(maxWidth: .infinity)
-                        .padding(.bottom, 4)
-                        .accessibilityHidden(true)
-                }
-            }
-            ForEach(0..<rows, id: \.self) { row in
+        VStack(spacing: 0) {
+            WeekdayHeader(lang: lang)
+            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                ForEach(0..<rows, id: \.self) { row in
                 GridRow {
                     ForEach(0..<7, id: \.self) { col in
                         let index = row * 7 + col - lead
@@ -99,7 +95,62 @@ public struct MonthGrid: View {
                     }
                 }
             }
+            }
+            .background(BoxLines(rows: rows, columns: 7))
         }
+    }
+}
+
+/// Weekday initials over a grid's columns, Saturday in holiday red.
+public struct WeekdayHeader: View {
+    let lang: Language
+
+    public init(lang: Language) {
+        self.lang = lang
+    }
+
+    public var body: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<7, id: \.self) { wd in
+                Text(Formatter.weekday(wd, lang, short: true))
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(wd == 6 ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.quiet))
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.bottom, 5)
+        .accessibilityHidden(true)
+    }
+}
+
+/// The hairlines of a box grid: every cell a box, as in a printed patro.
+public struct BoxLines: View {
+    let rows: Int
+    let columns: Int
+
+    public init(rows: Int, columns: Int) {
+        self.rows = rows
+        self.columns = columns
+    }
+
+    public var body: some View {
+        Canvas { context, size in
+            var path = Path()
+            let w = size.width / CGFloat(columns), h = size.height / CGFloat(rows)
+            for c in 0...columns {
+                let x = min(max(CGFloat(c) * w, 0.25), size.width - 0.25)
+                path.move(to: CGPoint(x: x, y: 0))
+                path.addLine(to: CGPoint(x: x, y: size.height))
+            }
+            for r in 0...rows {
+                let y = min(max(CGFloat(r) * h, 0.25), size.height - 0.25)
+                path.move(to: CGPoint(x: 0, y: y))
+                path.addLine(to: CGPoint(x: size.width, y: y))
+            }
+            context.stroke(path, with: .color(Color.primary.opacity(0.1)), lineWidth: 0.5)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 
@@ -127,7 +178,24 @@ struct DayCell: View {
 
         let minor: AnyShapeStyle = isToday ? AnyShapeStyle(palette.onAccent.opacity(0.85)) : AnyShapeStyle(.quiet)
 
-        VStack(spacing: 1) {
+        VStack(spacing: 0) {
+            if metrics.showAD {
+                // Top line of the box: festival dot on the left, the AD day on the right.
+                HStack(spacing: 2) {
+                    if let marker {
+                        EventDot(marker, size: 5)
+                            .overlay { if isToday { Circle().strokeBorder(palette.onAccent, lineWidth: 1) } }
+                    }
+                    Spacer(minLength: 0)
+                    Text(verbatim: adLabel(ad))
+                        .font(.system(size: 8.5))
+                        .monospacedDigit()
+                        .foregroundStyle(minor)
+                        .lineLimit(1)
+                }
+                .frame(height: 11)
+                .padding(.horizontal, 4)
+            }
             Text(verbatim: Formatter.digits(day, lang))
                 .font(.system(size: metrics.numeralSize, weight: isToday ? .semibold : .regular))
                 .foregroundStyle(numeralStyle(isHoliday: isHoliday))
@@ -146,23 +214,12 @@ struct DayCell: View {
         .padding(.top, metrics.numeralTop)
         .frame(maxWidth: .infinity)
         .frame(height: metrics.cellHeight, alignment: .top)
-        .overlay(alignment: .topTrailing) {
-            if metrics.showAD {
-                Text(verbatim: adLabel(ad))
-                    .font(.system(size: 8.5))
-                    .monospacedDigit()
-                    .foregroundStyle(minor)
-                    .lineLimit(1)
-                    .padding(.top, 3)
-                    .padding(.trailing, 4)
-            }
-        }
         .overlay(alignment: .topLeading) {
-            if let marker {
+            // Without the AD line (compact grids) the dot keeps to the corner.
+            if !metrics.showAD, let marker {
                 EventDot(marker, size: 5)
-                    .overlay { if isToday { Circle().strokeBorder(palette.onAccent, lineWidth: 1) } }
-                    .padding(.top, 5)
-                    .padding(.leading, 5)
+                    .padding(.top, 4)
+                    .padding(.leading, 4)
             }
         }
         .background { DayMark(isToday: isToday, isSelected: isSelected, isOtherToday: isOtherToday,
@@ -206,8 +263,8 @@ struct DayCell: View {
     }
 }
 
-/// How a day is marked in any grid: its whole cell, as a soft rounded rectangle. Filled with the
-/// accent for today, tinted for the selection, outlined for today on the other clock.
+/// How a day is marked in any grid: its whole box. Filled with the accent for today, tinted for
+/// the selection, outlined for today on the other clock.
 public struct DayMark: View {
     let isToday: Bool
     let isSelected: Bool
@@ -229,19 +286,17 @@ public struct DayMark: View {
     }
 
     public var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 7, style: .continuous)
         Group {
             if isToday {
-                shape.fill(accent)
+                Rectangle().fill(accent)
             } else if isSelected {
-                shape.fill(Color.primary.opacity(contrast == .increased ? 0.2 : 0.1))
+                Rectangle().fill(Color.primary.opacity(contrast == .increased ? 0.2 : 0.1))
             } else if isOtherToday {
-                shape.strokeBorder(Color.primary.opacity(0.45), lineWidth: 1)
+                Rectangle().strokeBorder(Color.primary.opacity(0.5), lineWidth: 1.5)
             } else if isHovered {
-                shape.fill(Color.primary.opacity(0.05))
+                Rectangle().fill(Color.primary.opacity(0.05))
             }
         }
-        .padding(1.5)
         .padding(.horizontal, horizontalInset)
     }
 }
