@@ -22,9 +22,13 @@ enum MenuBarFormat: String, Codable, CaseIterable, Identifiable {
 }
 
 struct AppSettings: Codable, Equatable {
-    var language: Language = .nepali
+    /// Interface language.
+    var language: Language = .english
+    /// Dates, months, weekdays, tithi and festival names.
+    var calendarLanguage: Language = .nepali
     var basis: DateBasis = .nepal
-    var themeID: String = "system"
+    var appearance: AppearanceMode = .auto
+    var accent: AccentChoice = .system
     var showTithi = true
     var showAD = true
     var menuFormat: MenuBarFormat = .monthDay
@@ -40,14 +44,16 @@ struct AppSettings: Codable, Equatable {
 
     init() {}
 
-    // Decode field by field so that settings saved by older versions keep working.
+    // Decode field by field so settings saved by older versions keep working.
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = AppSettings()
         func v<T: Decodable>(_ key: CodingKeys, _ fallback: T) -> T { (try? c.decode(T.self, forKey: key)) ?? fallback }
         language = v(.language, d.language)
+        calendarLanguage = v(.calendarLanguage, d.calendarLanguage)
         basis = v(.basis, d.basis)
-        themeID = v(.themeID, d.themeID)
+        appearance = v(.appearance, d.appearance)
+        accent = v(.accent, d.accent)
         showTithi = v(.showTithi, d.showTithi)
         showAD = v(.showAD, d.showAD)
         menuFormat = v(.menuFormat, d.menuFormat)
@@ -60,7 +66,15 @@ struct AppSettings: Codable, Equatable {
         notifyMinute = v(.notifyMinute, d.notifyMinute)
         showCalendarEvents = v(.showCalendarEvents, d.showCalendarEvents)
         checkForUpdates = v(.checkForUpdates, d.checkForUpdates)
+
+        // 1.0 had colour themes; carry the light/dark choice over to the new appearance setting.
+        if !c.contains(.appearance), let legacy = try? decoder.container(keyedBy: LegacyKeys.self),
+           let theme = try? legacy.decode(String.self, forKey: .themeID) {
+            appearance = ["dark", "midnight", "dhaka"].contains(theme) ? .dark : (theme == "system" ? .auto : .light)
+        }
     }
+
+    private enum LegacyKeys: String, CodingKey { case themeID }
 
     private static let key = "settings.v1"
 
@@ -79,8 +93,10 @@ struct AppSettings: Codable, Equatable {
     var shared: SharedSettings {
         var s = SharedSettings()
         s.language = language
+        s.calendarLanguage = calendarLanguage
         s.basis = basis
-        s.themeID = themeID
+        s.appearance = appearance
+        s.accent = accent
         s.showTithi = showTithi
         return s
     }

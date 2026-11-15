@@ -103,7 +103,7 @@ public enum Formatter {
         return lang == .nepali ? lunarMonthsNe[i] : lunarMonthsEn[i]
     }
 
-    /// "मार्ग कृष्ण एकादशी" — purnimanta naming as printed in Nepali patros.
+    /// "मार्ग कृष्ण एकादशी": purnimanta naming, as printed in Nepali patros.
     public static func tithiName(_ day: DayPanchang, _ lang: Language) -> String {
         var month = lunarMonth(day.purnimantaMonth, lang)
         if day.isAdhikMonth {

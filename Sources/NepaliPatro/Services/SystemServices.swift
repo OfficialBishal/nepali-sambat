@@ -12,6 +12,10 @@ enum AppInfo {
     static var repoURL: URL { URL(string: "https://github.com/\(repo)")! }
     static var releasesURL: URL { URL(string: "https://github.com/\(repo)/releases/latest")! }
     static var issuesURL: URL { URL(string: "https://github.com/\(repo)/issues")! }
+
+    static func feedURL(_ lang: Language) -> String {
+        "https://raw.githubusercontent.com/\(repo)/main/calendar/nepali-festivals\(lang == .nepali ? "-ne" : "").ics"
+    }
 }
 
 enum LaunchAtLogin {

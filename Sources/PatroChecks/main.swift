@@ -38,7 +38,7 @@ var roundTripOK = true
 for jdn in BSCalendar.firstJDN..<BSCalendar.endJDN where BSDate(jdn: jdn)?.jdn != jdn { roundTripOK = false }
 check(roundTripOK, "round trip every day 1975-2100 BS")
 
-// MARK: Nepal time — the reason this app exists
+// MARK: Nepal time, the reason this app exists
 
 let lastNepalMinute = utcDate(2026, 11, 15, 18, 14) // 23:59 in Kathmandu
 let firstNepalMinute = lastNepalMinute.addingTimeInterval(60) // 00:00 in Kathmandu

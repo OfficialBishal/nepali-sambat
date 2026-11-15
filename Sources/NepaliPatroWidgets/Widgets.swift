@@ -39,77 +39,72 @@ struct PatroProvider: TimelineProvider {
     }
 }
 
-struct WidgetTheme {
-    static func resolve(_ settings: SharedSettings, _ scheme: ColorScheme) -> Theme {
-        Theme.resolve(settings.themeID, systemIsDark: scheme == .dark)
-    }
-}
-
 // MARK: Today
 
 struct TodayWidgetView: View {
     @Environment(\.widgetFamily) private var family
-    @Environment(\.colorScheme) private var scheme
     let entry: PatroEntry
 
     var body: some View {
-        let theme = WidgetTheme.resolve(entry.settings, scheme)
         Group {
             if family == .systemMedium {
-                HStack(spacing: 14) {
-                    TodayBlock(entry: entry, theme: theme)
-                    Rectangle().fill(theme.secondary.opacity(0.2)).frame(width: 0.5)
-                    UpcomingList(entry: entry, theme: theme, limit: 4)
+                HStack(alignment: .top, spacing: 16) {
+                    TodayBlock(entry: entry)
+                    UpcomingList(entry: entry, limit: 4)
                 }
             } else {
-                TodayBlock(entry: entry, theme: theme)
+                TodayBlock(entry: entry)
             }
         }
-        .foregroundStyle(theme.primary)
-        .containerBackground(for: .widget) { theme.background }
+        .modifier(SchemeOverride(mode: entry.settings.appearance))
+        .containerBackground(.background, for: .widget)
+    }
+}
+
+/// Applies the app's Light/Dark choice; "Auto" leaves the system's scheme in place.
+struct SchemeOverride: ViewModifier {
+    let mode: AppearanceMode
+    @Environment(\.colorScheme) private var system
+
+    func body(content: Content) -> some View {
+        content.environment(\.colorScheme, mode.colorScheme ?? system)
     }
 }
 
 struct TodayBlock: View {
     let entry: PatroEntry
-    let theme: Theme
 
     var body: some View {
-        let lang = entry.settings.language
+        let cal = entry.settings.calendarLanguage
+        let palette = Palette(entry.settings.accent)
         let bs = BSDate(jdn: entry.jdn) ?? BSDate(year: 2083, month: 1, day: 1)
         let ad = ADDate(jdn: entry.jdn)
         let weekday = JDN.weekday(entry.jdn)
         let p = Panchang.shared.day(entry.jdn)
         let holiday = weekday == 6 || FestivalEngine.shared.events(on: entry.jdn).contains { $0.isPublicHoliday }
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text(Formatter.weekday(weekday, lang))
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(holiday ? theme.holiday : theme.accent)
-                Spacer(minLength: 0)
-                if entry.settings.basis == .nepal {
-                    Text("🇳🇵").font(.system(size: 10))
-                }
-            }
-            Text(Formatter.digits(bs.day, lang))
-                .font(.system(size: 50, weight: .bold, design: .rounded))
-                .foregroundStyle(holiday ? theme.holiday : theme.primary)
+            Text(Formatter.weekday(weekday, cal))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(holiday ? Palette.holiday : palette.accent)
+            Text(Formatter.digits(bs.day, cal))
+                .font(.system(size: 46, weight: .light))
+                .foregroundStyle(holiday ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.primary))
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
-            Text(verbatim: "\(Formatter.bsMonth(bs.month, lang)) \(Formatter.digits(bs.year, lang))")
+            Text(verbatim: "\(Formatter.bsMonth(bs.month, cal)) \(Formatter.digits(bs.year, cal))")
                 .font(.system(size: 13, weight: .semibold))
                 .lineLimit(1)
             Spacer(minLength: 2)
             if entry.settings.showTithi {
-                Text(Formatter.tithiName(p, lang))
-                    .font(.system(size: 9.5))
-                    .foregroundStyle(theme.secondary)
+                Text(Formatter.tithiName(p, cal))
+                    .font(.system(size: 10))
+                    .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             }
             Text(Formatter.adLong(ad, .english))
-                .font(.system(size: 9.5, weight: .medium))
-                .foregroundStyle(theme.secondary)
+                .font(.system(size: 10))
+                .foregroundStyle(.secondary)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -118,26 +113,27 @@ struct TodayBlock: View {
 
 struct UpcomingList: View {
     let entry: PatroEntry
-    let theme: Theme
     let limit: Int
 
     var body: some View {
-        let lang = entry.settings.language
-        let items = upcoming()
-        VStack(alignment: .leading, spacing: 5) {
-            Text(lang == .nepali ? "आगामी" : "UPCOMING")
-                .font(.system(size: 9, weight: .bold))
-                .foregroundStyle(theme.secondary)
-            ForEach(items, id: \.id) { e in
+        let cal = entry.settings.calendarLanguage
+        let ui = entry.settings.language
+        VStack(alignment: .leading, spacing: 6) {
+            Text(ui == .nepali ? "आगामी" : "Upcoming")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(.secondary)
+            ForEach(upcoming(), id: \.id) { e in
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Circle().fill(e.isPublicHoliday ? theme.holiday : theme.festival).frame(width: 5, height: 5)
-                    Text(e.name(lang))
-                        .font(.system(size: 11, weight: .semibold))
+                    Circle()
+                        .fill(e.isPublicHoliday ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.secondary))
+                        .frame(width: 5, height: 5)
+                    Text(e.name(cal))
+                        .font(.system(size: 11.5, weight: .medium))
                         .lineLimit(1)
-                    Spacer(minLength: 2)
-                    Text(Formatter.relativeDays(e.jdn - entry.jdn, lang))
-                        .font(.system(size: 9.5))
-                        .foregroundStyle(theme.secondary)
+                    Spacer(minLength: 4)
+                    Text(Formatter.relativeDays(e.jdn - entry.jdn, ui))
+                        .font(.system(size: 10))
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
             }
@@ -170,43 +166,50 @@ struct TodayWidget: Widget {
 // MARK: Month
 
 struct MonthWidgetView: View {
-    @Environment(\.colorScheme) private var scheme
     let entry: PatroEntry
 
     var body: some View {
-        let theme = WidgetTheme.resolve(entry.settings, scheme)
-        let lang = entry.settings.language
+        MonthWidgetContent(entry: entry)
+            .modifier(SchemeOverride(mode: entry.settings.appearance))
+            .containerBackground(.background, for: .widget)
+    }
+}
+
+struct MonthWidgetContent: View {
+    let entry: PatroEntry
+
+    var body: some View {
+        let cal = entry.settings.calendarLanguage
+        let palette = Palette(entry.settings.accent)
         let bs = BSDate(jdn: entry.jdn) ?? BSDate(year: 2083, month: 1, day: 1)
         let start = BSCalendar.startJDN(year: bs.year, month: bs.month) ?? entry.jdn
         let len = BSCalendar.daysInMonth(year: bs.year, month: bs.month) ?? 30
-        let rows = (JDN.weekday(start) + len + 6) / 7
+        let rows = MonthGrid.rows(year: bs.year, month: bs.month)
         let a = ADDate(jdn: start), b = ADDate(jdn: start + len - 1)
-        let todayEvents = FestivalEngine.shared.events(on: entry.jdn)
+        let todayEvent = FestivalEngine.shared.events(on: entry.jdn).first
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
-                Text(verbatim: "\(Formatter.bsMonth(bs.month, lang)) \(Formatter.digits(bs.year, lang))")
-                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                Text(verbatim: "\(Formatter.bsMonth(bs.month, cal)) \(Formatter.digits(bs.year, cal))")
+                    .font(.system(size: 16, weight: .semibold))
                 Spacer()
                 Text(verbatim: "\(Formatter.adMonth(a.month, .english, short: true)) – \(Formatter.adMonth(b.month, .english, short: true)) \(b.year)")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(theme.secondary)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
             }
-            MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: lang, theme: theme,
-                      metrics: .init(cellHeight: rows == 6 ? 37 : 44, dayFont: 15, smallFont: 7.5, spacing: 1.5,
-                                     showAD: true, showTithi: entry.settings.showTithi))
+            MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: cal, palette: palette,
+                      metrics: .init(cellHeight: rows == 6 ? 45 : 53, numeralSize: 15, circle: 26,
+                                     showAD: true, showTithi: entry.settings.showTithi, interactive: false))
             Spacer(minLength: 0)
-            HStack(spacing: 5) {
-                Text(Formatter.tithiName(Panchang.shared.day(entry.jdn), lang))
-                    .foregroundStyle(theme.secondary)
-                if let e = todayEvents.first {
-                    Text(verbatim: "· \(e.name(lang))").foregroundStyle(e.isPublicHoliday ? theme.holiday : theme.festival)
+            HStack(spacing: 6) {
+                Text(Formatter.tithiName(Panchang.shared.day(entry.jdn), cal))
+                    .foregroundStyle(.secondary)
+                if let e = todayEvent {
+                    Text(e.name(cal)).foregroundStyle(e.isPublicHoliday ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.primary))
                 }
             }
-            .font(.system(size: 10, weight: .medium))
+            .font(.system(size: 11))
             .lineLimit(1)
         }
-        .foregroundStyle(theme.primary)
-        .containerBackground(for: .widget) { theme.background }
     }
 }
 
@@ -246,31 +249,34 @@ enum WidgetMain {
 @MainActor
 func renderPreviews(to dir: URL) {
     try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-    for (themeID, lang, scheme) in [("system", Language.nepali, ColorScheme.light), ("system", .english, .dark), ("himalaya", .english, .light)] {
+    let configs: [(String, ColorScheme, Language, AccentChoice)] = [
+        ("light", .light, .nepali, .system), ("dark", .dark, .nepali, .blue), ("light-en", .light, .english, .teal),
+    ]
+    for (name, scheme, cal, accent) in configs {
         var settings = SharedSettings()
-        settings.themeID = themeID
-        settings.language = lang
+        settings.calendarLanguage = cal
+        settings.accent = accent
         let entry = PatroEntry(date: Date(), jdn: NepalTime.todayJDN(), settings: settings)
-        let theme = WidgetTheme.resolve(settings, scheme)
-        func save<V: View>(_ view: V, _ size: CGSize, _ name: String) {
-            let content = view.padding(16).frame(width: size.width, height: size.height)
-                .background(theme.background).foregroundStyle(theme.primary)
+        func save<V: View>(_ view: V, _ size: CGSize, _ kind: String) {
+            let content = view
+                .padding(16)
+                .frame(width: size.width, height: size.height)
+                .background(scheme == .dark ? Color(white: 0.12) : Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .environment(\.colorScheme, scheme)
             let r = ImageRenderer(content: content)
             r.scale = 2
             if let img = r.nsImage, let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff),
                let png = rep.representation(using: .png, properties: [:]) {
-                try? png.write(to: dir.appendingPathComponent("\(name)-\(themeID)-\(lang.rawValue).png"))
+                try? png.write(to: dir.appendingPathComponent("\(kind)-\(name).png"))
             }
         }
-        save(TodayBlock(entry: entry, theme: theme), CGSize(width: 170, height: 170), "small")
-        save(HStack(spacing: 14) {
-            TodayBlock(entry: entry, theme: theme)
-            Rectangle().fill(theme.secondary.opacity(0.2)).frame(width: 0.5)
-            UpcomingList(entry: entry, theme: theme, limit: 4)
+        save(TodayBlock(entry: entry), CGSize(width: 170, height: 170), "small")
+        save(HStack(alignment: .top, spacing: 16) {
+            TodayBlock(entry: entry)
+            UpcomingList(entry: entry, limit: 4)
         }, CGSize(width: 364, height: 170), "medium")
-        save(MonthWidgetView(entry: entry), CGSize(width: 364, height: 382), "large")
+        save(MonthWidgetContent(entry: entry), CGSize(width: 364, height: 382), "large")
     }
 }
 #endif

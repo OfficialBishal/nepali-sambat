@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Resources/icon-1024.png" width="128" alt="Nepali Patro icon">
+  <img src="docs/icon.png" width="128" alt="Nepali Patro icon">
 </p>
 
 <h1 align="center">Nepali Patro</h1>
@@ -13,6 +13,12 @@
   <code>brew install --cask officialbishal/tap/nepali-patro</code>
 </p>
 
+<p align="center">
+  <img src="docs/calendar-light.png" width="300" alt="The calendar just after midnight in Nepal, while it is still Sunday in New York">
+  &nbsp;
+  <img src="docs/calendar-dark-nepali.png" width="300" alt="The calendar in dark mode with a Nepali interface">
+</p>
+
 ---
 
 ## Why another Nepali calendar?
@@ -23,18 +29,18 @@ Most Nepali calendar apps work out "today" from your Mac's clock. If you live ou
 
 ## Features
 
-- **Menu bar date**: `कात्तिक २९`, `२९ कात्तिक, आइत`, `२०८३/०७/२९`, a calendar icon, and more, with an optional Nepal clock.
-- **Month view**: the BS month with English dates, the tithi for each day, public holidays in red, festival markers, and a dashed outline on your local date when it differs from Nepal's.
-- **Tithi and panchang**: today's tithi with its end time, sunrise and sunset in Kathmandu, and the Nepal Sambat year.
+- **Menu bar date**: `कात्तिक २९`, `२९ कात्तिक, आइत`, `२०८३/०७/२९`, a calendar icon, and more, with the time in Nepal if you want it.
+- **The month, the way a patro prints it**: Nepali dates with the English date in the corner, the tithi for each day, holidays and Saturdays in red, and a small marker on festival days. When Nepal and your Mac are on different dates, your local date gets a thin ring.
+- **Tithi and panchang**: the tithi with its end time, sunrise and sunset in Kathmandu, and the Nepal Sambat year.
 - **Festivals and holidays**: Dashain, Tihar, Chhath, Teej, Lhosars, Eid, and more. These are worked out from astronomy and the rules Nepali patros use, then checked against the Government of Nepal's holiday lists for 2082 and 2083 BS (see [accuracy](#accuracy)).
-- **AD ↔ BS converter** for 1975–2100 BS (1918–2044 AD), with copy buttons and a jump to that day in the calendar.
-- **Upcoming festivals**, counting down the days, with a "holidays only" filter.
+- **Date converter** for AD and BS in both directions, 1975–2100 BS (1918–2044 AD).
+- **Upcoming festivals** grouped by month, with a "holidays only" filter.
 - **Festival reminders**: on the day at a time you choose, and the evening before if you like.
-- **Apple Calendar**: your own events appear under the selected day, and one click writes Nepali festivals into a "Nepali Festivals" calendar. You can also export a `.ics` file.
+- **Apple Calendar**: your own events appear under the selected day, and one click writes Nepali festivals into a "Nepali Festivals" calendar. You can also export a `.ics` file or copy a feed URL for Google Calendar or Outlook.
 - **Desktop widgets**: today's date (small and medium) and the full month (large). They also follow Nepal time.
-- **Seven themes**, all free: Light, Dark, Himalaya, Laliguras, Chitwan, Midnight, Dhaka, plus Auto.
-- **Nepali or English** for the whole interface.
-- **Keyboard shortcuts**: ← → change month, ↑ ↓ change year, `T` goes to today, `⌘1`–`⌘3` switch pages, `⌘,` opens settings, Esc closes.
+- **Two separate languages**: an English interface with Nepali dates, a fully Nepali interface, or English throughout. The interface language and the calendar language are independent settings.
+- **Native look**: a system popover (Liquid Glass on macOS 26), a standard Settings window, Light, Dark or Auto, and seven accent colors. Red is never an accent, because in a patro red means a holiday.
+- **Keyboard shortcuts**: ← → change month, ↑ ↓ change year, `T` goes to today, `⌘1`–`⌘3` switch pages, `⌘,` opens Settings, Esc closes.
 - **`patro` command-line tool**, installed with the app:
 
 ```console
@@ -52,6 +58,18 @@ Mangsir 28   Dec 14   Vivah Panchami  (in 29 days)
 
 $ patro bs2ad 2083-07-22 --en      # also: ad2bs, month, events, ics
 ```
+
+<p align="center">
+  <img src="docs/converter.png" width="250" alt="Date converter">
+  <img src="docs/festivals.png" width="250" alt="Upcoming festivals">
+</p>
+<p align="center">
+  <img src="docs/settings.png" width="420" alt="Settings window">
+</p>
+<p align="center">
+  <img src="docs/widget-medium.png" width="364" alt="Medium widget">
+  <img src="docs/widget-large.png" width="250" alt="Large widget">
+</p>
 
 It has no network access, no analytics, and no account. The app is a few MB and runs entirely offline. The only network request is an optional daily update check against GitHub Releases.
 
@@ -108,11 +126,13 @@ swift run PatroChecks          # run the self-checks
 | Target | What it is |
 | --- | --- |
 | `PatroCore` | Calendar data, BS↔AD conversion, Nepal-time "today", astronomy, tithi, festival engine, ICS |
-| `PatroUI` | Shared SwiftUI pieces (themes, month grid) |
+| `PatroUI` | Shared SwiftUI pieces (color palette, month grid) |
 | `NepaliPatro` | The menu bar app |
 | `NepaliPatroWidgets` | The WidgetKit extension |
 | `patro` | The command-line tool |
 | `PatroChecks` | Self-checks: conversions, the Nepal-midnight flip, and official holiday dates |
+
+Design decisions are documented in [DESIGN.md](DESIGN.md) and the product brief in [PRODUCT.md](PRODUCT.md).
 
 ## License
 

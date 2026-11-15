@@ -305,7 +305,7 @@ extension FestivalEngine {
         .init(key: "jitiya", ne: "जितिया पर्व", en: "Jitiya", category: .regionalHoliday, rule: .lunar(month: 5, tithi: 23, at: .sunrise),
               noteNe: "जितिया मनाउने महिलाहरूका लागि बिदा", noteEn: "Holiday for women observing Jitiya"),
 
-        // Ashwin — Dashain
+        // Ashwin: Dashain
         .init(key: "ghatasthapana", ne: "घटस्थापना", en: "Ghatasthapana", category: .publicHoliday, rule: .lunar(month: 6, tithi: 1, at: .sunrise)),
         .init(key: "fulpati", ne: "फूलपाती", en: "Fulpati", category: .publicHoliday, rule: .lunar(month: 6, tithi: 7, at: .sunrise)),
         .init(key: "mahaAshtami", ne: "महाअष्टमी", en: "Maha Ashtami", category: .publicHoliday, rule: .lunar(month: 6, tithi: 8, at: .sunrise)),

@@ -1,46 +1,27 @@
 import AppKit
 import Observation
 import PatroCore
+import PatroUI
 import SwiftUI
 
-/// A borderless panel that drops down from the menu bar item.
-final class DropdownPanel: NSPanel {
-    init() {
-        super.init(contentRect: NSRect(x: 0, y: 0, width: 344, height: 600),
-                   styleMask: [.borderless, .nonactivatingPanel, .fullSizeContentView],
-                   backing: .buffered, defer: true)
-        isFloatingPanel = true
-        level = .popUpMenu
-        hasShadow = true
-        backgroundColor = .clear
-        isOpaque = false
-        isMovable = false
-        hidesOnDeactivate = false
-        animationBehavior = .utilityWindow
-        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient, .ignoresCycle]
-    }
-
-    override var canBecomeKey: Bool { true }
-    override var canBecomeMain: Bool { false }
-}
-
 @MainActor
-final class StatusBarController: NSObject {
+final class StatusBarController: NSObject, NSPopoverDelegate {
     private let model: AppModel
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    private let panel = DropdownPanel()
-    private var globalMonitor: Any?
-    private var localMonitor: Any?
-    private var appearanceObservation: NSKeyValueObservation?
+    private let popover = NSPopover()
+    private var keyMonitor: Any?
 
     init(model: AppModel) {
         self.model = model
         super.init()
 
-        let hosting = NSHostingView(rootView: PanelRoot().environment(model))
-        hosting.frame = NSRect(x: 0, y: 0, width: PanelRoot.size.width, height: PanelRoot.size.height)
-        panel.contentView = hosting
-        panel.setContentSize(PanelRoot.size)
+        let hosting = NSHostingController(rootView: PanelRoot().environment(model))
+        hosting.sizingOptions = []
+        popover.contentViewController = hosting
+        popover.contentSize = PanelRoot.size
+        popover.behavior = .transient
+        popover.animates = true
+        popover.delegate = self
 
         if let button = statusItem.button {
             button.target = self
@@ -50,16 +31,10 @@ final class StatusBarController: NSObject {
         }
         statusItem.autosaveName = "NepaliPatroStatusItem"
 
-        model.systemIsDark = Self.systemIsDark()
-        appearanceObservation = NSApp.observe(\.effectiveAppearance, options: [.new]) { [weak self] _, _ in
-            Task { @MainActor in self?.model.systemIsDark = Self.systemIsDark() }
-        }
+        model.closePopover = { [weak self] in self?.closePopover() }
         updateButton()
+        updateAppearance()
         observeModel()
-    }
-
-    private static func systemIsDark() -> Bool {
-        NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
     }
 
     // MARK: Menu bar label
@@ -69,12 +44,18 @@ final class StatusBarController: NSObject {
             _ = model.menuTitle
             _ = model.settings.menuShowsIcon
             _ = model.settings.menuFormat
+            _ = model.settings.appearance
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.updateButton()
+                self?.updateAppearance()
                 self?.observeModel()
             }
         }
+    }
+
+    private func updateAppearance() {
+        popover.appearance = model.settings.appearance.nsAppearance
     }
 
     private func updateButton() {
@@ -82,7 +63,7 @@ final class StatusBarController: NSObject {
         let title = model.menuTitle
         let s = model.settings
         if s.menuFormat == .iconOnly {
-            button.image = MenuBarIcon.calendar(day: Formatter.digits(model.today.day, model.lang))
+            button.image = MenuBarIcon.calendar(day: Formatter.digits(model.today.day, model.cal))
             button.imagePosition = title.isEmpty ? .imageOnly : .imageLeading
         } else if s.menuShowsIcon {
             button.image = MenuBarIcon.symbol()
@@ -91,120 +72,96 @@ final class StatusBarController: NSObject {
             button.image = nil
         }
         let font = NSFont.menuBarFont(ofSize: 0)
-        button.attributedTitle = NSAttributedString(string: title.isEmpty ? "" : (button.image == nil ? title : " " + title),
-                                                    attributes: [.font: font, .baselineOffset: 0.5])
+        let text = title.isEmpty ? "" : (button.image == nil ? title : " " + title)
+        button.attributedTitle = NSAttributedString(string: text, attributes: [.font: font, .baselineOffset: 0.5])
         button.toolTip = tooltip()
     }
 
     private func tooltip() -> String {
-        let lang = model.lang
-        let today = model.today
-        let ad = ADDate(jdn: model.todayJDN)
-        return "\(Formatter.dateLong(today, lang)), \(Formatter.weekday(JDN.weekday(model.todayJDN), lang))\n\(Formatter.adLong(ad, .english))"
+        let jdn = model.todayJDN
+        return "\(Formatter.dateLong(model.today, model.cal)), \(Formatter.weekday(JDN.weekday(jdn), model.cal))\n\(Formatter.adLong(ADDate(jdn: jdn), .english))"
     }
 
-    // MARK: Panel
+    // MARK: Popover
 
     @objc private func statusItemClicked(_ sender: NSStatusBarButton) {
         if NSApp.currentEvent?.type == .rightMouseUp {
             showContextMenu()
         } else {
-            togglePanel()
+            togglePopover()
         }
     }
 
-    func togglePanel() {
-        panel.isVisible ? closePanel() : openPanel()
+    func togglePopover() {
+        popover.isShown ? closePopover() : openPopover()
     }
 
-    func openPanel(page: Page? = nil) {
-        guard let button = statusItem.button, let buttonWindow = button.window else { return }
+    func openPopover(page: Page? = nil) {
+        guard let button = statusItem.button else { return }
         if let page { model.page = page }
         model.now = AppModel.currentDate()
         model.panelVisible = true
-
-        let buttonFrame = buttonWindow.convertToScreen(button.convert(button.bounds, to: nil))
-        let screen = buttonWindow.screen ?? NSScreen.main
-        let visible = screen?.visibleFrame ?? .zero
-        let size = PanelRoot.size
-        var x = buttonFrame.midX - size.width / 2
-        x = max(visible.minX + 6, min(x, visible.maxX - size.width - 6))
-        let y = buttonFrame.minY - size.height - 6
-        panel.setFrame(NSRect(x: x, y: y, width: size.width, height: size.height), display: true)
-        panel.alphaValue = 1
-        panel.makeKeyAndOrderFront(nil)
-        statusItem.button?.highlight(true)
-
-        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
-            Task { @MainActor in self?.closePanel() }
-        }
-        localMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .leftMouseDown]) { [weak self] event in
-            guard let self else { return event }
-            if event.type == .leftMouseDown {
-                if event.window !== self.panel && event.window !== self.statusItem.button?.window && event.window?.level != .popUpMenu {
-                    self.closePanel()
-                }
-                return event
-            }
-            return self.handleKey(event)
+        NSApp.activate(ignoringOtherApps: true)
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        popover.contentViewController?.view.window?.makeKey()
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            self?.handleKey(event) ?? event
         }
     }
 
-    func closePanel() {
-        guard panel.isVisible else { return }
-        panel.orderOut(nil)
-        statusItem.button?.highlight(false)
+    func closePopover() {
+        if popover.isShown { popover.performClose(nil) }
+    }
+
+    func popoverDidClose(_ notification: Notification) {
         model.panelVisible = false
-        if let m = globalMonitor { NSEvent.removeMonitor(m) }
-        if let m = localMonitor { NSEvent.removeMonitor(m) }
-        globalMonitor = nil
-        localMonitor = nil
+        if let m = keyMonitor { NSEvent.removeMonitor(m) }
+        keyMonitor = nil
+        // Hand focus back to the previous app unless one of our windows (Settings) is open.
+        let ownWindowOpen = NSApp.windows.contains { $0.isVisible && $0.level == .normal && $0.styleMask.contains(.titled) }
+        if !ownWindowOpen { NSApp.hide(nil) }
     }
 
     private func handleKey(_ event: NSEvent) -> NSEvent? {
-        // Don't steal keys from text fields (converter).
-        if let responder = panel.firstResponder, responder is NSTextView { 
-            if event.keyCode == 53 { closePanel(); return nil }
-            return event
-        }
-        switch event.keyCode {
-        case 53: closePanel(); return nil // esc
-        case 123 where model.page == .calendar: model.step(months: -1); return nil // ←
-        case 124 where model.page == .calendar: model.step(months: 1); return nil // →
-        case 126 where model.page == .calendar: model.step(months: -12); return nil // ↑ year
-        case 125 where model.page == .calendar: model.step(months: 12); return nil // ↓ year
-        default: break
-        }
+        guard popover.isShown else { return event }
         if event.modifierFlags.contains(.command) {
             switch event.charactersIgnoringModifiers {
             case "q": NSApp.terminate(nil); return nil
-            case ",": model.page = .settings; return nil
-            case "w": closePanel(); return nil
+            case ",": closePopover(); model.openSettings(.general); return nil
+            case "w": closePopover(); return nil
             case "1": model.page = .calendar; return nil
             case "2": model.page = .converter; return nil
             case "3": model.page = .upcoming; return nil
-            default: break
+            default: return event
             }
         }
-        if event.charactersIgnoringModifiers == "t", model.page == .calendar { model.goToToday(); return nil }
+        // Leave keys alone while a text field (the converter's date field) is being edited.
+        if popover.contentViewController?.view.window?.firstResponder is NSText { return event }
+        guard model.page == .calendar else { return event }
+        switch event.keyCode {
+        case 123: model.step(months: -1); return nil
+        case 124: model.step(months: 1); return nil
+        case 126: model.step(months: -12); return nil
+        case 125: model.step(months: 12); return nil
+        default: break
+        }
+        if event.charactersIgnoringModifiers == "t" { model.goToToday(); return nil }
         return event
     }
 
     private func showContextMenu() {
-        closePanel()
+        closePopover()
         let menu = NSMenu()
-        let lang = model.lang
-        let header = NSMenuItem(title: model.menuTitle.isEmpty ? Formatter.dateLong(model.today, lang) : tooltip().replacingOccurrences(of: "\n", with: " · "),
-                                action: nil, keyEquivalent: "")
+        let header = NSMenuItem(title: tooltip().replacingOccurrences(of: "\n", with: "   "), action: nil, keyEquivalent: "")
         header.isEnabled = false
         menu.addItem(header)
         menu.addItem(.separator())
         menu.addItem(item(model.t("Open Calendar", "पात्रो खोल्नुहोस्"), #selector(openCalendar)))
-        menu.addItem(item(model.t("Date Converter", "मिति रूपान्तरण"), #selector(openConverter)))
-        menu.addItem(item(model.t("Copy Today's Date", "आजको मिति कपी"), #selector(copyToday)))
-        menu.addItem(item(model.t("Settings…", "सेटिङ…"), #selector(openSettings), key: ","))
+        menu.addItem(item(model.t("Convert a Date", "मिति रूपान्तरण"), #selector(openConverter)))
+        menu.addItem(item(model.t("Copy Today’s Date", "आजको मिति कपी गर्नुहोस्"), #selector(copyToday)))
         menu.addItem(.separator())
-        menu.addItem(item(model.t("Quit Nepali Patro", "बन्द गर्नुहोस्"), #selector(quit), key: "q"))
+        menu.addItem(item(model.t("Settings…", "सेटिङ…"), #selector(openSettings), key: ","))
+        menu.addItem(item(model.t("Quit Nepali Patro", "नेपाली पात्रो बन्द गर्नुहोस्"), #selector(quit), key: "q"))
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
         statusItem.menu = nil
@@ -216,53 +173,60 @@ final class StatusBarController: NSObject {
         return i
     }
 
-    @objc private func openCalendar() { openPanel(page: .calendar) }
-    @objc private func openConverter() { openPanel(page: .converter) }
-    @objc private func openSettings() { openPanel(page: .settings) }
+    @objc private func openCalendar() { openPopover(page: .calendar) }
+    @objc private func openConverter() { openPopover(page: .converter) }
+    @objc private func openSettings() { model.openSettings(.general) }
     @objc private func quit() { NSApp.terminate(nil) }
     @objc private func copyToday() {
-        let lang = model.lang
-        Clipboard.copy("\(Formatter.dateLong(model.today, lang)), \(Formatter.weekday(JDN.weekday(model.todayJDN), lang))")
+        Clipboard.copy("\(Formatter.dateLong(model.today, model.cal)), \(Formatter.weekday(JDN.weekday(model.todayJDN), model.cal))")
     }
 }
 
 #if DEBUG
 extension StatusBarController {
-    /// Renders every page in a few themes to PNG files (debug builds only).
-    func writeSnapshots(to dir: URL) {
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let original = model.settings
-        let combos: [(String, Language)] = [("light", .nepali), ("dark", .english), ("himalaya", .nepali), ("midnight", .english), ("laliguras", .english), ("dhaka", .nepali), ("forest", .english)]
+    /// Debug builds only: renders the popover's pages to PNG files for visual review.
+    func snapshotSteps(to dir: URL, prefix: String) -> [() -> Void] {
         var steps: [() -> Void] = []
-        for (theme, lang) in combos {
-            for page in Page.allCases {
-                steps.append { [weak self] in
-                    guard let self else { return }
-                    self.model.settings.themeID = theme
-                    self.model.settings.language = lang
-                    if page == .calendar && theme == "dark" { self.model.select(self.model.todayJDN + 7) } else { self.model.selectedJDN = nil }
-                    self.openPanel(page: page)
-                }
-                steps.append { [weak self] in
-                    guard let self, let view = self.panel.contentView else { return }
-                    if let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) {
-                        view.cacheDisplay(in: view.bounds, to: rep)
-                        let url = dir.appendingPathComponent("\(theme)-\(page.rawValue).png")
-                        try? rep.representation(using: .png, properties: [:])?.write(to: url)
-                    }
-                }
+        for page in Page.allCases {
+            steps.append { [weak self] in
+                guard let self else { return }
+                self.closePopover()
+                self.model.page = page
+                self.openPopover(page: page)
+            }
+            steps.append { [weak self] in
+                guard let self, let view = self.popover.contentViewController?.view else { return }
+                SnapshotWriter.write(view: view, appearance: self.popover.effectiveAppearance,
+                                     to: dir.appendingPathComponent("\(prefix)-\(page.rawValue).png"), material: true)
             }
         }
-        steps.append { [weak self] in
-            self?.model.settings = original
-            NSApp.terminate(nil)
+        return steps
+    }
+}
+
+enum SnapshotWriter {
+    /// Draws a view hierarchy to PNG. Behind-window materials can't be captured offscreen, so the
+    /// popover material is approximated with a flat colour for the appearance.
+    @MainActor
+    static func write(view: NSView, appearance: NSAppearance, to url: URL, material: Bool) {
+        let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        guard let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
+        appearance.performAsCurrentDrawingAppearance {
+            view.cacheDisplay(in: view.bounds, to: rep)
         }
-        func run(_ i: Int) {
-            guard i < steps.count else { return }
-            steps[i]()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { run(i + 1) }
+        let size = view.bounds.size
+        let image = NSImage(size: size)
+        image.lockFocus()
+        if material {
+            NSColor(srgbRed: isDark ? 0.17 : 0.95, green: isDark ? 0.17 : 0.95, blue: isDark ? 0.18 : 0.95, alpha: 1).setFill()
+            NSBezierPath(roundedRect: NSRect(origin: .zero, size: size), xRadius: 12, yRadius: 12).fill()
         }
-        run(0)
+        rep.draw(in: NSRect(origin: .zero, size: size))
+        image.unlockFocus()
+        if let tiff = image.tiffRepresentation, let bitmap = NSBitmapImageRep(data: tiff),
+           let png = bitmap.representation(using: .png, properties: [:]) {
+            try? png.write(to: url)
+        }
     }
 }
 #endif
@@ -270,23 +234,18 @@ extension StatusBarController {
 enum MenuBarIcon {
     /// A small calendar glyph with today's day number, drawn as a template image.
     static func calendar(day: String) -> NSImage {
-        let size = NSSize(width: 20, height: 17)
+        let size = NSSize(width: 19, height: 16)
         let image = NSImage(size: size, flipped: false) { rect in
-            let body = NSRect(x: 1.5, y: 1, width: rect.width - 3, height: rect.height - 2.5)
-            let path = NSBezierPath(roundedRect: body, xRadius: 3.5, yRadius: 3.5)
+            let body = NSRect(x: 1, y: 0.75, width: rect.width - 2, height: rect.height - 1.5)
+            let outline = NSBezierPath(roundedRect: body, xRadius: 3.5, yRadius: 3.5)
             NSColor.black.setStroke()
-            path.lineWidth = 1.4
-            path.stroke()
-            let bar = NSBezierPath(rect: NSRect(x: body.minX, y: body.maxY - 4, width: body.width, height: 4))
-            NSColor.black.setFill()
-            NSBezierPath(roundedRect: body, xRadius: 3.5, yRadius: 3.5).setClip()
-            bar.fill()
-            NSGraphicsContext.current?.cgContext.resetClip()
-            let font = NSFont.systemFont(ofSize: day.count > 1 ? 9.5 : 10.5, weight: .bold)
-            let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.black]
-            let s = NSAttributedString(string: day, attributes: attrs)
+            outline.lineWidth = 1.25
+            outline.stroke()
+            NSBezierPath(rect: NSRect(x: body.minX + 0.6, y: body.maxY - 3.6, width: body.width - 1.2, height: 0.9)).fill()
+            let font = NSFont.systemFont(ofSize: day.count > 1 ? 9 : 9.5, weight: .semibold)
+            let s = NSAttributedString(string: day, attributes: [.font: font, .foregroundColor: NSColor.black])
             let sz = s.size()
-            s.draw(at: NSPoint(x: body.midX - sz.width / 2, y: body.minY + (body.height - 4 - sz.height) / 2 + 0.5))
+            s.draw(at: NSPoint(x: body.midX - sz.width / 2, y: body.minY + (body.height - 3.6 - sz.height) / 2 + 0.3))
             return true
         }
         image.isTemplate = true

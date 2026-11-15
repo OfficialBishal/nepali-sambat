@@ -3,187 +3,143 @@ import PatroUI
 import SwiftUI
 
 struct PanelRoot: View {
-    static let size = CGSize(width: 344, height: 616)
+    static let size = CGSize(width: 340, height: 596)
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        let theme = model.theme
+        @Bindable var model = model
         VStack(spacing: 0) {
-            Group {
+            ZStack {
                 switch model.page {
-                case .calendar: CalendarPage()
-                case .converter: ConverterPage()
-                case .upcoming: UpcomingPage()
-                case .settings: SettingsPage()
+                case .calendar: CalendarPage().transition(.opacity)
+                case .converter: ConverterPage().transition(.opacity)
+                case .upcoming: UpcomingPage().transition(.opacity)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            Rectangle().fill(theme.secondary.opacity(0.15)).frame(height: 0.5)
-            FooterBar()
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: model.page)
+            Divider()
+            BottomBar()
         }
         .frame(width: Self.size.width, height: Self.size.height)
-        .background(theme.background)
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(theme.isDark ? Color.white.opacity(0.12) : Color.black.opacity(0.10), lineWidth: 0.5)
-        )
-        .foregroundStyle(theme.primary)
-        .tint(theme.accent)
-        .environment(\.colorScheme, theme.colorScheme)
+        .tint(model.palette.accent)
+        .background {
+            if model.snapshotBackground { Color(nsColor: .windowBackgroundColor) }
+        }
     }
 }
 
-struct FooterBar: View {
+struct BottomBar: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        let theme = model.theme
-        HStack(spacing: 2) {
-            tab(.calendar, "calendar", model.t("Calendar", "पात्रो"))
-            tab(.converter, "arrow.left.arrow.right", model.t("Convert", "रूपान्तरण"))
-            tab(.upcoming, "sparkles", model.t("Festivals", "चाडपर्व"))
-            tab(.settings, "gearshape", model.t("Settings", "सेटिङ"), badge: model.updateChecker.updateAvailable)
+        @Bindable var model = model
+        HStack(spacing: 8) {
+            Picker("", selection: $model.page) {
+                Text(model.t("Calendar", "पात्रो")).tag(Page.calendar)
+                Text(model.t("Convert", "रूपान्तरण")).tag(Page.converter)
+                Text(model.t("Festivals", "चाडपर्व")).tag(Page.upcoming)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .fixedSize()
+
             Spacer(minLength: 0)
-            Button {
-                NSApp.terminate(nil)
+
+            Menu {
+                Button(model.t("Settings…", "सेटिङ…")) {
+                    model.closePopover()
+                    model.openSettings(.general)
+                }
+                .keyboardShortcut(",")
+                if model.updateChecker.updateAvailable, let v = model.updateChecker.latestVersion {
+                    Button(model.t("Update to \(v)…", "\(v) मा अपडेट गर्नुहोस्…")) {
+                        model.closePopover()
+                        model.openSettings(.general)
+                    }
+                }
+                Button(model.t("About Nepali Patro", "नेपाली पात्रोबारे")) {
+                    model.closePopover()
+                    model.openSettings(.about)
+                }
+                Divider()
+                Button(model.t("Quit Nepali Patro", "नेपाली पात्रो बन्द गर्नुहोस्")) { NSApp.terminate(nil) }
+                    .keyboardShortcut("q")
             } label: {
-                Image(systemName: "power")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(theme.secondary)
-                    .frame(width: 26, height: 26)
+                Image(systemName: "gearshape")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 24, height: 22)
                     .contentShape(Rectangle())
             }
+            .menuStyle(.button)
             .buttonStyle(.plain)
-            .help(model.t("Quit Nepali Patro", "बन्द गर्नुहोस्"))
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-    }
-
-    private func tab(_ page: Page, _ icon: String, _ title: String, badge: Bool = false) -> some View {
-        let theme = model.theme
-        let selected = model.page == page
-        return Button {
-            model.page = page
-        } label: {
-            HStack(spacing: 4) {
-                Image(systemName: icon).font(.system(size: 11, weight: .semibold))
-                if selected { Text(title).font(.system(size: 11, weight: .semibold)).lineLimit(1) }
-            }
-            .padding(.horizontal, selected ? 9 : 7)
-            .frame(height: 26)
-            .foregroundStyle(selected ? theme.onAccent : theme.secondary)
-            .background(Capsule().fill(selected ? theme.accent : Color.clear))
+            .menuIndicator(.hidden)
+            .fixedSize()
             .overlay(alignment: .topTrailing) {
-                if badge { Circle().fill(theme.holiday).frame(width: 6, height: 6).offset(x: -2, y: 3) }
+                if model.updateChecker.updateAvailable {
+                    Circle().fill(model.palette.accent).frame(width: 6, height: 6).offset(x: 3, y: -2)
+                }
             }
-            .contentShape(Capsule())
+            .help(model.t("Settings, updates and quit", "सेटिङ, अपडेट र बन्द"))
+            .accessibilityLabel(model.t("Settings and more", "सेटिङ र अन्य"))
         }
-        .buttonStyle(.plain)
-        .help(title)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 9)
     }
 }
 
-struct Card<Content: View>: View {
-    @Environment(AppModel.self) private var model
-    var padding: CGFloat = 10
-    @ViewBuilder var content: Content
+/// A plain row that highlights on hover and press, like a native list row.
+struct RowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        RowBody(configuration: configuration)
+    }
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) { content }
-            .padding(padding)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(model.theme.card))
+    private struct RowBody: View {
+        let configuration: ButtonStyleConfiguration
+        private var hovered = State(initialValue: false)
+
+        init(configuration: ButtonStyleConfiguration) {
+            self.configuration = configuration
+        }
+
+        var body: some View {
+            configuration.label
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Color.primary.opacity(configuration.isPressed ? 0.1 : (hovered.wrappedValue ? 0.05 : 0)))
+                        .padding(.horizontal, 6)
+                )
+                .onHover { hovered.wrappedValue = $0 }
+        }
     }
 }
 
-struct PageTitle: View {
-    @Environment(AppModel.self) private var model
+/// One line of facts: a symbol, a value and an optional detail on the right.
+struct FactRow: View {
+    let symbol: String
     let text: String
+    var detail: String? = nil
 
     var body: some View {
-        Text(text)
-            .font(.system(size: 17, weight: .bold, design: .rounded))
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
-struct SectionLabel: View {
-    @Environment(AppModel.self) private var model
-    let text: String
-
-    var body: some View {
-        Text(text.uppercased())
-            .font(.system(size: 9.5, weight: .semibold))
-            .tracking(0.6)
-            .foregroundStyle(model.theme.secondary)
-    }
-}
-
-struct CategoryTag: View {
-    @Environment(AppModel.self) private var model
-    let category: EventCategory
-
-    var body: some View {
-        let theme = model.theme
-        let (en, ne, color): (String, String, Color) = {
-            switch category {
-            case .publicHoliday: return ("Holiday", "सार्वजनिक बिदा", theme.holiday)
-            case .regionalHoliday: return ("Regional holiday", "क्षेत्रीय बिदा", theme.holiday.opacity(0.75))
-            case .festival: return ("Festival", "चाडपर्व", theme.festival)
-            case .observance: return ("Observance", "दिवस", theme.secondary)
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Image(systemName: symbol)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .frame(width: 16)
+            Text(text)
+                .font(.callout)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
+            Spacer(minLength: 6)
+            if let detail {
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
-        }()
-        Text(model.t(en, ne))
-            .font(.system(size: 9, weight: .semibold))
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .foregroundStyle(color)
-            .background(Capsule().fill(color.opacity(0.13)))
-    }
-}
-
-struct IconButton: View {
-    @Environment(AppModel.self) private var model
-    let systemName: String
-    var help: String = ""
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: systemName)
-                .font(.system(size: 11, weight: .bold))
-                .frame(width: 26, height: 24)
-                .background(RoundedRectangle(cornerRadius: 7, style: .continuous).fill(model.theme.card))
-                .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
-        .help(help)
-    }
-}
-
-struct PillButton: View {
-    @Environment(AppModel.self) private var model
-    let title: String
-    var systemImage: String? = nil
-    var prominent = false
-    let action: () -> Void
-
-    var body: some View {
-        let theme = model.theme
-        Button(action: action) {
-            HStack(spacing: 4) {
-                if let systemImage { Image(systemName: systemImage).font(.system(size: 10, weight: .semibold)) }
-                Text(title).font(.system(size: 11, weight: .semibold)).lineLimit(1)
-            }
-            .padding(.horizontal, 10)
-            .frame(height: 24)
-            .foregroundStyle(prominent ? theme.onAccent : theme.primary)
-            .background(Capsule().fill(prominent ? theme.accent : theme.card))
-            .contentShape(Capsule())
-        }
-        .buttonStyle(.plain)
     }
 }
 

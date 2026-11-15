@@ -1,21 +1,38 @@
 import Foundation
 
+public enum AppearanceMode: String, Codable, CaseIterable, Sendable {
+    case auto, light, dark
+}
+
+/// Accent color for today and the selection. Red is deliberately absent: in a patro, red means a holiday.
+public enum AccentChoice: String, Codable, CaseIterable, Sendable {
+    case system, blue, teal, green, marigold, purple, graphite
+}
+
 /// Settings the widget extension also needs. The app writes them to a small JSON file that the
 /// sandboxed widget can read (see the widget's entitlements).
 public struct SharedSettings: Codable, Equatable, Sendable {
-    public var language: Language = .nepali
+    /// Language of the interface: labels, buttons, messages.
+    public var language: Language = .english
+    /// Language of the calendar itself: BS dates, months, weekdays, tithi and festival names.
+    public var calendarLanguage: Language = .nepali
     public var basis: DateBasis = .nepal
-    public var themeID: String = "system"
+    public var appearance: AppearanceMode = .auto
+    public var accent: AccentChoice = .system
     public var showTithi: Bool = true
 
     public init() {}
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        language = (try? c.decode(Language.self, forKey: .language)) ?? .nepali
-        basis = (try? c.decode(DateBasis.self, forKey: .basis)) ?? .nepal
-        themeID = (try? c.decode(String.self, forKey: .themeID)) ?? "system"
-        showTithi = (try? c.decode(Bool.self, forKey: .showTithi)) ?? true
+        let d = SharedSettings()
+        func v<T: Decodable>(_ key: CodingKeys, _ fallback: T) -> T { (try? c.decode(T.self, forKey: key)) ?? fallback }
+        language = v(.language, d.language)
+        calendarLanguage = v(.calendarLanguage, d.calendarLanguage)
+        basis = v(.basis, d.basis)
+        appearance = v(.appearance, d.appearance)
+        accent = v(.accent, d.accent)
+        showTithi = v(.showTithi, d.showTithi)
     }
 
     /// The user's real home folder, even from inside a sandbox container.

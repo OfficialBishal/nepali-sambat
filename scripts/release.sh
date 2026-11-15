@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Publishes a new version: tags, builds the DMG, creates the GitHub release and bumps the Homebrew cask.
-# Usage: scripts/release.sh 1.0.1
+# Usage: scripts/release.sh 1.0.1   (optionally NOTES=notes.md for the release text)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -24,7 +24,11 @@ git push origin main "v$VERSION"
 ./scripts/build.sh
 DMG="dist/NepaliPatro-$VERSION.dmg"
 SHA="$(shasum -a 256 "$DMG" | cut -d' ' -f1)"
-gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Nepali Patro $VERSION" --generate-notes
+if [ -n "${NOTES:-}" ]; then
+  gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Nepali Patro $VERSION" --notes-file "$NOTES"
+else
+  gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Nepali Patro $VERSION" --generate-notes
+fi
 
 TAP="$(mktemp -d)"
 gh repo clone "$TAP_REPO" "$TAP" -- -q

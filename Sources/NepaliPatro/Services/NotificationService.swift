@@ -34,7 +34,8 @@ final class NotificationService {
     }
 
     private func schedule(settings: AppSettings, center: UNUserNotificationCenter) {
-        let lang = settings.language
+        let lang = settings.calendarLanguage
+        let ui = settings.language
         let today = JDN.of(Date(), in: .current)
         let events = FestivalEngine.shared.events(from: today, to: today + 62).filter { e in
             settings.notifyHolidaysOnly ? e.isPublicHoliday : e.category != .observance
@@ -45,14 +46,14 @@ final class NotificationService {
             guard count < 60, let dayEvents = byDay[jdn] else { break }
             let names = uniqueNames(dayEvents, lang)
             guard !names.isEmpty, let bs = BSDate(jdn: jdn) else { continue }
-            let body = names.joined(separator: " · ")
-            let dateLine = "\(Formatter.dateLong(bs, lang)) · \(Formatter.adLong(ADDate(jdn: jdn), lang))"
+            let body = names.joined(separator: ", ")
+            let dateLine = "\(Formatter.dateLong(bs, lang)), \(Formatter.adLong(ADDate(jdn: jdn), .english))"
 
             add(center, id: "\(prefix)\(jdn).day", jdn: jdn, title: names.first!, body: names.count > 1 ? "\(body)\n\(dateLine)" : dateLine,
                 hour: settings.notifyHour, minute: settings.notifyMinute)
             count += 1
             if settings.notifyDayBefore, jdn - 1 >= today {
-                let title = lang == .nepali ? "भोलि: \(names.first!)" : "Tomorrow: \(names.first!)"
+                let title = ui == .nepali ? "भोलि: \(names.first!)" : "Tomorrow: \(names.first!)"
                 add(center, id: "\(prefix)\(jdn).before", jdn: jdn - 1, title: title, body: dateLine,
                     hour: 19, minute: 0)
                 count += 1

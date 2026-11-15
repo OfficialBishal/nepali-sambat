@@ -5,7 +5,11 @@ import PatroUI
 import WidgetKit
 
 enum Page: String, CaseIterable {
-    case calendar, converter, upcoming, settings
+    case calendar, converter, upcoming
+}
+
+enum ConvertDirection: String {
+    case adToBS, bsToAD
 }
 
 @MainActor
@@ -24,10 +28,22 @@ final class AppModel {
     var displayYear: Int
     var displayMonth: Int
     var selectedJDN: Int?
-    var systemIsDark = false
+    /// Month navigation direction, for the slide transition.
+    var monthStep = 0
+    /// Debug snapshots paint the popover material, which can't be captured offscreen.
+    var snapshotBackground = false
     var panelVisible = false {
         didSet { scheduleTick() }
     }
+
+    // Converter state lives here so it survives closing the popover.
+    var convertDirection: ConvertDirection = .adToBS
+    var convertAD = AppModel.currentDate()
+    var convertBS: BSDate
+
+    /// Set by the app delegate; opens the Settings window on a given tab.
+    @ObservationIgnored var openSettings: (SettingsTab) -> Void = { _ in }
+    @ObservationIgnored var closePopover: () -> Void = {}
 
     let calendarService = CalendarService()
     let updateChecker = UpdateChecker()
@@ -41,6 +57,7 @@ final class AppModel {
         let today = BSDate(jdn: JDN.of(AppModel.currentDate(), in: s.basis.timeZone)) ?? BSDate(year: 2083, month: 1, day: 1)
         displayYear = today.year
         displayMonth = today.month
+        convertBS = today
         lastTodayJDN = JDN.of(AppModel.currentDate(), in: s.basis.timeZone)
         s.shared.save()
         observeSystem()
@@ -52,8 +69,11 @@ final class AppModel {
 
     // MARK: Derived
 
+    /// Interface language.
     var lang: Language { settings.language }
-    var theme: Theme { Theme.resolve(settings.themeID, systemIsDark: systemIsDark) }
+    /// Calendar language: BS dates, weekdays, tithi and festival names.
+    var cal: Language { settings.calendarLanguage }
+    var palette: Palette { Palette(settings.accent) }
     var todayJDN: Int { JDN.of(now, in: settings.basis.timeZone) }
     var nepalTodayJDN: Int { JDN.of(now, in: NepalTime.timeZone) }
     var localTodayJDN: Int { JDN.of(now, in: .current) }
@@ -64,10 +84,10 @@ final class AppModel {
 
     var menuTitle: String {
         var parts: [String] = []
-        let s = settings.menuFormat.sample(today, weekday: JDN.weekday(todayJDN), lang)
+        let s = settings.menuFormat.sample(today, weekday: JDN.weekday(todayJDN), cal)
         if !s.isEmpty { parts.append(s) }
         if settings.menuShowsNepalTime {
-            parts.append(Formatter.time(now, in: NepalTime.timeZone, lang))
+            parts.append(Formatter.time(now, in: NepalTime.timeZone, cal))
         }
         return parts.joined(separator: "  ")
     }
@@ -83,13 +103,21 @@ final class AppModel {
     func step(months n: Int) {
         let next = BSCalendar.addMonths(n, to: displayYear, month: displayMonth)
         guard BSCalendar.contains(year: next.year) else { return }
+        monthStep = n
         displayYear = next.year
         displayMonth = next.month
     }
 
     func goToToday() {
         selectedJDN = nil
+        if let t = BSDate(jdn: todayJDN) {
+            monthStep = (t.year * 12 + t.month) - (displayYear * 12 + displayMonth)
+        }
         showMonth(of: todayJDN)
+    }
+
+    var isShowingCurrentMonth: Bool {
+        today.year == displayYear && today.month == displayMonth
     }
 
     func select(_ jdn: Int) {
@@ -170,7 +198,8 @@ final class AppModel {
             || old.notifyDayBefore != settings.notifyDayBefore
             || old.notifyHour != settings.notifyHour
             || old.notifyMinute != settings.notifyMinute
-            || old.language != settings.language {
+            || old.language != settings.language
+            || old.calendarLanguage != settings.calendarLanguage {
             NotificationService.shared.reschedule(settings: settings)
         }
     }

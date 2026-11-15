@@ -111,7 +111,7 @@ final class CalendarService {
                     ev.endDate = ev.startDate
                     let bs = BSDate(jdn: jdn).map { Formatter.dateLong($0, .nepali) } ?? ""
                     var notes = "\(e.nameNe)\n\(e.nameEn)\n\(bs)"
-                    if e.isPublicHoliday { notes += "\nसार्वजनिक बिदा · Public holiday" }
+                    if e.isPublicHoliday { notes += "\nसार्वजनिक बिदा (public holiday)" }
                     if let n = e.noteEn { notes += "\n\(n)" }
                     ev.notes = notes
                     try store.save(ev, span: .thisEvent, commit: false)
