@@ -45,14 +45,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func runSnapshots(to dir: URL) {
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let original = model.settings
-        let configs: [(String, AppearanceMode, Language, Language)] = [
-            ("light", .light, .english, .nepali),
-            ("dark", .dark, .english, .nepali),
-            ("light-en", .light, .english, .english),
-            ("dark-ne", .dark, .nepali, .nepali),
+        let configs: [(String, AppearanceMode, Language, Language, AccentChoice)] = [
+            ("light", .light, .english, .nepali, .system),
+            ("dark", .dark, .english, .nepali, .system),
+            ("light-en", .light, .english, .english, .blue),
+            ("dark-ne", .dark, .nepali, .nepali, .marigold),
         ]
         var steps: [() -> Void] = []
-        for (name, appearance, ui, cal) in configs {
+        for (name, appearance, ui, cal, accent) in configs {
             steps.append { [weak self] in
                 guard let self else { return }
                 self.model.settings.appearance = appearance
@@ -60,6 +60,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 self.model.snapshotBackground = true
                 self.model.settings.language = ui
                 self.model.settings.calendarLanguage = cal
+                self.model.settings.accent = accent
                 self.model.selectedJDN = name.hasPrefix("dark") ? self.model.todayJDN + 7 : nil
             }
             steps += statusBar.snapshotSteps(to: dir, prefix: name)

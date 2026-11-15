@@ -1,11 +1,11 @@
 // Renders the app icon at 1024×1024 on the macOS icon grid.
-// Usage: swift scripts/make-icon.swift out.png [concept]   (concept: dhaka; default dhaka)
+// Usage: swift scripts/make-icon.swift out.png [concept]   (concept: pad | pad-crimson | pad-ink; default pad)
 import AppKit
 import CoreText
 
 let args = CommandLine.arguments
 let out = args.count > 1 ? args[1] : "icon.png"
-let concept = args.count > 2 ? args[2] : "dhaka"
+let concept = args.count > 2 ? args[2] : "pad"
 let canvas: CGFloat = 1024
 
 func rgb(_ hex: UInt32, _ a: CGFloat = 1) -> CGColor {
@@ -124,62 +124,59 @@ func fill(_ path: CGPath, _ color: CGColor) {
     ctx.fillPath()
 }
 
-switch concept {
-case "dhaka":
-    // Soft, deep tile; the motif is concentric rounded diamonds in madder, cotton and saffron.
-    fillTile(top: 0x3A3048, bottom: 0x1B1624)
-    let c = CGPoint(x: 512, y: 512)
-    /// A diamond with softened corners: a smaller diamond stroked with a round join.
-    func soft(_ radius: CGFloat, _ color: CGColor, shadow: Bool = false) {
-        let round: CGFloat = 36
-        let path = lozenge(center: c, radius: radius - round * 1.4142, step: 0)
-        ctx.saveGState()
-        if shadow { ctx.setShadow(offset: CGSize(width: 0, height: -18), blur: 40, color: CGColor(gray: 0, alpha: 0.45)) }
-        ctx.addPath(path)
-        ctx.setFillColor(color)
-        ctx.setStrokeColor(color)
-        ctx.setLineWidth(round * 2)
-        ctx.setLineJoin(.round)
-        ctx.drawPath(using: .fillStroke)
-        ctx.restoreGState()
-    }
-    soft(330, rgb(0xC8162E), shadow: true)
-    soft(236, rgb(0xF4EFE6))
-    soft(206, rgb(0xF0A500))
-    soft(92, rgb(0x1B1624))
-    // A light edge along the top of the madder diamond, like glass catching light.
-    ctx.saveGState()
-    ctx.setStrokeColor(CGColor(gray: 1, alpha: 0.22))
-    ctx.setLineWidth(5)
-    ctx.setLineJoin(.round)
-    ctx.addLines(between: [CGPoint(x: 512 - 258, y: 512 + 54), CGPoint(x: 512, y: 512 + 306 - 54 + 54), CGPoint(x: 512 + 258, y: 512 + 54)])
-    ctx.strokePath()
-    ctx.restoreGState()
+func roundedRect(_ r: CGRect, _ radius: CGFloat) -> CGPath {
+    CGPath(roundedRect: r, cornerWidth: radius, cornerHeight: radius, transform: nil)
+}
 
-case "tithi":
-    fillTile(top: 0x1B3F8F, bottom: 0x0E2763)
-    // Crescent: a disc with an offset disc removed, opening upward like the moon on the flag.
-    let moon = CGMutablePath()
-    let r: CGFloat = 250
-    let c = CGPoint(x: 512, y: 470)
-    moon.addEllipse(in: CGRect(x: c.x - r, y: c.y - r, width: 2 * r, height: 2 * r))
+/// A patro page: a sheet with a coloured header carrying the month, and the day in large type.
+/// A second sheet peeks out underneath, so it reads as a pad you tear pages from.
+func patroPage(tileTop: UInt32, tileBottom: UInt32, band: UInt32, numeral: UInt32) {
+    fillTile(top: tileTop, bottom: tileBottom)
+    let medium = available(["KohinoorDevanagari-Semibold", "KohinoorDevanagari-Medium", "DevanagariSangamMN"])
+    let regular = available(["KohinoorDevanagari-Regular", "DevanagariSangamMN"])
+    let page = CGRect(x: 242, y: 214, width: 540, height: 588)
+    let radius: CGFloat = 64
+
     ctx.saveGState()
-    ctx.addPath(moon)
-    ctx.addEllipse(in: CGRect(x: c.x - 232, y: c.y - 232 + 92, width: 464, height: 464))
+    ctx.addPath(shape)
+    ctx.clip()
+    // The sheet underneath.
+    ctx.saveGState()
+    ctx.setShadow(offset: CGSize(width: 0, height: -8), blur: 18, color: rgb(0x000000, 0.22))
+    ctx.addPath(roundedRect(page.insetBy(dx: 26, dy: 0).offsetBy(dx: 0, dy: -26), radius))
+    ctx.setFillColor(rgb(0xE9E6EE))
+    ctx.fillPath()
+    ctx.restoreGState()
+    // The page, with a soft drop shadow.
+    ctx.saveGState()
+    ctx.setShadow(offset: CGSize(width: 0, height: -14), blur: 34, color: rgb(0x000000, 0.30))
+    ctx.addPath(roundedRect(page, radius))
     ctx.setFillColor(rgb(0xFFFFFF))
-    ctx.fillPath(using: .evenOdd)
+    ctx.fillPath()
     ctx.restoreGState()
-    // Sun, resting in the crescent.
-    ctx.setFillColor(rgb(0xE8203F))
-    ctx.fillEllipse(in: CGRect(x: 512 - 92, y: 560, width: 184, height: 184))
+    // Header band, clipped to the page's rounded top.
+    ctx.saveGState()
+    ctx.addPath(roundedRect(page, radius))
+    ctx.clip()
+    let bandRect = CGRect(x: page.minX, y: page.maxY - 158, width: page.width, height: 158)
+    let g = CGGradient(colorsSpace: space, colors: [rgb(band), rgb(band, 0.92)] as CFArray, locations: [0, 1])!
+    ctx.addRect(bandRect)
+    ctx.clip()
+    ctx.drawLinearGradient(g, start: CGPoint(x: 0, y: bandRect.maxY), end: CGPoint(x: 0, y: bandRect.minY), options: [])
+    ctx.restoreGState()
+    draw(glyphPath("बैशाख", font: medium, size: 92), centeredAt: CGPoint(x: page.midX, y: page.maxY - 79), color: rgb(0xFFFFFF))
+    draw(glyphPath("१", font: regular, size: 430), centeredAt: CGPoint(x: page.midX, y: page.minY + 218), color: rgb(numeral))
+    ctx.restoreGState()
+}
 
+switch concept {
+case "pad-crimson":
+    patroPage(tileTop: 0xE8344E, tileBottom: 0xB4122E, band: 0x1F3F98, numeral: 0x1C1C22)
+case "pad-ink":
+    patroPage(tileTop: 0x3A3F58, tileBottom: 0x1E2133, band: 0xD0142F, numeral: 0x1C1C22)
 default:
-    // A patro page: the macOS calendar-icon idiom, written in Nepali.
-    fillTile(top: 0xFFFFFF, bottom: 0xF1F1F4)
-    let medium = available(["KohinoorDevanagari-Medium", "KohinoorDevanagari-Regular", "DevanagariSangamMN"])
-    let light = available(["KohinoorDevanagari-Light", "KohinoorDevanagari-Regular", "DevanagariSangamMN"])
-    draw(glyphPath("बैशाख", font: medium, size: 118), centeredAt: CGPoint(x: 512, y: 752), color: rgb(0xD0142F))
-    draw(glyphPath("१", font: light, size: 600), centeredAt: CGPoint(x: 512, y: 412), color: rgb(0x1D1D1F))
+    // Flag blue tile, crimson header: the colours of Nepal's flag, on the patro page of v1.
+    patroPage(tileTop: 0x3D63C9, tileBottom: 0x1C3C93, band: 0xD0142F, numeral: 0x1C1C22)
 }
 
 let png = NSBitmapImageRep(cgImage: ctx.makeImage()!).representation(using: .png, properties: [:])!

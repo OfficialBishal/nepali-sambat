@@ -48,24 +48,26 @@ struct TodayWidgetView: View {
     var body: some View {
         Group {
             if family == .systemMedium {
-                TodayMedium(entry: entry)
+                HStack(alignment: .top, spacing: 16) {
+                    TodayBlock(entry: entry).frame(width: 118)
+                    UpcomingList(entry: entry, limit: 3)
+                }
             } else {
                 TodayBlock(entry: entry)
             }
         }
+        .modifier(SchemeOverride(mode: entry.settings.appearance))
         .containerBackground(.background, for: .widget)
     }
 }
 
-/// Today on the left, the next three festivals on the right.
-struct TodayMedium: View {
-    let entry: PatroEntry
+/// Applies the app's Light/Dark choice; "Auto" leaves the system's scheme in place.
+struct SchemeOverride: ViewModifier {
+    let mode: AppearanceMode
+    @Environment(\.colorScheme) private var system
 
-    var body: some View {
-        HStack(alignment: .top, spacing: 16) {
-            TodayBlock(entry: entry).frame(width: 112)
-            UpcomingList(entry: entry, limit: 3)
-        }
+    func body(content: Content) -> some View {
+        content.environment(\.colorScheme, mode.colorScheme ?? system)
     }
 }
 
@@ -74,44 +76,45 @@ struct TodayBlock: View {
 
     var body: some View {
         let cal = entry.settings.calendarLanguage
+        let palette = Palette(entry.settings.accent)
         let bs = BSDate(jdn: entry.jdn) ?? BSDate(year: 2083, month: 1, day: 1)
         let ad = ADDate(jdn: entry.jdn)
         let weekday = JDN.weekday(entry.jdn)
         let p = Panchang.shared.day(entry.jdn)
-        let events = FestivalEngine.shared.events(on: entry.jdn).filter { $0.category != .observance }
+        var seen = Set<String>()
+        let events = FestivalEngine.shared.events(on: entry.jdn)
+            .filter { $0.category != .observance && seen.insert($0.nameEn).inserted }
+        let holiday = weekday == 6 || events.contains { $0.isPublicHoliday }
         VStack(alignment: .leading, spacing: 0) {
-            Text(Formatter.weekday(weekday, cal))
+            Text(verbatim: Formatter.weekday(weekday, cal))
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(weekday == 6 ? Loom.madder : Loom.saffron)
+                .foregroundStyle(holiday ? Palette.holiday : palette.accent)
             Text(verbatim: Formatter.digits(bs.day, cal))
-                .font(.system(size: 40, weight: .semibold))
+                .font(.system(size: 44, weight: .light))
+                .foregroundStyle(holiday ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.primary))
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
             Text(verbatim: "\(Formatter.bsMonth(bs.month, cal)) \(Formatter.digits(bs.year, cal))")
                 .font(.system(size: 13, weight: .semibold))
                 .lineLimit(1)
-            Spacer(minLength: 4)
-            if entry.settings.showTithi {
-                TithiBand(tithi: p.tithi, lang: entry.settings.language, height: 9)
-                    .padding(.bottom, 4)
-            }
+            Spacer(minLength: 2)
             if let e = events.first {
-                HStack(spacing: 5) {
-                    if let kind = EventMarker.kind(for: e) { EventMarker(kind, size: 6) }
-                    Text(e.name(cal))
-                        .foregroundStyle(e.isPublicHoliday ? AnyShapeStyle(Loom.madder) : AnyShapeStyle(.primary))
+                HStack(spacing: 4) {
+                    if let kind = EventDot.kind(for: [e]) { EventDot(kind, size: 5) }
+                    Text(verbatim: e.name(cal))
+                        .foregroundStyle(e.isPublicHoliday ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.primary))
                 }
-                .font(.system(size: 10.5, weight: .semibold))
+                .font(.system(size: 10.5, weight: .medium))
                 .lineLimit(1)
-            } else {
-                Text(Formatter.tithiShort(p, cal))
+            } else if entry.settings.showTithi {
+                Text(verbatim: Formatter.tithiShort(p, cal))
                     .font(.system(size: 10.5))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.quiet)
                     .lineLimit(1)
             }
-            Text(verbatim: "\(Formatter.adMonth(ad.month, .english, short: true)) \(ad.day), \(ad.year)")
+            Text(verbatim: "\(Formatter.adMonth(ad.month, .english, short: true))\u{00A0}\(ad.day), \(ad.year)")
                 .font(.system(size: 10.5))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.quiet)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -128,15 +131,15 @@ struct UpcomingList: View {
         VStack(alignment: .leading, spacing: 7) {
             Text(ui == .nepali ? "आउँदै गरेका" : "Coming up")
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.quiet)
             ForEach(upcoming(), id: \.id) { e in
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Group {
-                        if let kind = EventMarker.kind(for: e) { EventMarker(kind, size: 6.5) }
+                        if let kind = EventDot.kind(for: [e]) { EventDot(kind, size: 5) }
                     }
-                    .frame(width: 8)
+                    .frame(width: 6)
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(e.name(cal))
+                        Text(verbatim: e.name(cal))
                             .font(.system(size: 11.5, weight: .medium))
                             .lineLimit(1)
                         HStack(spacing: 4) {
@@ -145,7 +148,7 @@ struct UpcomingList: View {
                             Text(verbatim: away(e.jdn - entry.jdn, ui))
                         }
                         .font(.system(size: 10))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.quiet)
                         .lineLimit(1)
                     }
                 }
@@ -194,6 +197,7 @@ struct MonthWidgetView: View {
 
     var body: some View {
         MonthWidgetContent(entry: entry)
+            .modifier(SchemeOverride(mode: entry.settings.appearance))
             .containerBackground(.background, for: .widget)
     }
 }
@@ -203,6 +207,7 @@ struct MonthWidgetContent: View {
 
     var body: some View {
         let cal = entry.settings.calendarLanguage
+        let palette = Palette(entry.settings.accent)
         let bs = BSDate(jdn: entry.jdn) ?? BSDate(year: 2083, month: 1, day: 1)
         let start = BSCalendar.startJDN(year: bs.year, month: bs.month) ?? entry.jdn
         let len = BSCalendar.daysInMonth(year: bs.year, month: bs.month) ?? 30
@@ -210,27 +215,28 @@ struct MonthWidgetContent: View {
         let a = ADDate(jdn: start), b = ADDate(jdn: start + len - 1)
         let todayEvent = FestivalEngine.shared.events(on: entry.jdn).first { $0.category != .observance }
         VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: 1) {
                 Text(verbatim: "\(Formatter.bsMonth(bs.month, cal)) \(Formatter.digits(bs.year, cal))")
                     .font(.system(size: 16, weight: .semibold))
-                Spacer(minLength: 6)
                 Text(verbatim: "\(Formatter.adMonth(a.month, .english, short: true)) – \(Formatter.adMonth(b.month, .english, short: true)) \(b.year)")
                     .font(.system(size: 11))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.quiet)
             }
-            MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: cal,
-                      metrics: .init(cellHeight: rows == 6 ? 40 : 46, rowSpacing: rows == 6 ? 0 : 2,
-                                     numeralSize: 14, marker: rows == 6 ? 23 : 26,
+            MonthGrid(year: bs.year, month: bs.month, todayJDN: entry.jdn, lang: cal, palette: palette,
+                      metrics: .init(cellHeight: rows == 6 ? 45 : 53, numeralSize: 15, circle: rows == 6 ? 25 : 27,
+                                     circleTop: rows == 6 ? 6 : 8,
                                      showAD: true, showTithi: entry.settings.showTithi, interactive: false))
             Spacer(minLength: 0)
-            TithiBand(tithi: Panchang.shared.day(entry.jdn).tithi, lang: entry.settings.language, height: 12)
             HStack(spacing: 10) {
-                Text(Formatter.tithiShort(Panchang.shared.day(entry.jdn), cal))
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 4) {
+                    Text(verbatim: Formatter.tithiShort(Panchang.shared.day(entry.jdn), cal))
+                        .foregroundStyle(.quiet)
+                }
                 if let e = todayEvent {
-                    HStack(spacing: 5) {
-                        if let kind = EventMarker.kind(for: e) { EventMarker(kind, size: 6) }
-                        Text(e.name(cal)).foregroundStyle(e.isPublicHoliday ? AnyShapeStyle(Loom.madder) : AnyShapeStyle(.primary))
+                    HStack(spacing: 4) {
+                        if let kind = EventDot.kind(for: [e]) { EventDot(kind, size: 5) }
+                        Text(verbatim: e.name(cal))
+                            .foregroundStyle(e.isPublicHoliday ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.primary))
                     }
                 }
             }
@@ -276,16 +282,19 @@ enum WidgetMain {
 @MainActor
 func renderPreviews(to dir: URL) {
     try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-    let configs: [(String, ColorScheme, Language)] = [("ne", .light, .nepali), ("en", .dark, .english)]
-    for (name, scheme, cal) in configs {
+    let configs: [(String, ColorScheme, Language, AccentChoice)] = [
+        ("light", .light, .nepali, .system), ("dark", .dark, .nepali, .blue), ("light-en", .light, .english, .teal),
+    ]
+    for (name, scheme, cal, accent) in configs {
         var settings = SharedSettings()
         settings.calendarLanguage = cal
+        settings.accent = accent
         let entry = PatroEntry(date: Date(), jdn: NepalTime.todayJDN(), settings: settings)
         func save<V: View>(_ view: V, _ size: CGSize, _ kind: String) {
             let content = view
                 .padding(16)
                 .frame(width: size.width, height: size.height)
-                .background(Color(nsColor: scheme == .dark ? NSColor(white: 0.16, alpha: 1) : .white))
+                .background(scheme == .dark ? Color(white: 0.12) : Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .environment(\.colorScheme, scheme)
             let r = ImageRenderer(content: content)
@@ -296,7 +305,10 @@ func renderPreviews(to dir: URL) {
             }
         }
         save(TodayBlock(entry: entry), CGSize(width: 170, height: 170), "small")
-        save(TodayMedium(entry: entry), CGSize(width: 364, height: 170), "medium")
+        save(HStack(alignment: .top, spacing: 16) {
+            TodayBlock(entry: entry).frame(width: 118)
+            UpcomingList(entry: entry, limit: 3)
+        }, CGSize(width: 364, height: 170), "medium")
         save(MonthWidgetContent(entry: entry), CGSize(width: 364, height: 382), "large")
     }
 }

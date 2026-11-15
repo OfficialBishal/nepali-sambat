@@ -176,9 +176,12 @@ struct AppearanceSettings: View {
                     Text(model.t("Dark", "अँध्यारो")).tag(AppearanceMode.dark)
                 }
                 .pickerStyle(.segmented)
+                LabeledContent(model.t("Accent color", "मुख्य रङ")) {
+                    AccentPicker(selection: $model.settings.accent, lang: model.lang)
+                }
             } footer: {
-                Text(model.t("Colours keep the same meaning in both modes: saffron is today in Nepal, red is a public holiday, green is a festival.",
-                             "दुवै मोडमा रङको अर्थ उही: केसरी नेपालमा आज, रातो सार्वजनिक बिदा, हरियो चाडपर्व।"))
+                Text(model.t("The accent colour marks today and the selected day. Holidays and Saturdays are always red, as in a printed Nepali calendar.",
+                             "मुख्य रङले आज र छानिएको दिन देखाउँछ। छापिएको पात्रोमा जस्तै बिदा र शनिबार सधैं रातो।"))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -189,6 +192,39 @@ struct AppearanceSettings: View {
             }
         }
         .formStyle(.grouped)
+    }
+}
+
+/// A row of colour swatches like the accent picker in System Settings.
+struct AccentPicker: View {
+    @Binding var selection: AccentChoice
+    let lang: Language
+
+    var body: some View {
+        HStack(spacing: 7) {
+            ForEach(AccentChoice.allCases, id: \.self) { choice in
+                Button { selection = choice } label: {
+                    ZStack {
+                        if choice == .system {
+                            Circle().fill(AngularGradient(colors: [.red, .orange, .yellow, .green, .teal, .blue, .purple, .pink, .red],
+                                                          center: .center))
+                        } else {
+                            Circle().fill(Palette(choice).accent)
+                        }
+                        Circle().strokeBorder(Color.primary.opacity(0.15), lineWidth: 0.5)
+                        if selection == choice {
+                            Circle().fill(Color.white).frame(width: 5, height: 5)
+                        }
+                    }
+                    .frame(width: 16, height: 16)
+                    .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .help(Palette.name(choice, lang))
+                .accessibilityLabel(Palette.name(choice, lang))
+                .accessibilityAddTraits(selection == choice ? .isSelected : [])
+            }
+        }
     }
 }
 
@@ -225,7 +261,7 @@ struct ReminderSettings: View {
             } footer: {
                 if denied {
                     HStack(spacing: 6) {
-                        Text(model.t("Notifications are off for Sambat in System Settings.", "सिस्टम सेटिङमा Sambat को सूचना बन्द छ।"))
+                        Text(model.t("Notifications are off for Nepali Sambat in System Settings.", "सिस्टम सेटिङमा Nepali Sambat को सूचना बन्द छ।"))
                         Button(model.t("Open System Settings", "सिस्टम सेटिङ खोल्नुहोस्")) {
                             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension")!)
                         }
@@ -279,7 +315,7 @@ struct CalendarSettings: View {
         let service = model.calendarService
         Form {
             Section {
-                Toggle(model.t("Show my events in Sambat", "मेरा कार्यक्रम Sambat मा देखाउनुहोस्"), isOn: Binding(
+                Toggle(model.t("Show my events in Nepali Sambat", "मेरा कार्यक्रम Nepali Sambat मा देखाउनुहोस्"), isOn: Binding(
                     get: { model.settings.showCalendarEvents && service.hasAccess },
                     set: { on in
                         guard on else { model.settings.showCalendarEvents = false; return }
@@ -352,7 +388,7 @@ struct AboutSettings: View {
             Image(nsImage: NSApp.applicationIconImage)
                 .resizable()
                 .frame(width: 88, height: 88)
-            Text("Sambat")
+            Text("Nepali Sambat")
                 .font(.title2.weight(.semibold))
             Text(model.t("Version \(AppInfo.version) (\(AppInfo.build))", "संस्करण \(AppInfo.version) (\(AppInfo.build))"))
                 .font(.callout)

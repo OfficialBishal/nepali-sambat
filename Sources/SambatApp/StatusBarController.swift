@@ -27,7 +27,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
             button.target = self
             button.action = #selector(statusItemClicked(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            button.setAccessibilityTitle("Sambat")
+            button.setAccessibilityTitle("Nepali Sambat")
         }
         statusItem.autosaveName = "SambatStatusItem"
 
@@ -161,7 +161,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         menu.addItem(item(model.t("Copy Today’s Date", "आजको मिति कपी गर्नुहोस्"), #selector(copyToday)))
         menu.addItem(.separator())
         menu.addItem(item(model.t("Settings…", "सेटिङ…"), #selector(openSettings), key: ","))
-        menu.addItem(item(model.t("Quit Sambat", "Sambat बन्द गर्नुहोस्"), #selector(quit), key: "q"))
+        menu.addItem(item(model.t("Quit Nepali Sambat", "Nepali Sambat बन्द गर्नुहोस्"), #selector(quit), key: "q"))
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
         statusItem.menu = nil
@@ -232,26 +232,20 @@ enum SnapshotWriter {
 #endif
 
 enum MenuBarIcon {
-    /// Today's day number inside an outlined lozenge, drawn as a template image.
+    /// A small calendar glyph with today's day number, drawn as a template image.
     static func calendar(day: String) -> NSImage {
-        let size = NSSize(width: 22, height: 18)
+        let size = NSSize(width: 19, height: 16)
         let image = NSImage(size: size, flipped: false) { rect in
-            let c = NSPoint(x: rect.midX, y: rect.midY)
-            let r: CGFloat = 8.6
-            let path = NSBezierPath()
-            path.move(to: NSPoint(x: c.x, y: c.y + r))
-            path.line(to: NSPoint(x: c.x + r * 1.18, y: c.y))
-            path.line(to: NSPoint(x: c.x, y: c.y - r))
-            path.line(to: NSPoint(x: c.x - r * 1.18, y: c.y))
-            path.close()
-            path.lineJoinStyle = .round
-            path.lineWidth = 1.3
+            let body = NSRect(x: 1, y: 0.75, width: rect.width - 2, height: rect.height - 1.5)
+            let outline = NSBezierPath(roundedRect: body, xRadius: 3.5, yRadius: 3.5)
             NSColor.black.setStroke()
-            path.stroke()
-            let font = NSFont.systemFont(ofSize: day.count > 1 ? 8 : 9, weight: .bold)
+            outline.lineWidth = 1.25
+            outline.stroke()
+            NSBezierPath(rect: NSRect(x: body.minX + 0.6, y: body.maxY - 3.6, width: body.width - 1.2, height: 0.9)).fill()
+            let font = NSFont.systemFont(ofSize: day.count > 1 ? 9 : 9.5, weight: .semibold)
             let s = NSAttributedString(string: day, attributes: [.font: font, .foregroundColor: NSColor.black])
             let sz = s.size()
-            s.draw(at: NSPoint(x: c.x - sz.width / 2, y: c.y - sz.height / 2 + 0.2))
+            s.draw(at: NSPoint(x: body.midX - sz.width / 2, y: body.minY + (body.height - 3.6 - sz.height) / 2 + 0.3))
             return true
         }
         image.isTemplate = true
@@ -259,7 +253,7 @@ enum MenuBarIcon {
     }
 
     static func symbol() -> NSImage? {
-        let img = NSImage(systemSymbolName: "calendar", accessibilityDescription: "Sambat")
+        let img = NSImage(systemSymbolName: "calendar", accessibilityDescription: "Nepali Sambat")
         img?.isTemplate = true
         return img
     }

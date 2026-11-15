@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 VERSION="${1:?usage: scripts/release.sh <version>}"
-REPO="OfficialBishal/sambat"
+REPO="OfficialBishal/nepali-sambat"
 TAP_REPO="OfficialBishal/homebrew-tap"
 
 [ -z "$(git status --porcelain)" ] || { echo "Working tree is not clean"; exit 1; }
@@ -22,19 +22,19 @@ git tag "v$VERSION"
 git push origin main "v$VERSION"
 
 ./scripts/build.sh
-DMG="dist/Sambat-$VERSION.dmg"
+DMG="dist/NepaliSambat-$VERSION.dmg"
 SHA="$(shasum -a 256 "$DMG" | cut -d' ' -f1)"
 if [ -n "${NOTES:-}" ]; then
-  gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Sambat $VERSION" --notes-file "$NOTES"
+  gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Nepali Sambat $VERSION" --notes-file "$NOTES"
 else
-  gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Sambat $VERSION" --generate-notes
+  gh release create "v$VERSION" "$DMG" --repo "$REPO" --title "Nepali Sambat $VERSION" --generate-notes
 fi
 
 TAP="$(mktemp -d)"
 gh repo clone "$TAP_REPO" "$TAP" -- -q
-sed -i '' -e "s/^  version \".*\"/  version \"$VERSION\"/" -e "s/^  sha256 \".*\"/  sha256 \"$SHA\"/" "$TAP/Casks/sambat.rb"
-git -C "$TAP" commit -am "sambat $VERSION"
+sed -i '' -e "s/^  version \".*\"/  version \"$VERSION\"/" -e "s/^  sha256 \".*\"/  sha256 \"$SHA\"/" "$TAP/Casks/nepali-sambat.rb"
+git -C "$TAP" commit -am "nepali-sambat $VERSION"
 git -C "$TAP" push -q
 rm -rf "$TAP"
 
-echo "Released $VERSION. Users update with: brew upgrade --cask sambat"
+echo "Released $VERSION. Users update with: brew upgrade --cask nepali-sambat"

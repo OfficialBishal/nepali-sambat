@@ -9,56 +9,48 @@ struct ConverterPage: View {
     private var _copied = State<Bool>(initialValue: false)
     private var copied: Bool { get { _copied.wrappedValue } nonmutating set { _copied.wrappedValue = newValue } }
 
-    private var adRange: ClosedRange<Date> {
-        JDN.startOfDay(BSCalendar.firstJDN, in: .current)...JDN.startOfDay(BSCalendar.endJDN - 1, in: .current)
-    }
-
     var body: some View {
         @Bindable var model = model
         let jdn = resultJDN
-        VStack(alignment: .leading, spacing: 0) {
-            LoomHeader {
-                HeaderTitle(text: model.t("Converter", "रूपान्तरण"))
-                Picker("", selection: $model.convertDirection) {
-                    Text(model.t("AD to BS", "ईस्वीबाट विक्रम")).tag(ConvertDirection.adToBS)
-                    Text(model.t("BS to AD", "विक्रमबाट ईस्वी")).tag(ConvertDirection.bsToAD)
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .padding(.top, 10)
-            }
+        let other = model.settings.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN
+        VStack(alignment: .leading, spacing: 14) {
+            Text(model.t("Convert a date", "मिति रूपान्तरण"))
+                .font(.title3.weight(.semibold))
+
+            PillPicker(selection: $model.convertDirection, items: [
+                (ConvertDirection.adToBS, model.t("AD to BS", "ईस्वीबाट विक्रम")),
+                (ConvertDirection.bsToAD, model.t("BS to AD", "विक्रमबाट ईस्वी")),
+            ])
 
             VStack(alignment: .leading, spacing: 10) {
                 if model.convertDirection == .adToBS {
                     ADDatePicker(date: $model.convertAD)
                     ADMonthGrid(selected: JDN.of(model.convertAD, in: .current), todayJDN: model.todayJDN,
-                                otherTodayJDN: model.settings.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN) { jdn in
+                                otherTodayJDN: other, palette: model.palette) { jdn in
                         model.convertAD = JDN.startOfDay(jdn, in: .current).addingTimeInterval(12 * 3600)
                     }
                 } else {
                     BSDatePicker(date: $model.convertBS, lang: model.cal)
                     MonthGrid(year: model.convertBS.year, month: model.convertBS.month,
-                              todayJDN: model.todayJDN,
-                              otherTodayJDN: model.settings.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN,
-                              selectedJDN: model.convertBS.jdn,
-                              lang: model.cal, uiLanguage: model.lang,
-                              metrics: .init(cellHeight: 26, rowSpacing: 0, numeralSize: 12.5, marker: 23,
-                                             showAD: false, showTithi: false, minRows: 6),
+                              todayJDN: model.todayJDN, otherTodayJDN: other, selectedJDN: model.convertBS.jdn,
+                              lang: model.cal, palette: model.palette,
+                              metrics: .init(cellHeight: 25, numeralSize: 12.5, circle: 21, circleTop: 2,
+                                             showAD: false, showTithi: false),
                               onSelect: { jdn in if let d = BSDate(jdn: jdn) { model.convertBS = d } })
                 }
             }
-            .frame(height: 232, alignment: .top)
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
+            .frame(height: 206, alignment: .top)
             .onChange(of: model.convertDirection) { copied = false }
 
-            Divider().padding(.horizontal, 16)
+            Divider()
 
             if let jdn {
                 let p = Panchang.shared.day(jdn)
-                let events = FestivalEngine.shared.events(on: jdn).filter { $0.category != .observance }
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(primaryResult(jdn))
+                var seen = Set<String>()
+                let events = FestivalEngine.shared.events(on: jdn)
+                    .filter { $0.category != .observance && seen.insert($0.nameEn).inserted }
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(verbatim: primaryResult(jdn))
                         .font(.system(size: 20, weight: .semibold))
                         .textSelection(.enabled)
                         .lineLimit(1)
@@ -66,33 +58,25 @@ struct ConverterPage: View {
                     Text(model.relative(jdn))
                         .font(.subheadline)
                         .foregroundStyle(.quiet)
-                    VStack(alignment: .leading, spacing: 6) {
-                        FactRow(symbol: MoonIcon.name(for: p.tithi), text: Formatter.tithiShort(p, model.cal))
-                        ForEach(events.prefix(2), id: \.id) { e in EventLine(event: e) }
-                    }
-                    .padding(.top, 6)
-                    HStack(spacing: 8) {
-                        Button {
-                            Clipboard.copy(copyText(jdn))
-                            copied = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
-                        } label: {
-                            Label(copied ? model.t("Copied", "कपी भयो") : model.t("Copy", "कपी"),
-                                  systemImage: copied ? "checkmark" : "doc.on.doc")
-                        }
-                        Button {
-                            model.showMonth(of: jdn)
-                            model.select(jdn)
-                            model.page = .calendar
-                        } label: {
-                            Label(model.t("Show in Month", "महिनामा हेर्नुहोस्"), systemImage: "calendar")
-                        }
-                    }
-                    .controlSize(.small)
-                    .padding(.top, 8)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
+                VStack(alignment: .leading, spacing: 6) {
+                    FactRow(symbol: MoonIcon.name(for: p.tithi), text: Formatter.tithiShort(p, model.cal))
+                    ForEach(events.prefix(2), id: \.id) { e in EventLine(event: e) }
+                }
+                HStack(spacing: 8) {
+                    Button {
+                        Clipboard.copy(primaryResult(jdn))
+                        copied = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
+                    } label: {
+                        Label(copied ? model.t("Copied", "कपी भयो") : model.t("Copy", "कपी"),
+                              systemImage: copied ? "checkmark" : "doc.on.doc")
+                    }
+                    Button { model.reveal(jdn) } label: {
+                        Label(model.t("Show in Calendar", "पात्रोमा हेर्नुहोस्"), systemImage: "calendar")
+                    }
+                }
+                .controlSize(.small)
             }
 
             Spacer(minLength: 0)
@@ -101,9 +85,8 @@ struct ConverterPage: View {
                          "वि.सं. \(Formatter.digits(BSCalendar.firstYear, .nepali))–\(Formatter.digits(BSCalendar.lastYear, .nepali)) (सन् १९१८–२०४४) सम्म।"))
                 .font(.caption)
                 .foregroundStyle(.quiet)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 10)
         }
+        .padding(16)
     }
 
     private var resultJDN: Int? {
@@ -123,8 +106,6 @@ struct ConverterPage: View {
         case .bsToAD: return "\(Formatter.weekday(JDN.weekday(jdn), .english)), \(Formatter.adLong(ADDate(jdn: jdn), .english))"
         }
     }
-
-    private func copyText(_ jdn: Int) -> String { primaryResult(jdn) }
 }
 
 /// Year, month and day pop-up buttons for a Bikram Sambat date.
@@ -210,13 +191,13 @@ struct ADDatePicker: View {
     }
 }
 
-/// A Gregorian month in the same lozenge language as the patro grid, for picking an AD date.
-/// Like the BS grid: saffron is Nepal's today, an outline is the selection. Always six rows,
-/// so switching months never moves the result below.
+/// A Gregorian month drawn like the Nepali grid: today in the accent circle, the chosen day in grey,
+/// and today on the other clock as a ring. Always six rows, so the result below never moves.
 struct ADMonthGrid: View {
     let selected: Int
     let todayJDN: Int
     var otherTodayJDN: Int? = nil
+    let palette: Palette
     let onSelect: (Int) -> Void
 
     var body: some View {
@@ -228,10 +209,10 @@ struct ADMonthGrid: View {
             GridRow {
                 ForEach(0..<7, id: \.self) { wd in
                     Text(Formatter.weekday(wd, .english, short: true))
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundStyle(wd == 6 ? AnyShapeStyle(Loom.madder) : AnyShapeStyle(.quiet))
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(wd == 6 ? AnyShapeStyle(Palette.holiday) : AnyShapeStyle(.quiet))
                         .frame(maxWidth: .infinity)
-                        .padding(.bottom, 3)
+                        .padding(.bottom, 4)
                         .accessibilityHidden(true)
                 }
             }
@@ -242,7 +223,7 @@ struct ADMonthGrid: View {
                         if index >= 0 && index < length {
                             cell(jdn: start + index, day: index + 1)
                         } else {
-                            Color.clear.frame(maxWidth: .infinity).frame(height: 26)
+                            Color.clear.frame(maxWidth: .infinity).frame(height: 25)
                         }
                     }
                 }
@@ -251,30 +232,29 @@ struct ADMonthGrid: View {
     }
 
     private func cell(jdn: Int, day: Int) -> some View {
-        let isSelected = jdn == selected
+        let isSelected = jdn == selected && jdn != todayJDN
         let isToday = jdn == todayJDN
         let isOther = jdn == otherTodayJDN && otherTodayJDN != todayJDN
         return ZStack {
             if isToday {
-                DayMark().fill(Loom.saffron)
-            }
-            if isSelected && !isToday {
-                DayMark().strokeBorder(Color.primary.opacity(0.7), lineWidth: 1.5)
+                Circle().fill(palette.accent)
+            } else if isSelected {
+                Circle().fill(Color.primary.opacity(0.1))
             } else if isOther {
-                DayMark().strokeBorder(Loom.saffron, lineWidth: 1.5)
+                Circle().strokeBorder(Color.primary.opacity(0.45), lineWidth: 1)
             }
             Text(verbatim: "\(day)")
-                .font(.system(size: 12.5, weight: isToday ? .bold : .medium))
+                .font(.system(size: 12.5, weight: isToday ? .semibold : .regular))
                 .monospacedDigit()
-                .foregroundStyle(isToday ? AnyShapeStyle(Loom.ink) : AnyShapeStyle(.primary))
+                .foregroundStyle(isToday ? AnyShapeStyle(palette.onAccent) : AnyShapeStyle(.primary))
         }
-        .frame(width: 23, height: 23)
+        .frame(width: 21, height: 21)
         .frame(maxWidth: .infinity)
-        .frame(height: 26)
+        .frame(height: 25)
         .contentShape(Rectangle())
         .onTapGesture { onSelect(jdn) }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Formatter.adLong(ADDate(jdn: jdn), .english))
-        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityAddTraits(jdn == selected ? [.isButton, .isSelected] : .isButton)
     }
 }

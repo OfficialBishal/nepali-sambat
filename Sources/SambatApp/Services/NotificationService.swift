@@ -82,7 +82,7 @@ final class NotificationService {
     func sendTest(lang: Language) {
         guard let center else { return }
         let content = UNMutableNotificationContent()
-        content.title = "Sambat"
+        content.title = "Nepali Sambat"
         content.body = lang == .nepali ? "चाडपर्वको सूचना यसरी आउनेछ।" : "Festival reminders will look like this."
         center.add(UNNotificationRequest(identifier: "sambat.test", content: content,
                                          trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)))

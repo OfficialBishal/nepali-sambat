@@ -28,6 +28,7 @@ struct AppSettings: Codable, Equatable {
     var calendarLanguage: Language = .nepali
     var basis: DateBasis = .nepal
     var appearance: AppearanceMode = .auto
+    var accent: AccentChoice = .system
     var showTithi = true
     var showAD = true
     var menuFormat: MenuBarFormat = .monthDay
@@ -54,6 +55,7 @@ struct AppSettings: Codable, Equatable {
         calendarLanguage = v(.calendarLanguage, d.calendarLanguage)
         basis = v(.basis, d.basis)
         appearance = v(.appearance, d.appearance)
+        accent = v(.accent, d.accent)
         showTithi = v(.showTithi, d.showTithi)
         showAD = v(.showAD, d.showAD)
         menuFormat = v(.menuFormat, d.menuFormat)
@@ -100,6 +102,7 @@ struct AppSettings: Codable, Equatable {
         s.calendarLanguage = calendarLanguage
         s.basis = basis
         s.appearance = appearance
+        s.accent = accent
         s.showTithi = showTithi
         return s
     }

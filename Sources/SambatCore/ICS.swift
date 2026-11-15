@@ -7,7 +7,7 @@ public enum ICS {
         var lines = [
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
-            "PRODID:-//Sambat//EN",
+            "PRODID:-//Nepali Sambat//EN",
             "CALSCALE:GREGORIAN",
             "METHOD:PUBLISH",
             "X-WR-CALNAME:\(escape(name))",

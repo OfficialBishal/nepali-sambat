@@ -5,8 +5,8 @@ import ServiceManagement
 import UniformTypeIdentifiers
 
 enum AppInfo {
-    static let repo = "OfficialBishal/sambat"
-    static let caskName = "officialbishal/tap/sambat"
+    static let repo = "OfficialBishal/nepali-sambat"
+    static let caskName = "officialbishal/tap/nepali-sambat"
     static var version: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "dev" }
     static var build: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0" }
     static var repoURL: URL { URL(string: "https://github.com/\(repo)")! }

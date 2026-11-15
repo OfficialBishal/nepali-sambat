@@ -4,6 +4,11 @@ public enum AppearanceMode: String, Codable, CaseIterable, Sendable {
     case auto, light, dark
 }
 
+/// Accent color for today and the selection. Red is deliberately absent: in a patro, red means a holiday.
+public enum AccentChoice: String, Codable, CaseIterable, Sendable {
+    case system, blue, teal, green, marigold, purple, graphite
+}
+
 /// Settings the widget extension also needs. The app writes them to a small JSON file that the
 /// sandboxed widget can read (see the widget's entitlements).
 public struct SharedSettings: Codable, Equatable, Sendable {
@@ -13,6 +18,7 @@ public struct SharedSettings: Codable, Equatable, Sendable {
     public var calendarLanguage: Language = .nepali
     public var basis: DateBasis = .nepal
     public var appearance: AppearanceMode = .auto
+    public var accent: AccentChoice = .system
     public var showTithi: Bool = true
 
     public init() {}
@@ -25,6 +31,7 @@ public struct SharedSettings: Codable, Equatable, Sendable {
         calendarLanguage = v(.calendarLanguage, d.calendarLanguage)
         basis = v(.basis, d.basis)
         appearance = v(.appearance, d.appearance)
+        accent = v(.accent, d.accent)
         showTithi = v(.showTithi, d.showTithi)
     }
 

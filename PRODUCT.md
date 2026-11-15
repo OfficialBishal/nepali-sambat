@@ -10,7 +10,7 @@ A menu bar Nepali calendar that is right for people who aren't in Nepal. "Today"
 
 ## Brand Personality
 
-Quiet, precise, rooted. It should feel like something Apple might have shipped if it made a Nepali calendar: native controls, system materials, restrained color. The Nepali identity comes from the content itself (Devanagari numerals, red holidays as in a printed patro) and from a small palette taken from dhaka cloth, madder red, saffron and jamara green, each used only where it means something. Not from ornament.
+Quiet, precise, rooted. It should feel like something Apple might have shipped if it made a Nepali calendar: native controls, system materials, restrained color. The Nepali identity comes from the content itself (Devanagari numerals, red holidays as in a printed patro, crimson and blue from the flag used only where they mean something), not from decoration.
 
 ## Anti-references
 
@@ -21,7 +21,7 @@ Quiet, precise, rooted. It should feel like something Apple might have shipped i
 ## Design Principles
 
 1. **Native first.** Use the system popover, materials, SF type, SF Symbols and standard controls. Only draw something custom when macOS has no equivalent (the patro grid).
-2. **Color carries meaning.** Red means a holiday (the patro convention), saffron means today, green means a festival. Nothing else gets color.
+2. **Color carries meaning.** Red means a holiday (the patro convention), the accent means today or the selection. Nothing else gets color.
 3. **The patro, not a dashboard.** Show the Nepali date, the tithi and festivals the way a printed patro does, with less clutter. Every element earns its place.
 4. **Honest about time.** Always make clear whose day it is: Nepal's or the Mac's.
 5. **Two languages, cleanly separated.** The interface language and the calendar language are independent.

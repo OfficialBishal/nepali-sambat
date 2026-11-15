@@ -1,51 +1,75 @@
 # Design
 
-Sambat is a native macOS utility. The system supplies the popover, materials, controls, type and Settings window. This file records the few decisions layered on top, so new screens stay consistent. The visual direction was seeded as `seed:765ad6d0b8ebbbf0` (palpali dhaka, the Nepali woven cloth), then pared back to what feels at home on current macOS: colour from the cloth, form from the system.
+Nepali Sambat is a native macOS utility. The design system is mostly macOS's own. This file records the few decisions layered on top, so new screens stay consistent.
 
 ## Surfaces
 
 | Surface | Implementation | Notes |
 | --- | --- | --- |
-| Popover | `NSPopover` (transient) hosting SwiftUI, 340 × 640 pt | System popover material. Fixed height so the bottom navigation never moves under the pointer. |
-| Header card | `LoomHeader`: `.quaternary` fill, 18 pt continuous corners, hairline stroke, 10 pt inset | One per page. The only drawn surface; it sits as a translucent layer on the popover material. |
-| Navigation | Segmented control (Month, Converter, Festivals) and a gear menu in the bottom bar | Native controls only. |
-| Settings | `NSTabViewController` with toolbar tabs, one grouped `Form` per tab | Window resizes per tab (and for Reminders as options appear), top edge fixed. |
-| Widgets | WidgetKit, `containerBackground(.background)` | System adaptive background; same marks as the popover. |
-| Menu bar | `NSStatusItem` with menu-bar font text, or a template glyph | Right-click shows a standard menu. |
+| Calendar popover | `NSPopover` (transient) hosting SwiftUI, 340 × 596 pt | System popover material (Liquid Glass on macOS 26+, vibrancy before). Fixed height so the bottom navigation never moves under the pointer. |
+| Settings | `NSTabViewController` with `.toolbar` tabs, one `Form(.grouped)` per tab | Window resizes per tab, top edge fixed. Footers are leading-aligned secondary text. |
+| Bottom bar | `PillPicker` (Calendar, Convert, Festivals) filling the width, and a gear menu in a matching tile | Drawn like the macOS 26 segmented control in a form: a soft track with the chosen segment raised. The native control switches to a heavy accent fill in a popover and greys out when the popover isn't key; this looks the same in every state. The converter's AD/BS switch uses the same control. |
+| Widgets | WidgetKit, `containerBackground(.background)` | Same month grid as the popover, non-interactive. |
+| Menu bar | `NSStatusItem` with menu-bar font text or a template glyph | Right-click shows a standard `NSMenu`. |
 
-No borders around cells, no gradients, no custom window chrome.
+No cards, no custom window chrome, no gradients, no glass panels drawn by the app.
 
-## Colour
+## Color
 
-Four thread colours from dhaka cloth, each with one job. Nothing else is coloured.
+Color carries meaning, and only these three meanings:
 
-| Role | Token | Light | Dark | Use |
-| --- | --- | --- | --- | --- |
-| Today in Nepal | `Loom.saffron` | #F0A500 | #F0A500 | The filled day mark, the tithi tick for today, the weekday on the widget. Ink (#1C1724) on top. |
-| Holiday | `Loom.madder` | #C0122C | #FF6B70 | Saturday header, "Public holiday" labels, holiday markers. `madderWash` tints a holiday's day mark. |
-| Festival | `Loom.jamara` | #2C7A4B | #5CC98A | Festival markers. |
-| Quiet text | `.quiet` | primary at 68% | primary at 68% | Small supporting text, held above 4.5:1. |
+| Role | Light | Dark | Use |
+| --- | --- | --- | --- |
+| Holiday (`Palette.holiday`) | `#C0122C` | `#FF6B70` | Public holidays and Saturdays, as in a printed patro. Event dot for holidays. |
+| Accent (`Palette.accent`) | user choice | user choice | Today's circle, the selected date in pickers, interactive tint. Never red, so it can't be confused with a holiday. |
+| Quiet text (`.quiet`) | primary at 68% | primary at 68% | AD dates, tithi, captions. System `.secondary` falls under 4.5:1 at caption sizes. |
 
-Selection is an outline in primary, never a colour. Colour is never the only signal: holidays are named in text, and marker fill carries meaning (below).
-
-## Marks
-
-- **Day mark**: a continuous rounded square (`DayMark`, radius 34% of its size). Filled saffron = today in Nepal; saffron outline = today on this Mac when it differs; primary outline = the selection; madder wash = public holiday.
-- **Event marker** (`EventMarker`): a small softened diamond. Filled = public holiday, half filled = regional holiday, outline = festival. The Festivals page carries a legend.
-- **Tithi scale** (`TithiBand`): thirty rounded ticks in two fortnights. Past tithis are filled, today's is saffron and taller, the rest are faint. It animates in once when the popover opens (not with Reduce Motion).
+Accent choices: System (follows macOS), Blue `#1D4FB8`/`#5E8EF7`, Teal, Green, Marigold, Jacaranda, Graphite. Each defines an `onAccent` color with at least 4.5:1 contrast (dark-mode accents use dark text). Everything else is a system semantic color (`.primary`, `.secondary`, `windowBackgroundColor`) so Increase Contrast and vibrancy behave natively.
 
 ## Type
 
-SF Pro and Kohinoor Devanagari from the system. Title 24 semibold, with the year in light; page title 20; the grid numeral 15 medium; AD date 9; tithi 9 (8.5 condensed in English); captions use `.caption`. Dates follow one format each: long is weekday first ("Monday, Kartik 30, 2083"), short is "Kartik 30"; AD dates are always English with a no-break space ("Nov 16").
+SF Pro (system) everywhere, with Devanagari from the system fallback (Kohinoor Devanagari). There is no rounded design and no display face.
 
-## Grid cell
+| Role | Style |
+| --- | --- |
+| Today's date | 22 pt semibold, year in 22 pt regular secondary |
+| Page titles (Convert, Festivals) | `.title3` semibold |
+| Month title, day title | `.headline` |
+| Facts, event names | `.callout` (medium for names) |
+| Supporting lines | `.subheadline` / `.caption`, quiet |
+| Grid numeral | 15 pt regular (semibold when today), AD 8.5 pt, tithi 9 pt (8.5 pt condensed in English) |
 
-Top to bottom: AD date with the event marker beside it, the BS numeral on its day mark, the tithi. Columns are the content width; no minimum scale factors.
+Sentence case for every label and header. No uppercase tracked labels, no middle-dot separators (use commas or layout), no em dashes in copy.
+
+## The patro grid (`SambatUI.MonthGrid`)
+
+- Sunday first; weekday initials in the calendar language, Saturday in holiday red.
+- Each cell: BS numeral in a circle slot, set low enough that the AD day in the top-right corner never touches it (the 1st of the month and the first day shown carry the month: "Nov 1", "Oct 18"). Tithi directly below at a fixed size.
+- Festival marker (`EventDot`) in the top-left corner, the same everywhere (grid, lists, widgets): a red dot for a public holiday, a red ring for a regional holiday, a grey dot for a festival. Holiday status is also always written out in text in the detail, lists and converter.
+- Today is a filled accent circle with `onAccent` text. A selected day is a 10% primary fill. "Today on the other clock" (the Mac's date while following Nepal, or the reverse) is a 1 pt secondary ring.
+- Hover is a 5% primary rounded fill. Every cell has a full VoiceOver label.
+
+## Calendar page
+
+- Header: BS date, then weekday (calendar language) and AD date (English), then the tithi with when it ends, then today's festival if any. Nepal's clock on the right, labelled "Nepal time".
+- When Nepal and the Mac are on different dates, a one-line note says so.
+- Below the grid: "Coming up" (as many whole rows as fit) when nothing is selected, or the selected day's detail. Today's details aren't repeated under the grid.
+
+## Formats
+
+One format per kind of value. Long BS date: weekday first ("Monday, Kartik 30, 2083"). Short BS date: "Kartik 30". AD dates: always English, with a no-break space ("Nov 16"). Times follow the interface language; Nepali uses the spoken part of the day ("राति २:०८"). Tithi is shown as fortnight and tithi ("Shukla Saptami") without the lunar month, which reads as a mistake next to the solar month. Near today, when the two dates differ, relative labels name the place ("Today here, yesterday in Nepal").
 
 ## Motion
 
-Month changes slide; pages cross-fade (0.16 s); the tithi scale springs in. All of it is disabled with Reduce Motion.
+- Month change: a 0.2 s ease-out slide in the direction of travel, combined with a fade. Page switch: a 0.16 s crossfade.
+- With Reduce Motion on, both become instant or a plain fade.
+- The bottom switcher's raised segment slides between pages (0.22 s), instant with Reduce Motion.
+- Nothing animates on its own except the clock's numeric transition.
 
-## App icon
+## Language
 
-Concentric soft diamonds in madder, cotton and saffron, with a loom-dark eye, on a deep violet tile. Generated by `scripts/make-icon.swift`. Menu-bar glyph: today's number in an outlined diamond, as a template image.
+Two independent settings: the interface language (labels, buttons, sentences) and the calendar language (BS dates, weekdays, tithi, festival names). Gregorian dates are always written in English. Times follow the interface language.
+
+## Icon
+
+A patro page on a flag-blue squircle (superellipse, n = 5, on the 824 pt grid): a white sheet with a crimson header carrying "बैशाख", a large "१", and a second sheet peeking out beneath, like a pad you tear pages from. Crimson and blue are the colours of Nepal's flag; the coloured tile keeps it from being mistaken for Apple's Calendar. Generated by `scripts/make-icon.swift`. The menu bar glyph is a template calendar outline with today's day number.

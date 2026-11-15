@@ -79,6 +79,8 @@ final class AppModel {
     var today: BSDate { BSDate(jdn: todayJDN) ?? BSDate(year: 2083, month: 1, day: 1) }
     var focusJDN: Int { selectedJDN ?? todayJDN }
 
+    var palette: Palette { Palette(settings.accent) }
+
     func t(_ en: String, _ ne: String) -> String { lang == .nepali ? ne : en }
 
     // One format per kind of value, used on every screen.
@@ -193,8 +195,19 @@ final class AppModel {
         today.year == displayYear && today.month == displayMonth
     }
 
+    /// Shows a day's month with that day selected (from lists and the converter).
+    func reveal(_ jdn: Int) {
+        if let bs = BSDate(jdn: jdn) {
+            monthStep = (bs.year * 12 + bs.month) - (displayYear * 12 + displayMonth)
+        }
+        showMonth(of: jdn)
+        selectedJDN = jdn
+        page = .calendar
+    }
+
+    /// Selects a day (today included); choosing the selected day again clears it.
     func select(_ jdn: Int) {
-        selectedJDN = (jdn == todayJDN) ? nil : jdn
+        selectedJDN = (selectedJDN == jdn) ? nil : jdn
     }
 
     // MARK: Clock

@@ -2,8 +2,7 @@ import SambatCore
 import SambatUI
 import SwiftUI
 
-/// The year ahead, grouped by Nepali month.
-struct FestivalsPage: View {
+struct UpcomingPage: View {
     @Environment(AppModel.self) private var model
     @AppStorage("upcomingHolidaysOnly") private var holidaysOnly = false
 
@@ -11,7 +10,6 @@ struct FestivalsPage: View {
         let jdn: Int
         let events: [CalendarEvent]
         var id: Int { jdn }
-        var isHoliday: Bool { events.contains { $0.isPublicHoliday } }
     }
 
     private struct MonthGroup: Identifiable {
@@ -24,23 +22,17 @@ struct FestivalsPage: View {
     var body: some View {
         let groups = upcoming()
         VStack(alignment: .leading, spacing: 0) {
-            LoomHeader {
-                HStack(alignment: .firstTextBaseline) {
-                    HeaderTitle(text: model.t("Festivals", "चाडपर्व"))
-                    Spacer()
-                    Toggle(model.t("Public holidays only", "सार्वजनिक बिदा मात्र"), isOn: $holidaysOnly)
-                        .toggleStyle(.checkbox)
-                        .controlSize(.small)
-                }
-                HStack(spacing: 12) {
-                    legend(.publicHoliday, model.t("Public holiday", "सार्वजनिक बिदा"))
-                    legend(.regionalHoliday, model.t("Regional", "क्षेत्रीय"))
-                    legend(.festival, model.t("Festival", "चाडपर्व"))
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.top, 6)
+            HStack(alignment: .firstTextBaseline) {
+                Text(model.t("Festivals", "चाडपर्व"))
+                    .font(.title3.weight(.semibold))
+                Spacer()
+                Toggle(model.t("Public holidays only", "सार्वजनिक बिदा मात्र"), isOn: $holidaysOnly)
+                    .toggleStyle(.checkbox)
+                    .controlSize(.small)
             }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 2)
 
             ScrollView(.vertical) {
                 LazyVStack(alignment: .leading, spacing: 0) {
@@ -49,11 +41,11 @@ struct FestivalsPage: View {
                             ForEach(group.days) { day in row(day) }
                         } header: {
                             Text(verbatim: "\(Formatter.bsMonth(group.month, model.cal)) \(Formatter.digits(group.year, model.cal))")
-                                .font(.subheadline.weight(.semibold))
+                                .font(.caption.weight(.semibold))
                                 .foregroundStyle(.quiet)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 10)
-                                .padding(.bottom, 4)
+                                .padding(.bottom, 2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
@@ -63,25 +55,14 @@ struct FestivalsPage: View {
         }
     }
 
-    private func legend(_ kind: EventMarker.Kind, _ label: String) -> some View {
-        HStack(spacing: 5) {
-            EventMarker(kind, size: 7, onField: true)
-            Text(label)
-        }
-    }
-
     private func row(_ day: Day) -> some View {
-        Button {
-            model.showMonth(of: day.jdn)
-            model.select(day.jdn)
-            model.page = .calendar
-        } label: {
-            EventRow(jdn: day.jdn, events: day.events)
+        Button { model.reveal(day.jdn) } label: {
+            FestivalRow(jdn: day.jdn, events: day.events)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 6)
         }
         .buttonStyle(RowButtonStyle())
-        .accessibilityHint(model.t("Shows this day in the month", "यो दिन महिनामा देखाउँछ"))
+        .accessibilityHint(model.t("Shows this day in the calendar", "यो दिन पात्रोमा देखाउँछ"))
     }
 
     private func upcoming() -> [MonthGroup] {
@@ -90,10 +71,10 @@ struct FestivalsPage: View {
             holidaysOnly ? $0.isPublicHoliday : $0.category != .observance
         }
         let byDay = Dictionary(grouping: events, by: \.jdn)
+        let days: [Day] = byDay.keys.sorted().map { Day(jdn: $0, events: byDay[$0]!) }
         var groups: [MonthGroup] = []
-        for jdn in byDay.keys.sorted() {
-            guard let bs = BSDate(jdn: jdn) else { continue }
-            let day = Day(jdn: jdn, events: byDay[jdn]!)
+        for day in days {
+            guard let bs = BSDate(jdn: day.jdn) else { continue }
             if let last = groups.last, last.year == bs.year, last.month == bs.month {
                 groups[groups.count - 1] = MonthGroup(year: last.year, month: last.month, days: last.days + [day])
             } else {

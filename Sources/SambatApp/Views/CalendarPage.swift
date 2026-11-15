@@ -12,27 +12,33 @@ struct CalendarPage: View {
         let rows = MonthGrid.rows(year: model.displayYear, month: model.displayMonth)
         VStack(alignment: .leading, spacing: 0) {
             TodayHeader()
+                .padding(.horizontal, 16)
+                .padding(.top, 14)
+            DayDifferenceNote()
+                .padding(.horizontal, 16)
+                .padding(.top, 10)
             MonthBar()
                 .padding(.horizontal, 16)
-                .padding(.top, 12)
+                .padding(.top, 14)
                 .padding(.bottom, 6)
             MonthGrid(year: model.displayYear, month: model.displayMonth,
                       todayJDN: model.todayJDN,
                       otherTodayJDN: s.basis == .nepal ? model.localTodayJDN : model.nepalTodayJDN,
                       selectedJDN: model.selectedJDN,
-                      lang: model.cal, uiLanguage: model.lang,
-                      metrics: .init(cellHeight: rows == 6 ? 44 : 48, rowSpacing: rows == 6 ? 1 : 3,
-                                     numeralSize: 15, marker: rows == 6 ? 25 : 28,
-                                     showAD: s.showAD, showTithi: s.showTithi),
+                      lang: model.cal, palette: model.palette,
+                      metrics: .init(cellHeight: rows == 6 ? 40 : 44, circle: rows == 6 ? 24 : 26,
+                                     circleTop: rows == 6 ? 5 : 6, showAD: s.showAD, showTithi: s.showTithi),
                       onSelect: { model.select($0) })
                 .padding(.horizontal, 16)
                 .id(model.displayYear * 12 + model.displayMonth)
                 .transition(monthTransition)
                 .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: model.displayYear * 12 + model.displayMonth)
-            Divider().padding(.horizontal, 16).padding(.top, 4)
+            Divider()
+                .padding(.horizontal, 16)
+                .padding(.top, 4)
             Group {
                 if let selected = model.selectedJDN {
-                    DayPanel(jdn: selected)
+                    DayDetail(jdn: selected)
                 } else {
                     ComingUp()
                 }
@@ -50,7 +56,7 @@ struct CalendarPage: View {
     }
 }
 
-/// Today in Nepal, on the loom field: the date, the Nepal clock, and the woven tithi band.
+/// Today in Nepal: the date, weekday and AD date, the tithi, today's festival, and Nepal's clock.
 struct TodayHeader: View {
     @Environment(AppModel.self) private var model
 
@@ -60,15 +66,17 @@ struct TodayHeader: View {
         let today = model.today
         let p = Panchang.shared.day(jdn)
         let showClock = NepalTime.offsetSeconds(from: .current, at: model.now) != 0
-        let events = dedup(FestivalEngine.shared.events(on: jdn).filter { $0.category != .observance })
+        var seen = Set<String>()
+        let events = FestivalEngine.shared.events(on: jdn)
+            .filter { $0.category != .observance && seen.insert($0.nameEn).inserted }
 
-        LoomHeader {
+        VStack(alignment: .leading, spacing: 3) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                HStack(alignment: .firstTextBaseline, spacing: 7) {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(verbatim: "\(Formatter.bsMonth(today.month, cal)) \(Formatter.digits(today.day, cal))")
-                        .font(.system(size: 24, weight: .semibold))
-                    Text(Formatter.digits(today.year, cal))
-                        .font(.system(size: 24, weight: .light))
+                        .font(.system(size: 22, weight: .semibold))
+                    Text(verbatim: Formatter.digits(today.year, cal))
+                        .font(.system(size: 22, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
                 .lineLimit(1)
@@ -76,54 +84,45 @@ struct TodayHeader: View {
                 Spacer(minLength: 0)
                 if showClock {
                     Text(model.clock(model.now))
-                        .font(.system(size: 15, weight: .medium))
+                        .font(.system(size: 16, weight: .medium))
                         .monospacedDigit()
                         .contentTransition(.numericText())
                 }
             }
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(Formatter.weekday(JDN.weekday(jdn), cal))
-                Text(model.adMedium(jdn)).foregroundStyle(.secondary)
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(verbatim: Formatter.weekday(JDN.weekday(jdn), cal))
+                Text(verbatim: model.adMedium(jdn)).foregroundStyle(.quiet)
                 Spacer(minLength: 6)
-                if showClock { Text(model.t("Nepal time", "नेपाली समय")).foregroundStyle(.secondary) }
+                if showClock {
+                    Text(model.t("Nepal time", "नेपालको समय")).font(.caption).foregroundStyle(.quiet)
+                }
             }
             .font(.subheadline)
-            .padding(.top, 2)
-
-            TithiBand(tithi: p.tithi, lang: model.lang, animated: true)
-                .padding(.top, 14)
-            HStack(alignment: .firstTextBaseline) {
-                Text(Formatter.tithiShort(p, cal))
-                    .font(.subheadline.weight(.medium))
-                Spacer(minLength: 6)
-                Text(model.tithiEnd(p))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            HStack(alignment: .firstTextBaseline, spacing: 5) {
+                Image(systemName: MoonIcon.name(for: p.tithi)).font(.system(size: 10)).foregroundStyle(.quiet)
+                Text(verbatim: Formatter.tithiShort(p, cal))
+                Text(verbatim: model.tithiEnd(p)).foregroundStyle(.quiet)
             }
-            .padding(.top, 6)
-
+            .font(.subheadline)
+            .lineLimit(1)
             ForEach(events, id: \.id) { e in
-                HStack(alignment: .firstTextBaseline, spacing: 7) {
-                    if let kind = EventMarker.kind(for: e) { EventMarker(kind, onField: true) }
-                    Text(e.name(cal)).font(.subheadline.weight(.semibold))
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    if let kind = EventDot.kind(for: [e]) { EventDot(kind, size: 6) }
+                    Text(verbatim: e.name(cal)).fontWeight(.medium)
                     if e.isPublicHoliday {
-                        Text(model.t("Public holiday", "सार्वजनिक बिदा")).font(.caption).foregroundStyle(Loom.madder)
+                        Text(model.t("Public holiday", "सार्वजनिक बिदा")).foregroundStyle(Palette.holiday)
                     }
                 }
-                .padding(.top, 6)
+                .font(.subheadline)
+                .lineLimit(1)
+                .padding(.top, 2)
             }
-
-            DayDifferenceNote().padding(.top, 10)
         }
-    }
-
-    private func dedup(_ events: [CalendarEvent]) -> [CalendarEvent] {
-        var seen = Set<String>()
-        return events.filter { seen.insert($0.nameEn).inserted }
+        .accessibilityElement(children: .combine)
     }
 }
 
-/// Shown when Nepal and this Mac are on different dates: the moment other apps get wrong.
+/// Shown when Nepal and this Mac are on different dates: the moment other calendars get wrong.
 struct DayDifferenceNote: View {
     @Environment(AppModel.self) private var model
 
@@ -133,11 +132,11 @@ struct DayDifferenceNote: View {
         if nepal != local {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Image(systemName: "clock")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Loom.saffron)
+                    .font(.system(size: 11))
+                    .foregroundStyle(model.palette.accent)
                 Text(message(nepal: nepal, local: local))
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.quiet)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .accessibilityElement(children: .combine)
@@ -195,7 +194,7 @@ struct MonthBar: View {
                 .menuIndicator(.hidden)
                 .fixedSize()
                 .help(model.t("Jump to a month or year", "महिना वा साल छान्नुहोस्"))
-                Text(adRange)
+                Text(verbatim: adRange)
                     .font(.caption)
                     .foregroundStyle(.quiet)
             }
@@ -233,40 +232,50 @@ struct MonthBar: View {
 }
 
 /// The selected day: its date, tithi, sun times, festivals and the user's own events.
-struct DayPanel: View {
+struct DayDetail: View {
     @Environment(AppModel.self) private var model
     let jdn: Int
 
     var body: some View {
         let cal = model.cal
         let p = Panchang.shared.day(jdn)
-        let events = dedup(FestivalEngine.shared.events(on: jdn).filter { $0.category != .observance })
+        var seen = Set<String>()
+        let events = FestivalEngine.shared.events(on: jdn)
+            .filter { $0.category != .observance && seen.insert($0.nameEn).inserted }
         let ekEvents = model.settings.showCalendarEvents ? model.calendarService.events(on: ADDate(jdn: jdn)) : []
 
         ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(alignment: .firstTextBaseline) {
-                        Text(model.bsLong(jdn, year: false)).font(.headline)
+                        Text(verbatim: model.bsLong(jdn))
+                            .font(.headline)
                         Spacer(minLength: 6)
                         Text(model.relative(jdn))
                             .font(.caption)
                             .foregroundStyle(.quiet)
                     }
-                    Text(model.adMedium(jdn))
+                    Text(verbatim: model.adMedium(jdn))
                         .font(.subheadline)
                         .foregroundStyle(.quiet)
                 }
+
                 VStack(alignment: .leading, spacing: 6) {
                     FactRow(symbol: MoonIcon.name(for: p.tithi), text: Formatter.tithiShort(p, cal), detail: model.tithiEnd(p))
                     FactRow(symbol: "sun.horizon", text: "\(model.clock(p.sunrise)) – \(model.clock(p.sunset))",
                             detail: model.t("Sunrise, sunset in Kathmandu", "काठमाडौंमा सूर्योदय, सूर्यास्त"))
+                    if let ns = FestivalEngine.shared.nepalSambat(jdn: jdn) {
+                        FactRow(symbol: "calendar",
+                                text: cal == .nepali ? "नेपाल सम्वत् \(Formatter.digits(ns, .nepali))" : "Nepal Sambat \(ns)")
+                    }
                 }
+
                 if !events.isEmpty {
                     VStack(alignment: .leading, spacing: 7) {
                         ForEach(events, id: \.id) { e in EventLine(event: e) }
                     }
                 }
+
                 if !ekEvents.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(model.t("From your calendars", "तपाईंको क्यालेन्डरबाट"))
@@ -274,7 +283,7 @@ struct DayPanel: View {
                             .foregroundStyle(.quiet)
                         ForEach(ekEvents, id: \.eventIdentifier) { ev in
                             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                                Lozenge().fill(Color(cgColor: ev.calendar.cgColor)).frame(width: 7, height: 7).frame(width: 16)
+                                Circle().fill(Color(cgColor: ev.calendar.cgColor)).frame(width: 7, height: 7).frame(width: 16)
                                 Text(ev.title ?? "").font(.callout).lineLimit(1)
                                 Spacer(minLength: 6)
                                 Text(ev.isAllDay ? model.t("All day", "दिनभर") : model.clock(ev.startDate, in: .current))
@@ -289,16 +298,12 @@ struct DayPanel: View {
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-    }
-
-    private func dedup(_ events: [CalendarEvent]) -> [CalendarEvent] {
-        var seen = Set<String>()
-        return events.filter { seen.insert($0.nameEn).inserted }
+        .scrollIndicators(.automatic)
     }
 }
 
-/// With nothing selected: the next few festivals, so the space under the month looks forward.
-/// Shows as many whole rows as fit (three, two or one), never a row cut in half.
+/// With no day selected: the next festivals, so the space under the month looks ahead instead of
+/// repeating today. Shows as many whole rows as fit.
 struct ComingUp: View {
     @Environment(AppModel.self) private var model
 
@@ -318,20 +323,17 @@ struct ComingUp: View {
     }
 
     private func list(_ days: [Int], _ byDay: [Int: [CalendarEvent]]) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
             Text(model.t("Coming up", "आउँदै गरेका"))
-                .font(.subheadline.weight(.semibold))
+                .font(.caption.weight(.semibold))
                 .foregroundStyle(.quiet)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 2)
             ForEach(days, id: \.self) { jdn in
-                Button {
-                    model.showMonth(of: jdn)
-                    model.select(jdn)
-                } label: {
-                    EventRow(jdn: jdn, events: byDay[jdn] ?? [])
+                Button { model.reveal(jdn) } label: {
+                    FestivalRow(jdn: jdn, events: byDay[jdn] ?? [], showsMonth: true)
                         .padding(.horizontal, 16)
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 5)
                 }
                 .buttonStyle(RowButtonStyle())
             }

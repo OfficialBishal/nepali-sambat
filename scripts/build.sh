@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Builds "Sambat.app" (universal, ad-hoc signed) and a DMG into ./dist.
+# Builds "Nepali Sambat.app" (universal, ad-hoc signed) and a DMG into ./dist.
 # Needs only the Xcode Command Line Tools.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 VERSION="${VERSION:-$(cat VERSION)}"
 BUILD="${BUILD:-$(git rev-list --count HEAD 2>/dev/null || echo 1)}"
-APP_NAME="Sambat"
+APP_NAME="Nepali Sambat"
 DIST="dist"
 APP="$DIST/$APP_NAME.app"
-DMG="$DIST/Sambat-$VERSION.dmg"
+DMG="$DIST/NepaliSambat-$VERSION.dmg"
 
 echo "==> Building $APP_NAME $VERSION ($BUILD)"
 swift build -c release --arch arm64 --arch x86_64
